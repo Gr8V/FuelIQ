@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/main.dart';
 
 const months = [
     "January", "February", "March", "April", "May", "June",
@@ -32,15 +31,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Welcome to FuelIQ!',
-                  style: TextStyle(
-                    color: frog,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                
                 SizedBox(height: 20),
                 Card(
                   elevation: 3,

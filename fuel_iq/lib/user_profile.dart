@@ -14,7 +14,7 @@ class _UserProfileState extends State<UserProfile> {
       //app bar
       appBar: AppBar(
         //app title
-        title: const Text('FuelIQ'),
+        title: const Text('Profile'),
         centerTitle: true,
         
       ),

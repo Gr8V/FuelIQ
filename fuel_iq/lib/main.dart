@@ -1,59 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/homePage.dart';
 import 'package:fuel_iq/scan_page.dart';
+import 'package:fuel_iq/settings.dart';
 import 'package:fuel_iq/user_profile.dart';
 
 
 void main() {
   runApp(const FuelIQApp());
 }
-// Dark base colors
-const Color richBlack = Color.fromARGB(255, 2, 27, 26);      // deep dark background
-const Color darkGreen = Color.fromARGB(255, 0, 77, 64);      // main accent dark green
-// Mid-tone vibrant colors
-const Color bangladeshGreen = Color.fromARGB(255, 0, 168, 107); // vibrant green
-const Color mountainMeadow = Color.fromARGB(255, 48, 213, 200); // teal-ish midtone
-const Color carribbeanGreen = Color.fromARGB(255, 0, 224, 181); // lighter accent
-const Color frog = Color.fromARGB(255, 23, 135, 109);
-// Light color for text / highlights
-const Color antiFlashWhite = Color.fromARGB(255, 242, 242, 242); // near-white for contrast
 
+final ThemeData lightTheme = ThemeData(
+  brightness: Brightness.light,
+  scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+  cardColor: const Color(0xFFF5F5F5),
+  primaryColor: const Color(0xFF2E7D32),
+  colorScheme: const ColorScheme.light(
+    primary: Color(0xFF2E7D32),
+    secondary: Color(0xFFFF9800),
+  ),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Color(0xFF212121)),
+    bodyMedium: TextStyle(color: Color(0xFF616161)),
+  ),
+);
+final ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  scaffoldBackgroundColor: const Color(0xFF121212),
+  cardColor: const Color(0xFF1E1E1E),
+  primaryColor: const Color(0xFF00C853),
+  colorScheme:const ColorScheme.dark(
+    primary: Color(0xFF00C853),
+    secondary: Color(0xFFFFB300),
+  ),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Color(0xFFFFFFFF)),
+    bodyMedium: TextStyle(color: Color(0xFFB0B0B0)),
+  ),
+);
+ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 
-class FuelIQApp extends StatelessWidget {
+class FuelIQApp extends StatefulWidget {
   const FuelIQApp({super.key});
+  @override
+  State<FuelIQApp> createState() => _FuelIQAppState();
+}
+
+class _FuelIQAppState extends State<FuelIQApp> {
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FuelIQ',
-      theme: ThemeData(
-        //main app bg colour
-        scaffoldBackgroundColor: richBlack,
-        //app bar
-        appBarTheme: const AppBarTheme(
-          backgroundColor: darkGreen,
-          foregroundColor: antiFlashWhite
-        ),
-        //scan barcode button
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(carribbeanGreen),
-            foregroundColor: MaterialStateProperty.all(antiFlashWhite)
-          )
-        ),
-        //bottom nav bar
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: bangladeshGreen,
-          selectedItemColor: carribbeanGreen,
-          unselectedItemColor: antiFlashWhite
-        ),
-        cardTheme: const CardTheme(
-          color: frog,
-          surfaceTintColor: richBlack,
-        ),
-        
-      ),
-      home: HomeScreen(),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeNotifier.value,
+      home: const HomeScreen(),
+      builder: (context, child) {
+        return ValueListenableBuilder(
+          valueListenable: themeNotifier,
+          builder: (_, mode, __) {
+            return MaterialApp(
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: mode,
+              home: child,
+            );
+          }
+          );
+      },
       debugShowCheckedModeBanner: false,
     );
   }
@@ -67,11 +81,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  int _selectedBottomNavBarIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedBottomNavBarIndex = index;
     });
   }
 
@@ -79,32 +93,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
+        index: _selectedBottomNavBarIndex,
         children: const [
           // 0 - Home
           HomePage(),
           // 1 - Scan
           ScanPage(),
-          // 2 - Search (placeholder)
+          // 2 - Settings
+          SettingsPage(),
+          // 3 - Profile
           UserProfile()
-          
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
+        currentIndex: _selectedBottomNavBarIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home'
+            label: ''
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner),
-            label: 'Scan Barcode'
+            icon: Icon(Icons.bar_chart_rounded),
+            label: ''
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search'
+            icon: Icon(Icons.settings),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: ''
           ),
         ],
       ),
