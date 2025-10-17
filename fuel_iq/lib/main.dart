@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/homePage.dart';
+import 'package:fuel_iq/scan_page.dart';
 import 'package:fuel_iq/user_profile.dart';
+
 
 void main() {
   runApp(const FuelIQApp());
@@ -75,82 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //app bar
-      appBar: AppBar(
-        //app title
-        title: const Text('FuelIQ'),
-
-        centerTitle: true,
-        //user profile icon
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle_rounded),
-            tooltip: 'Profile',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UserProfile()),
-              );
-            },
-          )
-        ]
-      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
           // 0 - Home
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Welcome to FuelIQ!',
-                  style: TextStyle(
-                    color: frog,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                Card(
-                  elevation: 3,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Today\'s Macros',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            MacroTile(label: 'Protein', value: '0g'),
-                            MacroTile(label: 'Carbs', value: '0g'),
-                            MacroTile(label: 'Fat', value: '0g'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // 1 - Scan (placeholder)
-          Center(
-            child: Text('Scan Barcode screen', style: TextStyle(color: antiFlashWhite)),
-          ),
+          HomePage(),
+          // 1 - Scan
+          ScanPage(),
           // 2 - Search (placeholder)
-          Center(
-            child: Text('Search screen', style: TextStyle(color: antiFlashWhite)),
-          ),
+          UserProfile()
+          
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -171,30 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class MacroTile extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const MacroTile({super.key, required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(label),
-      ],
     );
   }
 }
