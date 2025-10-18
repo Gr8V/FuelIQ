@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-class ScanPage extends StatefulWidget {
-  const ScanPage({Key? key}) : super(key: key);
+class DetailsPage extends StatefulWidget {
+  const DetailsPage({Key? key}) : super(key: key);
 
   
 
   @override
-  State<ScanPage> createState() => _ScanPageState();
+  State<DetailsPage> createState() => _DetailsPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title: const Text("Scan Page"),
+        title: const Text("Details"),
         centerTitle: true,
         ),
       //body

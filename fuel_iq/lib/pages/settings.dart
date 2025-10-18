@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/main.dart';
+//theme
+import 'package:fuel_iq/globals/theme_controller.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
