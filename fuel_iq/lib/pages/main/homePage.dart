@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:fuel_iq/theme/colors.dart';
+
 const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -12,7 +14,7 @@ String appBarTitle = todaysDate;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -20,15 +22,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // Choose colors from theme if you want
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgArc = isDark ? Colors.white12 : Colors.black12;
-    final fgArc = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title:  Text(appBarTitle),
+        title:  Text(
+          appBarTitle,
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.25,
+            height: 1.3,
+          ),
+        ),
         centerTitle: true,
+        backgroundColor: colorScheme.primary,
         ),
       //body
       body: Padding(
@@ -36,10 +47,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                
                 const SizedBox(height: 20),
                 Card(
                   elevation: 3,
+                  color: theme.cardColor,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -47,30 +58,84 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Calories Eaten'),
+                            Text(
+                              'Calories Eaten',
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.width *0.07,
+                                color: colorScheme.onSurface
+                              ),
+                            ),
                             CaloriesCircularChart(
                               eaten: 60,
                               goal: 1800,
                               size: 100,
-                              backgroundArcColor: bgArc,
-                              foregroundArcColor: fgArc,
+                              backgroundArcColor: colorScheme.surface,
+                              foregroundArcColor: colorScheme.primary,
+                              centerTextColor: colorScheme.onSurface,
                               strokeWidth: 10,
                             )
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            MacroTile(label: 'Protein', eaten: 10, goal: 100),
-                            MacroTile(label: 'Carbs', eaten: 10, goal: 100),
-                            MacroTile(label: 'Fat', eaten: 10, goal: 100),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: Card(
+                        elevation: 3,
+                        color: theme.cardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: MacroTile(
+                                label: 'Protein',
+                                eaten: 10, 
+                                goal: 100,
+                                bgColor: colorScheme.surface,
+                                fgColor: AppColors.proteinColor,
+                                centerTextColor: colorScheme.onSurface,
+                              ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Card(
+                        elevation: 3,
+                        color: theme.cardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: MacroTile(
+                                label: 'Carbs',
+                                eaten: 10, 
+                                goal: 100,
+                                bgColor: colorScheme.surface,
+                                fgColor: AppColors.carbsColor,
+                                centerTextColor: colorScheme.onSurface,
+                              ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Card(
+                        elevation: 3,
+                        color: theme.cardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: MacroTile(
+                                label: 'Fats',
+                                eaten: 10, 
+                                goal: 100,
+                                bgColor: colorScheme.surface,
+                                fgColor: AppColors.fatColor,
+                                centerTextColor: colorScheme.onSurface,
+                              ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
       )
@@ -83,22 +148,24 @@ class MacroTile extends StatelessWidget {
   final String label;
   final double eaten;
   final double goal;
+  final Color bgColor;
+  final Color fgColor;
+  final Color centerTextColor;
 
-  const MacroTile({super.key, required this.label, required this.eaten, required this.goal});
+  const MacroTile({super.key, required this.label, required this.eaten, required this.goal,
+    required this.bgColor, required this.fgColor, required this.centerTextColor});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgArc = isDark ? Colors.white12 : Colors.black12;
-    final fgArc = Theme.of(context).colorScheme.primary;
     return Column(
       children: [
         CaloriesCircularChart(
           eaten: eaten,
           goal: goal,
           size: 70,
-          backgroundArcColor: bgArc,
-          foregroundArcColor: fgArc,
+          backgroundArcColor: bgColor,
+          foregroundArcColor: fgColor,
+          centerTextColor: centerTextColor,
           strokeWidth: 5,
           ),
         const SizedBox(height: 4),

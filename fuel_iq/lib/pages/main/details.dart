@@ -13,11 +13,23 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title: const Text("Details"),
+        title:  Text(
+          "Details",
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.25,
+            height: 1.3,
+          ),
+        ),
         centerTitle: true,
+        backgroundColor: colorScheme.primary,
         ),
       //body
       body: const Padding(

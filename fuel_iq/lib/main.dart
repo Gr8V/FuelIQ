@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/pages/main/addItems.dart';
 //pages
-import 'package:fuel_iq/pages/homePage.dart';
-import 'package:fuel_iq/pages/details.dart';
-import 'package:fuel_iq/pages/settings.dart';
-import 'package:fuel_iq/pages/user_profile.dart';
+import 'package:fuel_iq/pages/main/homePage.dart';
+import 'package:fuel_iq/pages/main/details.dart';
+import 'package:fuel_iq/pages/main/settings.dart';
+import 'package:fuel_iq/pages/main/user_profile.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/theme/app_theme.dart';
@@ -19,32 +20,24 @@ class FuelIQApp extends StatefulWidget {
 }
 
 class _FuelIQAppState extends State<FuelIQApp> {
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FuelIQ',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeNotifier.value,
-      home: const HomeScreen(),
-      builder: (context, child) {
-        return ValueListenableBuilder(
-          valueListenable: themeNotifier,
-          builder: (_, mode, __) {
-            return MaterialApp(
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: mode,
-              home: child,
-            );
-          }
-          );
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, currentMode, child) {
+        return MaterialApp(
+          title: 'FuelIQ',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: currentMode, // ✅ reacts to changes
+          home: const HomeScreen(),
+          debugShowCheckedModeBanner: false,
+        );
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 }
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,12 +49,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedBottomNavBarIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedBottomNavBarIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,9 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
           HomePage(),
           // 1 - Scan
           DetailsPage(),
-          // 2 - Settings
+          // 2 - Add Food
+          SizedBox.shrink(),
+          // 3 - Settings
           SettingsPage(),
-          // 3 - Profile
+          // 4 - Profile
           UserProfile()
         ],
       ),
@@ -84,15 +73,28 @@ class _HomeScreenState extends State<HomeScreen> {
         showUnselectedLabels: false,
         elevation: 0,
         currentIndex: _selectedBottomNavBarIndex,
-        onTap: _onItemTapped,
+        onTap: (index) {
+          if (index == 2) {
+            showAddFoodDrawer(context);
+          }
+          else {
+            setState(() {
+              _selectedBottomNavBarIndex = index;
+            });
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: ''
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart_rounded),
-            label: ''
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
@@ -100,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: ''
+            label: '',
           ),
         ],
       ),

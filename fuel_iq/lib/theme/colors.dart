@@ -16,4 +16,9 @@ class AppColors {
   static const darkSecondary = Color(0xFFFFB300);
   static const darkTextPrimary = Color(0xFFFFFFFF);
   static const darkTextSecondary = Color(0xFFB0B0B0);
+  
+  // ✅ Macro-specific colors (same for both, can tweak later)
+  static const proteinColor = Color(0xFFF44336);     // Red
+  static const carbsColor = Color(0xFFFFC107);   // Amber
+  static const fatColor = Color(0xFF2196F3); // Blue
 }

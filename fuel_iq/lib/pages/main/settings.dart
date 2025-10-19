@@ -5,8 +5,6 @@ import 'package:fuel_iq/globals/theme_controller.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
-  
-
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
@@ -15,11 +13,23 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title: const Text("Settings"),
+        title:  Text(
+          "Settings",
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.25,
+            height: 1.3,
+          ),
+        ),
         centerTitle: true,
+        backgroundColor: colorScheme.primary,
         ),
       //body
       body: Padding(
@@ -48,7 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         );
                       },
-                      transitionDuration: const Duration(milliseconds: 400),
+                      transitionDuration: const Duration(milliseconds: 150),
                   )
                 );
               },
@@ -72,8 +82,24 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
   
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text("Select Theme")),
+      //app bar
+      appBar: AppBar(
+        title:  Text(
+          "Settings",
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.25,
+            height: 1.3,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: colorScheme.primary,
+        ),
       body: Column(
         children: [
           RadioListTile(
