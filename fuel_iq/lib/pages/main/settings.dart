@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title:  Text( 
+        title:  Text(
           "Settings",
           style: TextStyle(
             color: colorScheme.onPrimary,
