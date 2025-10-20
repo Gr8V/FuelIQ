@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/pages/secondary/water.dart';
 import 'dart:math';
 
 import 'package:fuel_iq/theme/colors.dart';
@@ -48,14 +49,13 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
+                //calories eaten
                 Card(
                   elevation: 3,
                   color: theme.cardColor,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Row(
+                    child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -75,14 +75,14 @@ class _HomePageState extends State<HomePage> {
                               strokeWidth: 10,
                             )
                           ],
-                        ),
-                      ],
                     ),
                   ),
                 ),
+                //Macros
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    //protein
                     Expanded(
                       child: Card(
                         elevation: 3,
@@ -100,6 +100,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    //carbs
                     Expanded(
                       child: Card(
                         elevation: 3,
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    //fats
                     Expanded(
                       child: Card(
                         elevation: 3,
@@ -135,6 +137,58 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                   ],
+                ),
+                const SizedBox(height: 20),
+                //others
+                Card(
+                  color: theme.cardColor,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Card(
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            ),
+                            leading: CaloriesCircularChart(
+                              eaten: 100,
+                              goal: 200,
+                              size: 40,
+                              backgroundArcColor: colorScheme.surface,
+                              foregroundArcColor: colorScheme.primary,
+                              centerTextColor: colorScheme.onSurface,
+                              strokeWidth: 2,
+                              icon: Icons.water_drop,
+                            ),
+                            title: const Text('Water Intake'),
+                            subtitle: const Text('500 ml remaining'),
+                            onTap: () {
+                              Navigator.push(
+                            context,
+                            //transition and page builder
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1.0, 0.0),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                transitionDuration: const Duration(milliseconds: 150),
+                            )
+                          );
+                            },
+                          )
+                          ),
+                      ],
+                    ),
+                  
                 )
               ],
             ),
@@ -176,21 +230,17 @@ class MacroTile extends StatelessWidget {
 }
 
 
-
-
-/// Reusable animated circular calories chart.
-/// - `eaten` and `goal` are in same units (kcal).
-/// - animates whenever eaten/goal change.
-/// - customizable colors and stroke width.
+/// Reusable animated circular chart with optional icon in center.
 class CaloriesCircularChart extends StatefulWidget {
   final double eaten;
   final double goal;
-  final double size; // diameter in logical pixels
+  final double size; // diameter
   final Color backgroundArcColor;
   final Color foregroundArcColor;
   final Color centerTextColor;
   final double strokeWidth;
   final Duration animationDuration;
+  final IconData? icon; // 🔹 NEW optional icon field
 
   const CaloriesCircularChart({
     Key? key,
@@ -202,6 +252,7 @@ class CaloriesCircularChart extends StatefulWidget {
     this.centerTextColor = Colors.white,
     this.strokeWidth = 16.0,
     this.animationDuration = const Duration(milliseconds: 700),
+    this.icon, // 🔹 optional
   }) : super(key: key);
 
   @override
@@ -233,7 +284,7 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
   void didUpdateWidget(covariant CaloriesCircularChart oldWidget) {
     super.didUpdateWidget(oldWidget);
     final newPercent = _clampPercent(widget.eaten / max(widget.goal, 1));
-    _oldPercent = _animation.value; // current visual percent
+    _oldPercent = _animation.value;
     _targetPercent = newPercent;
     _animation = Tween<double>(begin: _oldPercent, end: _targetPercent)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
@@ -260,24 +311,22 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
     return SizedBox(
       width: widget.size,
       height: widget.size,
-      child: Semantics(
-        label:
-            'Calories eaten ${eatenAmount.toInt()} of ${goalAmount.toInt()} calories, $displayedPercent percent',
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Painter draws the donut
-            CustomPaint(
-              size: Size(widget.size, widget.size),
-              painter: _DonutPainter(
-                progress: percent,
-                backgroundArcColor: widget.backgroundArcColor,
-                foregroundArcColor: widget.foregroundArcColor,
-                strokeWidth: widget.strokeWidth,
-              ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Background + progress arcs
+          CustomPaint(
+            size: Size(widget.size, widget.size),
+            painter: _DonutPainter(
+              progress: percent,
+              backgroundArcColor: widget.backgroundArcColor,
+              foregroundArcColor: widget.foregroundArcColor,
+              strokeWidth: widget.strokeWidth,
             ),
+          ),
 
-            // Center text: calories and percent
+          // 🔹 Center content (text or icon)
+          if (widget.icon == null)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -299,17 +348,22 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
                   ),
                 ),
               ],
+            )
+          else
+            Icon(
+              widget.icon,
+              size: widget.size * 0.45,
+              color: widget.foregroundArcColor,
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
 }
 
-/// CustomPainter that draws a background arc and a foreground arc for progress.
+/// Draws circular arcs for progress visualization.
 class _DonutPainter extends CustomPainter {
-  final double progress; // 0.0 - 1.0
+  final double progress;
   final Color backgroundArcColor;
   final Color foregroundArcColor;
   final double strokeWidth;
@@ -325,13 +379,9 @@ class _DonutPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = (min(size.width, size.height) - strokeWidth) / 2;
-
     final rect = Rect.fromCircle(center: center, radius: radius);
+    const startAngle = -pi / 2;
 
-    final startAngle = -pi / 2; // start at top
-    final sweepBackground = 2 * pi;
-
-    // Background circle (light track)
     final bgPaint = Paint()
       ..color = backgroundArcColor
       ..style = PaintingStyle.stroke
@@ -339,9 +389,6 @@ class _DonutPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..isAntiAlias = true;
 
-    canvas.drawArc(rect, startAngle, sweepBackground, false, bgPaint);
-
-    // Foreground arc (progress)
     final fgPaint = Paint()
       ..color = foregroundArcColor
       ..style = PaintingStyle.stroke
@@ -349,11 +396,8 @@ class _DonutPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..isAntiAlias = true;
 
-    final sweepForeground = (2 * pi * progress);
-    canvas.drawArc(rect, startAngle, sweepForeground, false, fgPaint);
-
-    // Optional: small center hole (to make it donut-like)
-    // Not necessary because we used stroke style, but could add shadow/inner circle if desired.
+    canvas.drawArc(rect, startAngle, 2 * pi, false, bgPaint);
+    canvas.drawArc(rect, startAngle, 2 * pi * progress, false, fgPaint);
   }
 
   @override

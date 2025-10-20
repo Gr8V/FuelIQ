@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LogWater extends StatefulWidget {
-  const LogWater({super.key});
+class WaterPage extends StatefulWidget {
+  const WaterPage({super.key});
 
   @override
-  State<LogWater> createState() => _LogWaterState();
+  State<WaterPage> createState() => _WaterPageState();
 }
 
-class _LogWaterState extends State<LogWater> {
+class _WaterPageState extends State<WaterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -16,7 +16,7 @@ class _LogWaterState extends State<LogWater> {
       //app bar
       appBar: AppBar(
         title:  Text(
-          "Log Water Intake",
+          "Water",
           style: TextStyle(
             color: colorScheme.onPrimary,
             fontSize: 20,
