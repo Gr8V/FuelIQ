@@ -7,26 +7,25 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.lightScaffold,
     cardColor: AppColors.lightCard,
     primaryColor: AppColors.lightPrimary,
-    
-    // 🔹 Add proper Material 3 color scheme
+    useMaterial3: true,
     colorScheme: const ColorScheme.light(
       primary: AppColors.lightPrimary,
+      onPrimary: Colors.white,
       secondary: AppColors.lightSecondary,
-      background: AppColors.lightScaffold,        // 🔹 important for backgrounds
-      surface: AppColors.lightCard,               // 🔹 used for cards, sheets
-      onPrimary: Colors.white,                    // 🔹 text/icons on primary
-      onSecondary: Colors.black,                  // optional
-      onBackground: AppColors.lightTextPrimary,   // 🔹 text on background
-      onSurface: AppColors.lightTextPrimary,      // 🔹 text on card/surface
+      onSecondary: Colors.black,
+      tertiary: AppColors.lightTertiary,
+      onTertiary: Colors.white,
+      surface: AppColors.lightCard,
+      onSurface: AppColors.lightTextPrimary,
+      error: AppColors.lightError,
+      onError: Colors.white,
+      outline: Colors.grey,
+      shadow: Colors.black,
+      surfaceTint: Colors.transparent, // disables unwanted overlay
+      inverseSurface: AppColors.lightCard,
+      onInverseSurface: AppColors.lightTextPrimary,
+      inversePrimary: AppColors.lightPrimary,
     ),
-
-    // 🔹 Define text theme that adapts automatically
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(fontSize: 16),
-      bodyMedium: TextStyle(fontSize: 14),
-      titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-    ),
-    useMaterial3: true, // 🔹 enables latest Material 3 behavior
   );
 
   static final ThemeData darkTheme = ThemeData(
@@ -34,24 +33,24 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.darkScaffold,
     cardColor: AppColors.darkCard,
     primaryColor: AppColors.darkPrimary,
-
-    // 🔹 Add dark mode color scheme
+    useMaterial3: true,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.darkPrimary,
+      onPrimary: Colors.white,
       secondary: AppColors.darkSecondary,
-      background: AppColors.darkScaffold,
+      onSecondary: Colors.black,
+      tertiary: AppColors.darkTertiary,
+      onTertiary: Colors.white,
       surface: AppColors.darkCard,
-      onPrimary: Colors.white,                    // 🔹 readable on dark primary
-      onSecondary: Colors.white70,                // optional
-      onBackground: AppColors.darkTextPrimary,
       onSurface: AppColors.darkTextPrimary,
+      error: AppColors.darkError,
+      onError: Colors.white,
+      outline: Colors.grey,
+      shadow: Colors.black,
+      surfaceTint: Colors.transparent,
+      inverseSurface: AppColors.darkCard,
+      onInverseSurface: AppColors.darkTextPrimary,
+      inversePrimary: AppColors.darkPrimary,
     ),
-
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(fontSize: 16),
-      bodyMedium: TextStyle(fontSize: 14),
-      titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-    ),
-    useMaterial3: true,
   );
 }

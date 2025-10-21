@@ -1,14 +1,11 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'dart:math';
 
 import 'package:fuel_iq/theme/colors.dart';
 
-const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-String todaysDate = "${DateTime.now().day} ${months[DateTime.now().month-1]} ${DateTime.now().year}";
+String todaysDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
 String appBarTitle = todaysDate;
 
 
@@ -52,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                 //calories eaten
                 Card(
                   elevation: 3,
-                  color: theme.cardColor,
+                  color: colorScheme.surface,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -69,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                               eaten: 60,
                               goal: 1800,
                               size: 100,
-                              backgroundArcColor: colorScheme.surface,
+                              backgroundArcColor: theme.colorScheme.onSurface,
                               foregroundArcColor: colorScheme.primary,
                               centerTextColor: colorScheme.onSurface,
                               strokeWidth: 10,
@@ -93,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                                 label: 'Protein',
                                 eaten: 10, 
                                 goal: 100,
-                                bgColor: colorScheme.surface,
+                                bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.proteinColor,
                                 centerTextColor: colorScheme.onSurface,
                               ),
@@ -111,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                                 label: 'Carbs',
                                 eaten: 10, 
                                 goal: 100,
-                                bgColor: colorScheme.surface,
+                                bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.carbsColor,
                                 centerTextColor: colorScheme.onSurface,
                               ),
@@ -129,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                                 label: 'Fats',
                                 eaten: 10, 
                                 goal: 100,
-                                bgColor: colorScheme.surface,
+                                bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.fatColor,
                                 centerTextColor: colorScheme.onSurface,
                               ),
