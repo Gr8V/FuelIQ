@@ -339,7 +339,7 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
                 Text(
                   '$displayedPercent%',
                   style: TextStyle(
-                    color: widget.centerTextColor.withOpacity(0.85),
+                    color: widget.centerTextColor,
                     fontSize: widget.size * 0.18,
                     fontWeight: FontWeight.bold,
                   ),

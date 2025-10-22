@@ -11,7 +11,7 @@ class AppTheme {
     colorScheme: const ColorScheme.light(
       primary: AppColors.lightPrimary,
       onPrimary: Colors.white,
-      secondary: AppColors.lightSecondary,
+      secondary: AppColors.lightScaffold,
       onSecondary: Colors.black,
       tertiary: AppColors.lightTertiary,
       onTertiary: Colors.white,
@@ -37,8 +37,8 @@ class AppTheme {
     colorScheme: const ColorScheme.dark(
       primary: AppColors.darkPrimary,
       onPrimary: Colors.white,
-      secondary: AppColors.darkSecondary,
-      onSecondary: Colors.black,
+      secondary: AppColors.darkScaffold,
+      onSecondary: Colors.white,
       tertiary: AppColors.darkTertiary,
       onTertiary: Colors.white,
       surface: AppColors.darkCard,

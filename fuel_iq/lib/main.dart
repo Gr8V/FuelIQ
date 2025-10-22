@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/pages/main/addItems.dart';
+import 'package:fuel_iq/pages/main/add_items.dart';
 //pages
-import 'package:fuel_iq/pages/main/homePage.dart';
+import 'package:fuel_iq/pages/main/home_page.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/main/settings.dart';
 import 'package:fuel_iq/pages/main/user_profile.dart';

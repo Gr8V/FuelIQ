@@ -100,42 +100,30 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
         centerTitle: true,
         backgroundColor: colorScheme.primary,
         ),
-      body: Column(
-        children: [
-          RadioListTile(
-            title: const Text('Light Mode'),
-            value: ThemeMode.light,
-            groupValue: _selectedMode,
-            onChanged: (ThemeMode? value) {
-              setState(() {
-                _selectedMode = value;
-                themeNotifier.value = value!;
-              });
-            },
+      body: RadioGroup<ThemeMode>(
+          groupValue: _selectedMode,
+          onChanged: (ThemeMode? value) {
+            setState(() {
+              _selectedMode = value;
+              themeNotifier.value = value!;
+            });
+          },
+          child: const Column(
+            children: [
+              RadioListTile(
+                value: ThemeMode.light,
+                title: Text("Light Mode"),
+              ),
+              RadioListTile(
+                value: ThemeMode.dark,
+                title: Text("Dark Mode"),
+              ),
+              RadioListTile(
+                value: ThemeMode.system,
+                title: Text("System Default"),
+              ),
+            ],
           ),
-          RadioListTile<ThemeMode>(
-            title: const Text("Dark Mode"),
-            value: ThemeMode.dark,
-            groupValue: _selectedMode,
-            onChanged: (ThemeMode? value) {
-              setState(() {
-                _selectedMode = value;
-                themeNotifier.value = value!;
-              });
-            },
-          ),
-          RadioListTile<ThemeMode>(
-            title: const Text("System Default"),
-            value: ThemeMode.system,
-            groupValue: _selectedMode,
-            onChanged: (ThemeMode? value) {
-              setState(() {
-                _selectedMode = value;
-                themeNotifier.value = value!;
-              });
-            },
-          ),
-        ],
       )
     );
   }

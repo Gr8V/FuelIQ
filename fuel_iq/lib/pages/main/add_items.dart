@@ -13,7 +13,7 @@ void showAddFoodDrawer(BuildContext context) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    backgroundColor: colorScheme.background,
+    backgroundColor: colorScheme.secondary,
     isScrollControlled: true,
     builder: (context) {
       return SizedBox(
@@ -25,7 +25,6 @@ void showAddFoodDrawer(BuildContext context) {
               width: 50,
               height: 5,
               decoration: BoxDecoration(
-                color: colorScheme.onBackground,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -37,6 +36,7 @@ void showAddFoodDrawer(BuildContext context) {
                 Card(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 3,
+                  color: colorScheme.surface,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -79,6 +79,7 @@ void showAddFoodDrawer(BuildContext context) {
                 Card(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 3,
+                  color: colorScheme.surface,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -128,6 +129,7 @@ void showAddFoodDrawer(BuildContext context) {
                     Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 3,
+                      color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
@@ -164,6 +166,7 @@ void showAddFoodDrawer(BuildContext context) {
                     Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 3,
+                      color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
