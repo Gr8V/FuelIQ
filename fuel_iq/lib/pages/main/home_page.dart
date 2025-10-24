@@ -179,8 +179,8 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(16),
                             ),
                             leading: CaloriesCircularChart(
-                              eaten: 100,
-                              goal: 200,
+                              eaten: waterDrunk,
+                              goal: 4.0,
                               size: 40,
                               backgroundArcColor: colorScheme.surface,
                               foregroundArcColor: colorScheme.primary,
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                               icon: Icons.water_drop,
                             ),
                             title: const Text('Water Intake'),
-                            subtitle: const Text('500 ml remaining'),
+                            subtitle:  Text('${4.0- waterDrunk}L remaining'),
                             onTap: () {
                               Navigator.push(
                             context,
