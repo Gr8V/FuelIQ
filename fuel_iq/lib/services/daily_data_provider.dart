@@ -9,10 +9,10 @@ class DailyDataProvider extends ChangeNotifier {
   /// Load data for today
   Future<void> loadDailyData(String date) async {
     _dailyData = await LocalStorageService.getDailyData(date);
-    notifyListeners(); // rebuild listeners
+    notifyListeners();
   }
 
-  /// Update today's data
+  /// Update today's totals (calories, protein, etc.)
   Future<void> updateDailyData(String date, Map<String, dynamic> newData) async {
     await LocalStorageService.saveDailyData(
       date: date,
@@ -25,6 +25,18 @@ class DailyDataProvider extends ChangeNotifier {
     );
 
     _dailyData = await LocalStorageService.getDailyData(date);
-    notifyListeners(); // rebuild listeners
+    notifyListeners();
+  }
+
+  /// Add a single food entry to today's foods list
+  Future<void> addFood(String date, Map<String, dynamic> foodEntry) async {
+    await LocalStorageService.saveDailyData(
+      date: date,
+      foodEntry: foodEntry,
+    );
+
+    _dailyData = await LocalStorageService.getDailyData(date);
+    notifyListeners();
   }
 }
+

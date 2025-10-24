@@ -1,19 +1,19 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class LocalStorageService {
   static const String _dailyDataKey = 'daily_data';
 
-  /// Save daily data for a given date
+  /// Save daily data totals AND optionally a food entry
   static Future<void> saveDailyData({
     required String date, // e.g. "2025-10-21"
-    required double calories,
-    required double protein,
-    required double carbs,
-    required double fats,
-    required double water,
-    required double weight,
+    double? calories,
+    double? protein,
+    double? carbs,
+    double? fats,
+    double? water,
+    double? weight,
+    Map<String, dynamic>? foodEntry, // optional new food
   }) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -22,17 +22,34 @@ class LocalStorageService {
     Map<String, dynamic> allData =
         existingData != null ? jsonDecode(existingData) : {};
 
-    // Update this date’s data
-    allData[date] = {
-      'calories': calories,
-      'protein': protein,
-      'carbs': carbs,
-      'fats': fats,
-      'water': water,
-      'weight': weight,
+    // Initialize the day's data if not present
+    Map<String, dynamic> dayData = allData[date] ?? {
+      'calories': 0.0,
+      'protein': 0.0,
+      'carbs': 0.0,
+      'fats': 0.0,
+      'water': 0.0,
+      'weight': 0.0,
+      'foods': [], // list of foods eaten
     };
 
-    // Save it back
+    // Update totals if provided
+    if (calories != null) dayData['calories'] = calories;
+    if (protein != null) dayData['protein'] = protein;
+    if (carbs != null) dayData['carbs'] = carbs;
+    if (fats != null) dayData['fats'] = fats;
+    if (water != null) dayData['water'] = water;
+    if (weight != null) dayData['weight'] = weight;
+
+    // Add new food if provided
+    if (foodEntry != null) {
+      List<dynamic> foods = dayData['foods'] ?? [];
+      foods.add(foodEntry);
+      dayData['foods'] = foods;
+    }
+
+    // Save back
+    allData[date] = dayData;
     await prefs.setString(_dailyDataKey, jsonEncode(allData));
   }
 
@@ -40,7 +57,6 @@ class LocalStorageService {
   static Future<Map<String, dynamic>?> getDailyData(String date) async {
     final prefs = await SharedPreferences.getInstance();
     final existingData = prefs.getString(_dailyDataKey);
-
     if (existingData == null) return null;
 
     final allData = jsonDecode(existingData);

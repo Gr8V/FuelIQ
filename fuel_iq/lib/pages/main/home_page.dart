@@ -45,6 +45,14 @@ class _HomePageState extends State<HomePage> {
     //data
     final dailyData = context.watch<DailyDataProvider>().dailyData;
     final caloriesEaten = (dailyData?['calories'] ?? 0).toDouble();
+    final proteinEaten = (dailyData?['protein'] ?? 0).toDouble();
+    final carbsEaten = (dailyData?['carbs'] ?? 0).toDouble();
+    final fatsEaten = (dailyData?['fats'] ?? 0).toDouble();
+    final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
+    final weightToday = (dailyData?['weight'] ?? 0).toDouble();
+
+    final foods = context.watch<DailyDataProvider>().dailyData?['foods'] ?? [];
+    
 
     return Scaffold(
       //app bar
@@ -111,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(16.0),
                           child: MacroTile(
                                 label: 'Protein',
-                                eaten: 10, 
+                                eaten: proteinEaten, 
                                 goal: 100,
                                 bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.proteinColor,
@@ -129,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(16.0),
                           child: MacroTile(
                                 label: 'Carbs',
-                                eaten: 10, 
+                                eaten: carbsEaten, 
                                 goal: 100,
                                 bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.carbsColor,
@@ -147,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(16.0),
                           child: MacroTile(
                                 label: 'Fats',
-                                eaten: 10, 
+                                eaten: fatsEaten, 
                                 goal: 100,
                                 bgColor: colorScheme.onSurface,
                                 fgColor: AppColors.fatColor,
@@ -209,9 +217,38 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   
+                ),
+
+                //food eaten
+                Card(
+                  color: colorScheme.surface,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 4 * 70.0, // approx height for 4 items, adjust as needed
+                      child: foods.isEmpty
+                          ? const Center(child: Text('No foods logged yet'))
+                          : ListView.builder(
+                              itemCount: foods.length,
+                              itemBuilder: (context, index) {
+                                final food = foods[index];
+                                return Card(
+                                  elevation: 3,
+                                  color: colorScheme.secondary,
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  child: ListTile(
+                                    title: Text(food['name']),
+                                    subtitle: Text(
+                                        'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}'),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
                 )
-              ],
-            ),
+          ],
+        ),
       )
     );
   }
