@@ -71,183 +71,185 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: colorScheme.primary,
         ),
       //body
-      body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                //calories eaten
-                Card(
-                  elevation: 3,
-                  color: colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Calories Eaten',
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *0.07,
-                                color: colorScheme.onSurface
+      body: SingleChildScrollView(
+        child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  //calories eaten
+                  Card(
+                    elevation: 3,
+                    color: colorScheme.surface,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Calories Eaten',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *0.07,
+                                  color: colorScheme.onSurface
+                                ),
                               ),
-                            ),
-                            CaloriesCircularChart(
-                              eaten: caloriesEaten,
-                              goal: 1800,
-                              size: 100,
-                              backgroundArcColor: theme.colorScheme.onSurface,
-                              foregroundArcColor: colorScheme.primary,
-                              centerTextColor: colorScheme.onSurface,
-                              strokeWidth: 10,
-                            )
-                          ],
+                              CaloriesCircularChart(
+                                eaten: caloriesEaten,
+                                goal: 1800,
+                                size: 100,
+                                backgroundArcColor: theme.colorScheme.onSurface,
+                                foregroundArcColor: colorScheme.primary,
+                                centerTextColor: colorScheme.onSurface,
+                                strokeWidth: 10,
+                              )
+                            ],
+                      ),
                     ),
                   ),
-                ),
-                //Macros
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //protein
-                    Expanded(
-                      child: Card(
-                        elevation: 3,
-                        color: theme.cardColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: MacroTile(
-                                label: 'Protein',
-                                eaten: proteinEaten, 
-                                goal: 100,
-                                bgColor: colorScheme.onSurface,
-                                fgColor: AppColors.proteinColor,
-                                centerTextColor: colorScheme.onSurface,
-                              ),
+                  //Macros
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      //protein
+                      Expanded(
+                        child: Card(
+                          elevation: 3,
+                          color: theme.cardColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: MacroTile(
+                                  label: 'Protein',
+                                  eaten: proteinEaten, 
+                                  goal: 100,
+                                  bgColor: colorScheme.onSurface,
+                                  fgColor: AppColors.proteinColor,
+                                  centerTextColor: colorScheme.onSurface,
+                                ),
+                          ),
                         ),
                       ),
-                    ),
-                    //carbs
-                    Expanded(
-                      child: Card(
-                        elevation: 3,
-                        color: theme.cardColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: MacroTile(
-                                label: 'Carbs',
-                                eaten: carbsEaten, 
-                                goal: 100,
-                                bgColor: colorScheme.onSurface,
-                                fgColor: AppColors.carbsColor,
-                                centerTextColor: colorScheme.onSurface,
-                              ),
+                      //carbs
+                      Expanded(
+                        child: Card(
+                          elevation: 3,
+                          color: theme.cardColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: MacroTile(
+                                  label: 'Carbs',
+                                  eaten: carbsEaten, 
+                                  goal: 100,
+                                  bgColor: colorScheme.onSurface,
+                                  fgColor: AppColors.carbsColor,
+                                  centerTextColor: colorScheme.onSurface,
+                                ),
+                          ),
                         ),
                       ),
-                    ),
-                    //fats
-                    Expanded(
-                      child: Card(
-                        elevation: 3,
-                        color: theme.cardColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: MacroTile(
-                                label: 'Fats',
-                                eaten: fatsEaten, 
-                                goal: 100,
-                                bgColor: colorScheme.onSurface,
-                                fgColor: AppColors.fatColor,
-                                centerTextColor: colorScheme.onSurface,
-                              ),
+                      //fats
+                      Expanded(
+                        child: Card(
+                          elevation: 3,
+                          color: theme.cardColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: MacroTile(
+                                  label: 'Fats',
+                                  eaten: fatsEaten, 
+                                  goal: 100,
+                                  bgColor: colorScheme.onSurface,
+                                  fgColor: AppColors.fatColor,
+                                  centerTextColor: colorScheme.onSurface,
+                                ),
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
-                //others
-                Card(
-                  color: theme.cardColor,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Card(
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  //others
+                  Card(
+                    color: theme.cardColor,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Card(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              ),
+                              leading: CaloriesCircularChart(
+                                eaten: waterDrunk,
+                                goal: 4.0,
+                                size: 40,
+                                backgroundArcColor: colorScheme.surface,
+                                foregroundArcColor: colorScheme.primary,
+                                centerTextColor: colorScheme.onSurface,
+                                strokeWidth: 2,
+                                icon: Icons.water_drop,
+                              ),
+                              title: const Text('Water Intake'),
+                              subtitle:  Text('${4.0- waterDrunk}L remaining'),
+                              onTap: () {
+                                Navigator.push(
+                              context,
+                              //transition and page builder
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    return SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(1.0, 0.0),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      child: FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                                  transitionDuration: const Duration(milliseconds: 150),
+                              )
+                            );
+                              },
+                            )
                             ),
-                            leading: CaloriesCircularChart(
-                              eaten: waterDrunk,
-                              goal: 4.0,
-                              size: 40,
-                              backgroundArcColor: colorScheme.surface,
-                              foregroundArcColor: colorScheme.primary,
-                              centerTextColor: colorScheme.onSurface,
-                              strokeWidth: 2,
-                              icon: Icons.water_drop,
-                            ),
-                            title: const Text('Water Intake'),
-                            subtitle:  Text('${4.0- waterDrunk}L remaining'),
-                            onTap: () {
-                              Navigator.push(
-                            context,
-                            //transition and page builder
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    child: FadeTransition(
-                                      opacity: animation,
-                                      child: child,
+                        ],
+                      ),
+                    
+                  ),
+        
+                  //food eaten
+                  Card(
+                    color: colorScheme.surface,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 4 * 70.0, // approx height for 4 items, adjust as needed
+                        child: foods.isEmpty
+                            ? const Center(child: Text('No foods logged yet'))
+                            : ListView.builder(
+                                itemCount: foods.length,
+                                itemBuilder: (context, index) {
+                                  final food = foods[index];
+                                  return Card(
+                                    elevation: 3,
+                                    color: colorScheme.secondary,
+                                    margin: const EdgeInsets.symmetric(vertical: 4),
+                                    child: ListTile(
+                                      title: Text(food['name']),
+                                      subtitle: Text(
+                                          'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}'),
                                     ),
                                   );
                                 },
-                                transitionDuration: const Duration(milliseconds: 150),
-                            )
-                          );
-                            },
-                          )
-                          ),
-                      ],
+                              ),
+                      ),
                     ),
-                  
-                ),
-
-                //food eaten
-                Card(
-                  color: colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 4 * 70.0, // approx height for 4 items, adjust as needed
-                      child: foods.isEmpty
-                          ? const Center(child: Text('No foods logged yet'))
-                          : ListView.builder(
-                              itemCount: foods.length,
-                              itemBuilder: (context, index) {
-                                final food = foods[index];
-                                return Card(
-                                  elevation: 3,
-                                  color: colorScheme.secondary,
-                                  margin: const EdgeInsets.symmetric(vertical: 4),
-                                  child: ListTile(
-                                    title: Text(food['name']),
-                                    subtitle: Text(
-                                        'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}'),
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  ),
-                )
-          ],
+                  )
+            ],
+          ),
         ),
       )
     );
