@@ -1,13 +1,20 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'dart:math';
+import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'package:fuel_iq/theme/colors.dart';
 
-String todaysDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+String getTodaysDate() {
+  final now = DateTime.now();
+  final year = now.year.toString();
+  final month = now.month.toString().padLeft(2, '0'); // 1 → 01
+  final day = now.day.toString().padLeft(2, '0');     // 7 → 07
+  return "$year-$month-$day";
+}
+String todaysDate = getTodaysDate();
 String appBarTitle = todaysDate;
-
 
 
 class HomePage extends StatefulWidget {
@@ -18,10 +25,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    // Load initial data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DailyDataProvider>(context, listen: false)
+          .loadDailyData(todaysDate);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    //theme
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    //data
+    final dailyData = context.watch<DailyDataProvider>().dailyData;
+    final caloriesEaten = (dailyData?['calories'] ?? 0).toDouble();
 
     return Scaffold(
       //app bar
@@ -63,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             CaloriesCircularChart(
-                              eaten: 60,
+                              eaten: caloriesEaten,
                               goal: 1800,
                               size: 100,
                               backgroundArcColor: theme.colorScheme.onSurface,

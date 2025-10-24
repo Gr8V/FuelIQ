@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
+import 'package:provider/provider.dart';
 //pages
-import 'package:fuel_iq/pages/main/home_page.dart';
-import 'package:fuel_iq/pages/main/details.dart';
-import 'package:fuel_iq/pages/main/settings.dart';
-import 'package:fuel_iq/pages/main/user_profile.dart';
+import 'pages/main/home_page.dart';
+import 'pages/main/details.dart';
+import 'pages/main/settings.dart';
+import 'pages/main/user_profile.dart';
+import 'services/daily_data_provider.dart';
 //theme
-import 'package:fuel_iq/globals/theme_controller.dart';
-import 'package:fuel_iq/theme/app_theme.dart';
+import 'globals/theme_controller.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const FuelIQApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => DailyDataProvider()),
+      ],
+      child: const FuelIQApp(),
+    ),
+  );
 }
 
 class FuelIQApp extends StatefulWidget {
