@@ -11,7 +11,11 @@ import 'services/daily_data_provider.dart';
 import 'globals/theme_controller.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await loadSavedTheme();
+  
   runApp(
     MultiProvider(
       providers: [

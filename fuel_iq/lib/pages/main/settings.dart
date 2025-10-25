@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
-import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -72,22 +70,17 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class ThemeSelectionPage extends StatefulWidget {
+class ThemeSelectionPage extends StatelessWidget {
   const ThemeSelectionPage({super.key});
-
-  @override
-  State<ThemeSelectionPage> createState() => _ThemeSelectionPageState();
-}
-
-class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    return Consumer<DailyDataProvider>(
-      builder: (context, provider, child) {
+    
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, currentTheme, child) {
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -104,24 +97,23 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
             backgroundColor: colorScheme.primary,
           ),
           body: RadioGroup<ThemeMode>(
-            groupValue: provider.themeMode,
+            groupValue: currentTheme,
             onChanged: (ThemeMode? value) {
               if (value != null) {
-                provider.setTheme(value);
-                themeNotifier.value = value;
+                setTheme(value);
               }
             },
             child: const Column(
               children: [
-                RadioListTile<ThemeMode>(
+                RadioListTile(
                   value: ThemeMode.light,
                   title: Text("Light Mode"),
                 ),
-                RadioListTile<ThemeMode>(
+                RadioListTile(
                   value: ThemeMode.dark,
                   title: Text("Dark Mode"),
                 ),
-                RadioListTile<ThemeMode>(
+                RadioListTile(
                   value: ThemeMode.system,
                   title: Text("System Default"),
                 ),
