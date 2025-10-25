@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
+import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -78,53 +80,56 @@ class ThemeSelectionPage extends StatefulWidget {
 }
 
 class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
-  ThemeMode? _selectedMode = themeNotifier.value;
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    return Scaffold(
-      //app bar
-      appBar: AppBar(
-        title:  Text(
-          "Settings",
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.25,
-            height: 1.3,
+
+    return Consumer<DailyDataProvider>(
+      builder: (context, provider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "Settings",
+              style: TextStyle(
+                color: colorScheme.onPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.25,
+                height: 1.3,
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: colorScheme.primary,
           ),
-        ),
-        centerTitle: true,
-        backgroundColor: colorScheme.primary,
-        ),
-      body: RadioGroup<ThemeMode>(
-          groupValue: _selectedMode,
-          onChanged: (ThemeMode? value) {
-            setState(() {
-              _selectedMode = value;
-              themeNotifier.value = value!;
-            });
-          },
-          child: const Column(
-            children: [
-              RadioListTile(
-                value: ThemeMode.light,
-                title: Text("Light Mode"),
-              ),
-              RadioListTile(
-                value: ThemeMode.dark,
-                title: Text("Dark Mode"),
-              ),
-              RadioListTile(
-                value: ThemeMode.system,
-                title: Text("System Default"),
-              ),
-            ],
+          body: RadioGroup<ThemeMode>(
+            groupValue: provider.themeMode,
+            onChanged: (ThemeMode? value) {
+              if (value != null) {
+                provider.setTheme(value);
+                themeNotifier.value = value;
+              }
+            },
+            child: const Column(
+              children: [
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.light,
+                  title: Text("Light Mode"),
+                ),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.dark,
+                  title: Text("Dark Mode"),
+                ),
+                RadioListTile<ThemeMode>(
+                  value: ThemeMode.system,
+                  title: Text("System Default"),
+                ),
+              ],
+            ),
           ),
-      )
+        );
+      },
     );
   }
 }

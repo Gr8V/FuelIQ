@@ -38,5 +38,34 @@ class DailyDataProvider extends ChangeNotifier {
     _dailyData = await LocalStorageService.getDailyData(date);
     notifyListeners();
   }
+
+  //-------------------- THEME FUNCTIONS --------------------
+
+  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode get themeMode => _themeMode;
+
+  /// Load saved theme
+  Future<void> loadTheme() async {
+    final savedTheme = await LocalStorageService.getThemeData();
+    _themeMode = savedTheme ?? ThemeMode.system;
+    notifyListeners();
+  }
+
+  /// Set and save theme
+  Future<void> setTheme(ThemeMode mode) async {
+    _themeMode = mode;
+    await LocalStorageService.saveThemeData(currentTheme: mode);
+    notifyListeners();
+  }
+
+  /// Toggle between light and dark mode
+  Future<void> toggleTheme() async {
+    if (_themeMode == ThemeMode.light) {
+      await setTheme(ThemeMode.dark);
+    } else {
+      await setTheme(ThemeMode.light);
+    }
+  }
+
 }
 
