@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/pages/main/home_page.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+  const DetailsPage({super.key});
 
   
 
@@ -10,6 +11,22 @@ class DetailsPage extends StatefulWidget {
 }
 class _DetailsPageState extends State<DetailsPage> {
   int _selectedDayIndex = 0;
+
+  DateTime? selectedDate;
+
+  Future<void> _pickDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(), // default to today
+      firstDate: DateTime(2000), // earliest date allowed
+      lastDate: DateTime(2100),  // latest date allowed
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() => selectedDate = picked);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,47 +46,24 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
         centerTitle: true,
         backgroundColor: colorScheme.primary,
-        ),
+    ),
       //body
-      body: Padding(
-        padding: const EdgeInsets.all(0), // remove extra padding if you want full width
+    body: Padding(
+      padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Row(
-              children: List.generate(7, (index) {
-                final isSelected = index == _selectedDayIndex;
-                return Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedDayIndex = index;
-                      });
-                    },
-                    splashColor: Colors.transparent, // optional: remove ripple effect
-                    highlightColor: Colors.transparent, // optional: remove highlight
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                            color: isSelected
-                                ? colorScheme.primary
-                                : colorScheme.surface,
-                            border: Border.all(
-                                color: isSelected
-                                    ? colorScheme.primary
-                                    : colorScheme.onSurface),
-                          ),
-                      child: Column(
-                        
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.date_range),
-                          Text('Day ${index + 1}'),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }),
+            Center(
+              child: ElevatedButton(
+                onPressed:() {
+                  _pickDate();
+                },
+                child: Text(
+                  selectedDate != null
+                      ? "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}"
+                      : todaysDate,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
             ),
             Divider(height: 1, color: colorScheme.onSurface),
             Expanded(
@@ -85,7 +79,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
  // Dummy pages for each day
   final List<Widget> _pages = List.generate(
-      7,
+      30,
       (index) => Center(
             child: DailyData(index: index,),
           ));

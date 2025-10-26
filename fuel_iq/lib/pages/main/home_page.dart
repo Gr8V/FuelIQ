@@ -11,7 +11,7 @@ String getTodaysDate() {
   final year = now.year.toString();
   final month = now.month.toString().padLeft(2, '0'); // 1 → 01
   final day = now.day.toString().padLeft(2, '0');     // 7 → 07
-  return "$year-$month-$day";
+  return "$day-$month-$year";
 }
 String todaysDate = getTodaysDate();
 String appBarTitle = todaysDate;
