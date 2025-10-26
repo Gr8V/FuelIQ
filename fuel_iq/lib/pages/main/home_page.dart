@@ -219,35 +219,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     
                   ),
-        
-                  //food eaten
-                  Card(
-                    color: colorScheme.surface,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 4 * 70.0, // approx height for 4 items, adjust as needed
-                        child: foods.isEmpty
-                            ? const Center(child: Text('No foods logged yet'))
-                            : ListView.builder(
-                                itemCount: foods.length,
-                                itemBuilder: (context, index) {
-                                  final food = foods[index];
-                                  return Card(
-                                    elevation: 3,
-                                    color: colorScheme.secondary,
-                                    margin: const EdgeInsets.symmetric(vertical: 4),
-                                    child: ListTile(
-                                      title: Text(food['name']),
-                                      subtitle: Text(
-                                          'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}'),
-                                    ),
-                                  );
-                                },
-                              ),
-                      ),
-                    ),
-                  )
             ],
           ),
         ),
