@@ -2,17 +2,30 @@ import 'package:flutter/material.dart';
 import 'local_storage.dart';
 
 class DailyDataProvider extends ChangeNotifier {
-  Map<String, dynamic>? _dailyData;
+  // Each date stores its own data safely
+  final Map<String, Map<String, dynamic>> _dataByDate = {};
 
-  Map<String, dynamic>? get dailyData => _dailyData;
+  Map<String, dynamic>? getDailyData(String date) => _dataByDate[date];
 
-  /// Load data for today
+  /// Load data for a specific date
   Future<void> loadDailyData(String date) async {
-    _dailyData = await LocalStorageService.getDailyData(date);
+    final data = await LocalStorageService.getDailyData(date);
+
+    // Fallback if null
+    _dataByDate[date] = data ?? {
+      'calories': 0.0,
+      'protein': 0.0,
+      'carbs': 0.0,
+      'fats': 0.0,
+      'water': 0.0,
+      'weight': 0.0,
+      'foods': [],
+    };
+
     notifyListeners();
   }
 
-  /// Update today's totals (calories, protein, etc.)
+  /// Update data for a specific date
   Future<void> updateDailyData(String date, Map<String, dynamic> newData) async {
     await LocalStorageService.saveDailyData(
       date: date,
@@ -24,20 +37,42 @@ class DailyDataProvider extends ChangeNotifier {
       weight: newData['weight'],
     );
 
-    _dailyData = await LocalStorageService.getDailyData(date);
+    final data = await LocalStorageService.getDailyData(date);
+
+    // Same fallback here
+    _dataByDate[date] = data ?? {
+      'calories': 0.0,
+      'protein': 0.0,
+      'carbs': 0.0,
+      'fats': 0.0,
+      'water': 0.0,
+      'weight': 0.0,
+      'foods': [],
+    };
+
     notifyListeners();
   }
 
-  /// Add a single food entry to today's foods list
+  /// Add a single food entry for a specific date
   Future<void> addFood(String date, Map<String, dynamic> foodEntry) async {
     await LocalStorageService.saveDailyData(
       date: date,
       foodEntry: foodEntry,
     );
 
-    _dailyData = await LocalStorageService.getDailyData(date);
+    final data = await LocalStorageService.getDailyData(date);
+
+    // Same fallback here too
+    _dataByDate[date] = data ?? {
+      'calories': 0.0,
+      'protein': 0.0,
+      'carbs': 0.0,
+      'fats': 0.0,
+      'water': 0.0,
+      'weight': 0.0,
+      'foods': [],
+    };
+
     notifyListeners();
   }
-  
 }
-

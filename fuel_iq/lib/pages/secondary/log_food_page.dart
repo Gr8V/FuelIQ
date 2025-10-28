@@ -113,8 +113,9 @@ class _LogFoodState extends State<LogFood> {
               ElevatedButton(
                 onPressed: () async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
+
                   //gets current calorie data
-                  final currentData = provider.dailyData ?? {
+                  final currentData = provider.getDailyData(todaysDate) ?? {
                     'calories': 0.0,
                     'protein': 0.0,
                     'carbs': 0.0,

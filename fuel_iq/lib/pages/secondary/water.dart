@@ -17,7 +17,7 @@ class _WaterPageState extends State<WaterPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final dailyData = context.watch<DailyDataProvider>().dailyData;
+    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
     final waterDrunk = dailyData?['water'] ?? 0.0; // in liters
     return Scaffold(
       //app bar
@@ -75,10 +75,10 @@ class _WaterPageState extends State<WaterPage> {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
 
                   // Get current water intake
-                  final currentWater = provider.dailyData?['water'] ?? 0.0;
+                  final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
 
                   // Update only water
-                  final updatedData = Map<String, dynamic>.from(provider.dailyData ?? {});
+                  final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
                   updatedData['water'] = currentWater + 0.25; // add 250 ml
 
                   await provider.updateDailyData(todaysDate, updatedData);

@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     final colorScheme = theme.colorScheme;
 
     //data
-    final dailyData = context.watch<DailyDataProvider>().dailyData;
+    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
     final caloriesEaten = (dailyData?['calories'] ?? 0).toDouble();
     final proteinEaten = (dailyData?['protein'] ?? 0).toDouble();
     final carbsEaten = (dailyData?['carbs'] ?? 0).toDouble();
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
     final weightToday = (dailyData?['weight'] ?? 0).toDouble();
 
-    final foods = context.watch<DailyDataProvider>().dailyData?['foods'] ?? [];
+    final foods = context.watch<DailyDataProvider>().getDailyData(todaysDate)?['foods'] ?? [];
     
 
     return Scaffold(
