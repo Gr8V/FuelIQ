@@ -55,6 +55,50 @@ class LocalStorageService {
     await prefs.setString(_dailyDataKey, jsonEncode(allData));
   }
 
+  static Future<void> deleteFood({
+  required String date,
+  required String foodName,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final existingData = prefs.getString(_dailyDataKey);
+    if (existingData == null) return;
+
+    final Map<String, dynamic> allData = jsonDecode(existingData);
+    if (allData[date] == null) return;
+
+    final Map<String, dynamic> dayData = Map<String, dynamic>.from(allData[date]);
+    final List<dynamic> foods = List.from(dayData['foods'] ?? []);
+
+    // Find the food to delete
+    int deleteIndex = foods.indexWhere((food) {
+      final storedName = (food['name'] ?? food['foodName'] ?? '').toString().trim().toLowerCase();
+      return storedName == foodName.trim().toLowerCase();
+    });
+
+    if (deleteIndex == -1) return; // not found
+
+    // --- Subtract deleted food’s macros ---
+    final food = Map<String, dynamic>.from(foods[deleteIndex]);
+    double toDouble(v) =>
+        v is num ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0;
+
+    dayData['calories'] = (toDouble(dayData['calories']) - toDouble(food['calories'])).clamp(0.0, double.infinity);
+    dayData['protein']  = (toDouble(dayData['protein'])  - toDouble(food['protein'])).clamp(0.0, double.infinity);
+    dayData['carbs']    = (toDouble(dayData['carbs'])    - toDouble(food['carbs'])).clamp(0.0, double.infinity);
+    dayData['fats']     = (toDouble(dayData['fats'])     - toDouble(food['fats'])).clamp(0.0, double.infinity);
+
+    // --- Remove the food ---
+    foods.removeAt(deleteIndex);
+    dayData['foods'] = foods;
+
+    // Save updated day data
+    allData[date] = dayData;
+    await prefs.setString(_dailyDataKey, jsonEncode(allData));
+  }
+
+
+
+
   /// Get data for a specific date
   static Future<Map<String, dynamic>?> getDailyData(String date) async {
     final prefs = await SharedPreferences.getInstance();

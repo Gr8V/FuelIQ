@@ -436,6 +436,46 @@ class _FoodViewState extends State<FoodView> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        backgroundColor: Colors.redAccent,
+        child: const Icon(Icons.delete, color: Colors.white),
+        onPressed: () async {
+          // ✅ Confirm deletion
+          final confirm = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Delete Food'),
+              content: Text('Are you sure you want to delete "$widget.foodName"?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
+          );
+
+          if (confirm == true) {
+            final provider = Provider.of<DailyDataProvider>(context, listen: false);
+
+            // ✅ Delete the specific food
+            await provider.deleteFood(widget.dateOfFood, widget.foodName);
+
+            if (context.mounted) {
+              Navigator.pop(context); // Go back after deletion
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$widget.foodName deleted successfully')),
+              );
+            }
+          }
+        },
+      )
+
     );
   }
 }

@@ -75,4 +75,27 @@ class DailyDataProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  //DELETE a food entry by name for a given date
+  Future<void> deleteFood(String date, String foodName) async {
+    await LocalStorageService.deleteFood(date: date, foodName: foodName);
+
+    // 🔧 reload and update the specific date's data in _dataByDate
+    final updatedData = await LocalStorageService.getDailyData(date);
+
+    _dataByDate[date] = updatedData ?? {
+      'calories': 0.0,
+      'protein': 0.0,
+      'carbs': 0.0,
+      'fats': 0.0,
+      'water': 0.0,
+      'weight': 0.0,
+      'foods': [],
+    };
+
+    notifyListeners(); // 🔔 refresh the UI
+  }
+
+
+
 }
