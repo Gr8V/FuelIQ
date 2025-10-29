@@ -267,57 +267,57 @@ class _DailyDataState extends State<DailyData> {
               ),
               const SizedBox(height: 20),
               foods.isEmpty
-                  ? const Center(child: Text('No foods logged yet'))
-                  : ListView.builder(
-                      shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                      physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                      itemCount: foods.length,
-                      itemBuilder: (context, index) {
-                        final food = foods[index];
-                        return Card(
-                          elevation: 3,
-                          color: colorScheme.secondary,
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          child: ListTile(
-                            tileColor: colorScheme.surface,
-                            title: Text(food['name']),
-                            subtitle: Text(
-                              'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}',
+              ? const Center(child: Text('No foods logged yet'))
+              : ListView.builder(
+                shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  final food = foods[index];
+                  return Card(
+                    elevation: 3,
+                    color: colorScheme.secondary,
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    child: ListTile(
+                      tileColor: colorScheme.surface,
+                      title: Text(food['name']),
+                      subtitle: Text(
+                        'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}',
+                      ),
+                      onTap:() {
+                        Navigator.push(
+                          context,
+                          //transition and page builder
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => FoodView(
+                              foodName: food['name'],
+                              quantity: food['quantity'],
+                              calories: food['calories'],
+                              protein: food['protein'],
+                              carbs:  food['carbs'],
+                              fats: food['fats'],
+                              dateOfFood: widget.dateSelected,
                             ),
-                            onTap:() {
-                              Navigator.push(
-                                context,
-                                //transition and page builder
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => FoodView(
-                                    foodName: food['name'],
-                                    quantity: food['quantity'],
-                                    calories: food['calories'],
-                                    protein: food['protein'],
-                                    carbs:  food['carbs'],
-                                    fats: food['fats'],
-                                    dateOfFood: widget.dateSelected,
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(1.0, 0.0),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: FadeTransition(
+                                    opacity: animation,
+                                    child: child,
                                   ),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      return SlideTransition(
-                                        position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0),
-                                          end: Offset.zero,
-                                        ).animate(animation),
-                                        child: FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                                    transitionDuration: const Duration(milliseconds: 150),
-                                )
-                              );
-                            },
-                          ),
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 150),
+                          )
                         );
                       },
                     ),
+                  );
+                },
+              ),
             ],
           ),
         ),
