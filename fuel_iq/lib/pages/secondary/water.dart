@@ -70,29 +70,62 @@ class _WaterPageState extends State<WaterPage> {
                   ),
               ),
               const SizedBox(height: 100,),
-              ElevatedButton(
-                onPressed:() async{
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(), // square edges
+                        padding: EdgeInsets.zero, // removes internal spacing
+                        minimumSize: const Size(double.infinity, 60), // adjust height if needed
+                      ),
+                      onPressed: () async {
+                        final provider = Provider.of<DailyDataProvider>(context, listen: false);
 
-                  // Get current water intake
-                  final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
+                        // Get current water intake
+                        final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
 
-                  // Update only water
-                  final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
-                  updatedData['water'] = currentWater + 0.25; // add 250 ml
+                        // Update only water
+                        final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
+                        updatedData['water'] = currentWater + 0.25; // add 250 ml
 
-                  await provider.updateDailyData(todaysDate, updatedData);
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Icon(Icons.water_drop),
-                      Text('Add 250ml Water')
-                    ],
+                        await provider.updateDailyData(todaysDate, updatedData);
+                      },
+                      child: const Text('Add 250ml'),
+                    ),
                   ),
-                )
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(), // square edges
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(double.infinity, 60),
+                      ),
+                      onPressed: () async {
+                        final provider = Provider.of<DailyDataProvider>(context, listen: false);
+
+                        // Get current water intake
+                        final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
+                        final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
+
+                        if (currentWater > 0) {
+                          // Update only water
+                          updatedData['water'] = currentWater - 0.25; // add 250 ml
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('You Have Not Drank Water Today.')),
+                          );
+                        }
+
+                        await provider.updateDailyData(todaysDate, updatedData);
+                      },
+                      child: const Text('Remove 250ml'),
+                    ),
+                  ),
+                ],
               )
+
             ],
           ),
         ),
