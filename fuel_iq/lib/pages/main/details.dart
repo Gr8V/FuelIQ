@@ -3,7 +3,6 @@ import 'package:fuel_iq/pages/main/home_page.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
@@ -26,7 +25,15 @@ class _DetailsPageState extends State<DetailsPage> {
     );
 
     if (picked != null && picked != selectedDate) {
-      setState(() => selectedDate = picked);
+      setState(() {
+        // Check if picked date is today
+        final pickedStr = "${picked.day}-${picked.month}-${picked.year}";
+        if (pickedStr == todaysDate) {
+          selectedDate = null; // Keep null for today
+        } else {
+          selectedDate = picked;
+        }
+      });
     }
   }
 

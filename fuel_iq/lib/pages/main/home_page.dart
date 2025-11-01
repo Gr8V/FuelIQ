@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
+import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'dart:math';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,8 @@ import 'package:fuel_iq/theme/colors.dart';
 String getTodaysDate() {
   final now = DateTime.now();
   final year = now.year.toString();
-  final month = now.month.toString().padLeft(2, '0'); // 1 → 01
-  final day = now.day.toString().padLeft(2, '0');     // 7 → 07
+  final month = now.month.toString();
+  final day = now.day.toString();
   return "$day-$month-$year";
 }
 String todaysDate = getTodaysDate();
@@ -220,6 +221,41 @@ class _HomePageState extends State<HomePage> {
                   },
                 )
               ),
+              //weight
+              Card(
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  leading: Icon(Icons.monitor_weight_outlined, size: 40, color: colorScheme.primary,), // Icon instead of chart
+                  title: const Text('Weight'),
+                  subtitle: Text('${weightToday.toStringAsFixed(1)} kg'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      //transition and page builder
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(1.0, 0.0),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 150),
+                      )
+                    );
+                  },
+                )
+              ),
+
+              //food eaten
               const SizedBox(height: 20),
               Center(child: Text(
                 'Todays Food',
