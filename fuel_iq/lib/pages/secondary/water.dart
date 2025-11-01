@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/constants.dart';
 import 'package:fuel_iq/pages/main/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
@@ -58,7 +59,7 @@ class _WaterPageState extends State<WaterPage> {
                         ),
                         CaloriesCircularChart(
                               eaten: waterDrunk,
-                              goal: 4,
+                              goal: waterTarget,
                               size: 100,
                               backgroundArcColor: theme.colorScheme.onSurface,
                               foregroundArcColor: colorScheme.primary,

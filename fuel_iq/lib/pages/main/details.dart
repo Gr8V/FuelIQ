@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/constants.dart';
 import 'package:fuel_iq/pages/main/home_page.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/theme/colors.dart';
@@ -162,7 +163,7 @@ class _DailyDataState extends State<DailyData> {
                           ),
                           CaloriesCircularChart(
                             eaten: caloriesEaten,
-                            goal: 1800,
+                            goal: caloriesTarget,
                             size: 100,
                             backgroundArcColor: theme.colorScheme.onSurface,
                             foregroundArcColor: colorScheme.primary,
@@ -187,7 +188,7 @@ class _DailyDataState extends State<DailyData> {
                         child: MacroTile(
                               label: 'Protein',
                               eaten: proteinEaten, 
-                              goal: 100,
+                              goal: proteinTarget,
                               bgColor: colorScheme.onSurface,
                               fgColor: AppColors.proteinColor,
                               centerTextColor: colorScheme.onSurface,
@@ -205,7 +206,7 @@ class _DailyDataState extends State<DailyData> {
                         child: MacroTile(
                               label: 'Carbs',
                               eaten: carbsEaten, 
-                              goal: 100,
+                              goal: carbsTarget,
                               bgColor: colorScheme.onSurface,
                               fgColor: AppColors.carbsColor,
                               centerTextColor: colorScheme.onSurface,
@@ -223,7 +224,7 @@ class _DailyDataState extends State<DailyData> {
                         child: MacroTile(
                               label: 'Fats',
                               eaten: fatsEaten, 
-                              goal: 100,
+                              goal: fatsTarget,
                               bgColor: colorScheme.onSurface,
                               fgColor: AppColors.fatColor,
                               centerTextColor: colorScheme.onSurface,
@@ -246,7 +247,7 @@ class _DailyDataState extends State<DailyData> {
                         child: MacroTile(
                               label: 'Water',
                               eaten: waterDrunk, 
-                              goal: 4,
+                              goal: waterTarget,
                               bgColor: colorScheme.onSurface,
                               fgColor: AppColors.darkTertiary,
                               centerTextColor: colorScheme.onSurface,

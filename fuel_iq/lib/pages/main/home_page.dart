@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/constants.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
@@ -8,15 +9,6 @@ import 'package:provider/provider.dart';
 
 import 'package:fuel_iq/theme/colors.dart';
 
-String getTodaysDate() {
-  final now = DateTime.now();
-  final year = now.year.toString();
-  final month = now.month.toString();
-  final day = now.day.toString();
-  return "$day-$month-$year";
-}
-String todaysDate = getTodaysDate();
-String appBarTitle = todaysDate;
 
 
 class HomePage extends StatefulWidget {
@@ -104,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             CaloriesCircularChart(
                               eaten: caloriesEaten,
-                              goal: 1800,
+                              goal: caloriesTarget,
                               size: 100,
                               backgroundArcColor: theme.colorScheme.onSurface,
                               foregroundArcColor: colorScheme.primary,
@@ -129,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                               child: MacroTile(
                                     label: 'Protein',
                                     eaten: proteinEaten, 
-                                    goal: 100,
+                                    goal: proteinTarget,
                                     bgColor: colorScheme.onSurface,
                                     fgColor: AppColors.proteinColor,
                                     centerTextColor: colorScheme.onSurface,
@@ -147,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                               child: MacroTile(
                                     label: 'Carbs',
                                     eaten: carbsEaten, 
-                                    goal: 100,
+                                    goal: carbsTarget,
                                     bgColor: colorScheme.onSurface,
                                     fgColor: AppColors.carbsColor,
                                     centerTextColor: colorScheme.onSurface,
@@ -165,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                               child: MacroTile(
                                     label: 'Fats',
                                     eaten: fatsEaten, 
-                                    goal: 100,
+                                    goal: fatsTarget,
                                     bgColor: colorScheme.onSurface,
                                     fgColor: AppColors.fatColor,
                                     centerTextColor: colorScheme.onSurface,
@@ -187,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   leading: CaloriesCircularChart(
                     eaten: waterDrunk,
-                    goal: 4.0,
+                    goal: waterTarget,
                     size: 40,
                     backgroundArcColor: colorScheme.surface,
                     foregroundArcColor: colorScheme.primary,
@@ -196,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.water_drop,
                   ),
                   title: const Text('Water Intake'),
-                  subtitle:  Text('${4.0- waterDrunk}L remaining'),
+                  subtitle:  Text('${waterTarget- waterDrunk}L remaining'),
                   onTap: () {
                     Navigator.push(
                       context,
