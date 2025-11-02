@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
 import 'package:provider/provider.dart';
 //pages
@@ -15,6 +16,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await loadSavedTheme();
+
+  // Initialize provider
+  final dataProvider = DailyDataProvider();
+  
+  // Load last targets (or use defaults)
+  final lastTargets = await dataProvider.getLastTargets();
+  
+  // Set global targets
+  caloriesTarget = lastTargets?['calorieTarget'] ?? defaultCaloriesTarget;
+  proteinTarget = lastTargets?['proteinTarget'] ?? defaultProteinTarget;
+  carbsTarget = lastTargets?['carbsTarget'] ?? defaultCarbsTarget;
+  fatsTarget = lastTargets?['fatsTarget'] ?? defaultFatsTarget;
+  waterTarget = lastTargets?['waterTarget'] ?? defaultWaterTarget;
   
   runApp(
     MultiProvider(

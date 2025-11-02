@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/globals/user_data.dart';
+import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -183,13 +185,13 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
       ),
       body: ListView(
         children: [
-          //calories target setter
+          // Calorie Target
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Calories Target',
+                  'Calorie Target',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
@@ -204,15 +206,18 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
             onTap: () {
               showEditTargetDialog(
                 context: context,
-                title: 'Calories Target',
+                title: 'Calorie Target',
                 initialValue: caloriesTarget,
-                onSave: (newValue) {
+                onSave: (newValue) async {
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
                   setState(() => caloriesTarget = newValue);
+                  await provider.updateSingleTarget(getTodaysDate(), 'calorieTarget', newValue);
                 },
               );
             },
           ),
-          //protein target setter
+
+          // Protein Target
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,13 +240,16 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 context: context,
                 title: 'Protein Target',
                 initialValue: proteinTarget,
-                onSave: (newValue) {
+                onSave: (newValue) async {
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
                   setState(() => proteinTarget = newValue);
+                  await provider.updateSingleTarget(getTodaysDate(), 'proteinTarget', newValue);
                 },
               );
             },
           ),
-          //carbs target setter
+
+          // Carbs Target
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,13 +272,16 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 context: context,
                 title: 'Carbs Target',
                 initialValue: carbsTarget,
-                onSave: (newValue) {
+                onSave: (newValue) async {
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
                   setState(() => carbsTarget = newValue);
+                  await provider.updateSingleTarget(getTodaysDate(), 'carbsTarget', newValue);
                 },
               );
             },
           ),
-          //fats target setter
+
+          // Fats Target
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,13 +304,14 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 context: context,
                 title: 'Fats Target',
                 initialValue: fatsTarget,
-                onSave: (newValue) {
+                onSave: (newValue) async {
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
                   setState(() => fatsTarget = newValue);
+                  await provider.updateSingleTarget(getTodaysDate(), 'fatsTarget', newValue);
                 },
               );
             },
           ),
-          //water target setter
           ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -322,8 +334,14 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 context: context,
                 title: 'Water Target',
                 initialValue: waterTarget,
-                onSave: (newValue) {
+                onSave: (newValue) async {
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
                   setState(() => waterTarget = newValue);
+                  await provider.updateSingleTarget(
+                    getTodaysDate(), 
+                    'waterTarget', 
+                    newValue,
+                  );
                 },
               );
             },

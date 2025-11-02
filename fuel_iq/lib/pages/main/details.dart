@@ -87,6 +87,7 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             Expanded(
               child: DailyData(
+                showAppBar: false,
                 key: ValueKey(selectedDate),
                 dateSelected: selectedDate != null
                       ? "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}"
@@ -103,9 +104,10 @@ class _DetailsPageState extends State<DetailsPage> {
 
 class DailyData extends StatefulWidget {
   final String dateSelected;
+  final bool showAppBar;
 
 
-  const DailyData({super.key, required this.dateSelected});
+  const DailyData({super.key, required this.dateSelected, required this.showAppBar});
   
   @override
   State<DailyData> createState() => _DailyDataState();
@@ -139,6 +141,20 @@ class _DailyDataState extends State<DailyData> {
     final foods = context.watch<DailyDataProvider>().getDailyData(widget.dateSelected)?['foods'] ?? [];
 
     return Scaffold(
+      appBar: widget.showAppBar ? AppBar(
+        title:  Text(
+            "Today's Data",
+            style: TextStyle(
+              color: colorScheme.onPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.25,
+              height: 1.3,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: colorScheme.primary,
+      ) : null,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
