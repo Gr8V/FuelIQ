@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
-import 'package:fuel_iq/globals/constants.dart';
+import 'package:fuel_iq/globals/user_data.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -334,6 +334,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
   }
 }
 
+// TODO : the change in targets is not saved as targets are not stored using 
+// shared prefrences.
 Future<void> showEditTargetDialog({
   required BuildContext context,
   required String title,

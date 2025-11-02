@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/globals/constants.dart';
+import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
