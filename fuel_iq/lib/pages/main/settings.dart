@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/services/local_storage.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -68,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.flag),
-              title: const Text('Target'),
+              title: const Text('Targets'),
               subtitle: const Text('Set Targets (Calories, Macros, Water)'),
               onTap: () {
                 Navigator.push(
@@ -92,8 +93,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   )
                 );
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.flag),
+              
+              title: const Text('Erase All Data'),
+              subtitle: const Text(''),
+              onTap: () {
+                showEraseDataDialog(context: context);
+              },
+              
             )
-        ],
+          ],
         ),
       ),
     );
@@ -352,8 +363,6 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
   }
 }
 
-// TODO : the change in targets is not saved as targets are not stored using 
-// shared prefrences.
 Future<void> showEditTargetDialog({
   required BuildContext context,
   required String title,
@@ -395,3 +404,106 @@ Future<void> showEditTargetDialog({
     },
   );
 }
+
+
+Future<void> showEraseDataDialog({
+  required BuildContext context,
+}) async {
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: const Icon(
+                Icons.warning_rounded,
+                color: Colors.red,
+                size: 28,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Delete All Data',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[700],
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final provider = Provider.of<DailyDataProvider>(
+                context,
+                listen: false,
+              );
+              await provider.clearAllData();
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text('All data cleared successfully'),
+                      ],
+                    ),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 0,
+            ),
+            child: const Text(
+              'Delete All',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+      );
+    },
+  );
+}
+
+

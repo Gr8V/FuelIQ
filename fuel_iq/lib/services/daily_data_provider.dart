@@ -285,6 +285,19 @@ class DailyDataProvider extends ChangeNotifier {
     await _reloadDateData(normalizedDate);
   }
 
+
+  Future<void> clearAllData() async {
+    // Clear storage
+    await LocalStorageService.clearAllData();
+    
+    // Clear cache
+    _cache.clear();
+    
+    // Notify all listeners to update UI
+    notifyListeners();
+  }
+
+
   // ============================================================================
   // PRIVATE HELPER METHODS
   // ============================================================================
