@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
-import 'package:fuel_iq/services/local_storage.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {

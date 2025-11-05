@@ -8,11 +8,11 @@ void showAddFoodDrawer(BuildContext context) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
   showModalBottomSheet(
-    
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
+    
     backgroundColor: colorScheme.secondary,
     isScrollControlled: true,
     builder: (context) {
@@ -77,47 +77,64 @@ void showAddFoodDrawer(BuildContext context) {
                 ),
                 //Scan Barcode
                 Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 3,
-                  color: colorScheme.surface,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        //transition and page builder
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => const ScanBarcode(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).animate(animation),
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              );
-                            },
-                            transitionDuration: const Duration(milliseconds: 150),
-                        )
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: const SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.qr_code_scanner, size: 32),
-                          SizedBox(height: 8),
-                          Text('Scan', textAlign: TextAlign.center),
-                        ],
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 3,
+                color: colorScheme.surface,
+                child: InkWell(
+                  onTap: () async {
+
+                  // Use root navigator for the next push
+                  final code = await Navigator.of(context, rootNavigator: true).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => const ScanBarcode(),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: FadeTransition(opacity: animation, child: child),
+                        );
+                      },
+                      transitionDuration: const Duration(milliseconds: 150),
+                    ),
+                  );
+
+                  if (code != null && code is String) {
+                    Navigator.of(context, rootNavigator: true).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            BarcodeResultPage(code: code),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: FadeTransition(opacity: animation, child: child),
+                          );
+                        },
+                        transitionDuration: const Duration(milliseconds: 150),
                       ),
+                    );
+                  }
+                },
+                
+                  borderRadius: BorderRadius.circular(12),
+                  child: const SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.qr_code_scanner, size: 32),
+                        SizedBox(height: 8),
+                        Text('Scan', textAlign: TextAlign.center),
+                      ],
                     ),
                   ),
                 ),
+              ),
               ],
             ),
             const SizedBox( height: 12),
