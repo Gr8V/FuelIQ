@@ -104,7 +104,7 @@ void showAddFoodDrawer(BuildContext context) {
                     Navigator.of(context, rootNavigator: true).push(
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            BarcodeResultPage(code: code),
+                            BarcodeResultPage(barcode: code),
                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
                             position: Tween<Offset>(

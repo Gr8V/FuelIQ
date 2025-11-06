@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/user_data.dart';
+import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:fuel_iq/services/api_services.dart';
+import 'package:provider/provider.dart';
 
 class ScanBarcode extends StatefulWidget {
   const ScanBarcode({super.key});
@@ -135,28 +139,6 @@ class _ScanBarcodeState extends State<ScanBarcode> {
               ],
             ),
           ),
-
-          // Optional rescan button (visible after a scan)
-          if (isScanned)
-            Positioned(
-              bottom: 40,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 20),
-                ),
-                onPressed: () {
-                  setState(() => isScanned = false);
-                  cameraController.start();
-                },
-                icon: const Icon(Icons.refresh, color: Colors.white),
-                label: const Text(
-                  'Rescan',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -164,22 +146,237 @@ class _ScanBarcodeState extends State<ScanBarcode> {
 }
 
 
-class BarcodeResultPage extends StatelessWidget {
-  final String code;
+class BarcodeResultPage extends StatefulWidget {
+  final String barcode;
 
-  const BarcodeResultPage({super.key, required this.code});
+  const BarcodeResultPage({super.key, required this.barcode});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Scanned Result")),
-      body: Center(
-        child: Text(
-          "Scanned Barcode:\n$code",
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
+  State<BarcodeResultPage> createState() => _BarcodeResultPageState();
+}
+
+class _BarcodeResultPageState extends State<BarcodeResultPage> {
+  final _fooService = OpenFoodFactsService();
+  ProductInfo? _productInfo;
+  bool _isloading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProduct();
   }
+
+  Future<void> _loadProduct() async {
+    setState(() {
+      _isloading = true;
+      _error = null;
+    });
+
+    try {
+      final product = await _fooService.getProductByBarcode(widget.barcode);
+
+      if (product != null) {
+        setState(() {
+          _productInfo = _fooService.parseProductInfo(product);
+          _isloading = false;
+        });
+      } else {
+        setState(() {
+          _error = 'Product not Found';
+          _isloading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Error loading product : $e';
+        _isloading = false;
+      });
+    }
+  }
+
+
+  @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text("Scanned Result")),
+    body: _isloading
+      ? const Center(child: CircularProgressIndicator())
+      : _error != null
+        ? Center(child: Text(_error!))
+        : _productInfo == null
+          ? const Center(child: Text("No product info available"))
+          : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Builder(
+              builder: (context) {
+                // ✅ Safe to access here
+                final String foodName = _productInfo!.productName;
+                final String quantity = "100";
+                final double? calories = _productInfo!.energyKcal;
+                final double? protein = _productInfo!.proteins;
+                final double? carbs = _productInfo!.carbohydrates;
+                final double? fats = _productInfo!.fat;
+
+                final foodNameController = TextEditingController(text: foodName);
+                final quantityController = TextEditingController(text: quantity);
+                final caloriesController = TextEditingController(text: calories.toString());
+                final proteinController = TextEditingController(text: protein.toString());
+                final carbsController = TextEditingController(text: carbs.toString());
+                final fatsController = TextEditingController(text: fats.toString());
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Food Name
+                    TextField(
+                      controller: foodNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Food Name',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+              
+                    // Quantity (grams/ml)
+                    TextField(
+                      controller: quantityController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Quantity (g/ml)',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+              
+                    // Calories
+                    TextField(
+                      controller: caloriesController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Calories',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+              
+                    // Protein
+                    TextField(
+                      controller: proteinController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Protein (g)',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+              
+                    // Carbs
+                    TextField(
+                      controller: carbsController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Carbs (g)',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+              
+                    // Fats
+                    TextField(
+                      controller: fatsController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Fats (g)',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+              
+                    // Save Button
+                    ElevatedButton(
+                      onPressed: () async {
+                        final provider = Provider.of<DailyDataProvider>(context, listen: false);
+
+                        //gets current calorie data
+                        final currentData = provider.getDailyData(todaysDate) ?? {
+                          'calories': 0.0,
+                          'protein': 0.0,
+                          'carbs': 0.0,
+                          'fats': 0.0,
+                          'water': 0.0,
+                          'weight': 0.0,
+                        };
+                        final String foodName = foodNameController.text.trim();
+                        final double? calories = double.tryParse(caloriesController.text.trim());
+              
+                        // Only add if name and calories are valid
+                        if (foodName.isNotEmpty && calories != null) {
+                          final foodEntry = {
+                            'name': foodName,
+                            'quantity': double.tryParse(quantityController.text.trim()) ?? 0,
+                            'calories': calories,
+                            'protein': double.tryParse(proteinController.text.trim()) ?? 0,
+                            'carbs': double.tryParse(carbsController.text.trim()) ?? 0,
+                            'fats': double.tryParse(fatsController.text.trim()) ?? 0,
+                          };
+                        // Sum the totals
+                        final updatedData = {
+                          'calories': (currentData['calories'] ?? 0.0) + foodEntry['calories'],
+                          'protein': (currentData['protein'] ?? 0.0) + foodEntry['protein'],
+                          'carbs': (currentData['carbs'] ?? 0.0) + foodEntry['carbs'],
+                          'fats': (currentData['fats'] ?? 0.0) + foodEntry['fats'],
+                          'water': currentData['water'],
+                          'weight': currentData['weight'],
+                        };
+              
+              
+                          await provider.addFood(todaysDate, foodEntry);
+                          await provider.updateDailyData(todaysDate, updatedData);
+              
+                          // Optional: clear fields after adding
+                          foodNameController.clear();
+                          quantityController.clear();
+                          caloriesController.clear();
+                          proteinController.clear();
+                          carbsController.clear();
+                          fatsController.clear();
+              
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Food added successfully!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please enter a valid food name and calories')),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Add Food',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(fontSize: 18, color: Colors.red),
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          ),
+  );
+}
+
 }
