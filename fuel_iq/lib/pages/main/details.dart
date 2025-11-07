@@ -207,7 +207,7 @@ class _DailyDataState extends State<DailyData> {
                             MacroTile(
                               eaten: caloriesEaten,
                               goal: caloriesTarget,
-                              size: 140,
+                              size: 80,
                               bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                               fgColor: colorScheme.onSurface,
                               icon: FontAwesomeIcons.fireFlameCurved,
@@ -643,6 +643,8 @@ class _FoodViewState extends State<FoodView> {
 }
 
 
+
+
 class FoodCard extends StatelessWidget {
   final Map<String, dynamic> food;
   final String todaysDate;
@@ -680,7 +682,8 @@ class FoodCard extends StatelessWidget {
                 fats: food['fats'],
                 dateOfFood: todaysDate,
               ),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return SlideTransition(
                   position: Tween<Offset>(
                     begin: const Offset(1.0, 0.0),
@@ -698,22 +701,12 @@ class FoodCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🍴 Food Icon Circle
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: colorScheme.secondary.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.restaurant_menu_rounded, size: 26),
-              ),
-              const SizedBox(width: 14),
-
               // 🧾 Text info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Food name (handles long names)
                     Text(
                       food['name'],
                       style: TextStyle(
@@ -721,67 +714,100 @@ class FoodCard extends StatelessWidget {
                         fontSize: 16,
                         color: colorScheme.onSurface,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+
                     const SizedBox(height: 4),
+
+                    // Quantity + Calories
                     Row(
                       children: [
                         Icon(Icons.scale_rounded,
-                            size: 16, color: colorScheme.onSurface.withValues(alpha: 0.6)),
+                            size: 16,
+                            color: colorScheme.onSurface.withValues(alpha: 0.6)),
                         const SizedBox(width: 4),
-                        Text(
-                          '${food['quantity']}g',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withValues(alpha: 0.7),
-                            fontSize: 13,
+                        Flexible(
+                          child: Text(
+                            '${food['quantity']}g',
+                            style: TextStyle(
+                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Icon(Icons.local_fire_department_rounded,
                             size: 16, color: colorScheme.onSurface),
                         const SizedBox(width: 4),
-                        Text(
-                          '${food['calories']} kcal',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withValues(alpha: 0.7),
-                            fontSize: 13,
+                        Flexible(
+                          child: Text(
+                            '${food['calories']} kcal',
+                            style: TextStyle(
+                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 6),
-                    Row(
+
+                    // ⚡ Macros Row (responsive Wrap)
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 4,
                       children: [
-                        Icon(Icons.fitness_center_rounded,
-                            size: 16, color: AppColors.proteinColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          'P: ${food['protein']}g',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withValues(alpha: 0.8),
-                            fontSize: 12.5,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.fitness_center_rounded,
+                                size: 16, color: AppColors.proteinColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              'P: ${food['protein']}g',
+                              style: TextStyle(
+                                color:
+                                    colorScheme.onSurface.withValues(alpha: 0.8),
+                                fontSize: 12.5,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Icon(Icons.breakfast_dining_rounded,
-                            size: 16, color: AppColors.carbsColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          'C: ${food['carbs']}g',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withValues(alpha: 0.8),
-                            fontSize: 12.5,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.breakfast_dining_rounded,
+                                size: 16, color: AppColors.carbsColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              'C: ${food['carbs']}g',
+                              style: TextStyle(
+                                color:
+                                    colorScheme.onSurface.withValues(alpha: 0.8),
+                                fontSize: 12.5,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Icon(Icons.water_drop_rounded,
-                            size: 16, color: AppColors.fatColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          'F: ${food['fats']}g',
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withValues(alpha: 0.8),
-                            fontSize: 12.5,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.water_drop_rounded,
+                                size: 16, color: AppColors.fatColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              'F: ${food['fats']}g',
+                              style: TextStyle(
+                                color:
+                                    colorScheme.onSurface.withValues(alpha: 0.8),
+                                fontSize: 12.5,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -789,6 +815,7 @@ class FoodCard extends StatelessWidget {
                 ),
               ),
 
+              // ➡️ Chevron
               Icon(Icons.chevron_right_rounded,
                   color: colorScheme.onSurface.withValues(alpha: 0.5)),
             ],

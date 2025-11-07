@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                               MacroTile(
                                 eaten: caloriesEaten,
                                 goal: caloriesTarget,
-                                size: 140,
+                                size: 80,
                                 bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                                 fgColor:colorScheme.onSurface,
                                 icon: FontAwesomeIcons.fireFlameCurved,

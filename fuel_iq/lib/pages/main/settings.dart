@@ -411,45 +411,64 @@ Future<void> showEraseDataDialog({
   await showDialog(
     context: context,
     builder: (context) {
+      final colorScheme = Theme.of(context).colorScheme;
+
       return AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: const Icon(
-                Icons.warning_rounded,
-                color: Colors.red,
-                size: 28,
+        titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.warning_rounded,
+                  color: Colors.red,
+                  size: 28,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'Delete All Data',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              const SizedBox(width: 12),
+              const Text(
+                'Delete All Data',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+
+        content: const Text(
+          "Are you sure you want to permanently delete all your data? This action cannot be undone.",
+          style: TextStyle(fontSize: 15.5),
+        ),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ),
@@ -460,6 +479,7 @@ Future<void> showEraseDataDialog({
                 listen: false,
               );
               await provider.clearAllData();
+
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -471,7 +491,6 @@ Future<void> showEraseDataDialog({
                         Text('All data cleared successfully'),
                       ],
                     ),
-                    backgroundColor: Colors.green,
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
@@ -480,10 +499,7 @@ Future<void> showEraseDataDialog({
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -498,11 +514,7 @@ Future<void> showEraseDataDialog({
             ),
           ),
         ],
-        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       );
     },
   );
 }
-
-
