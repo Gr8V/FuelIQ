@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/pages/secondary/log_food_page.dart';
 import 'package:fuel_iq/pages/secondary/scan_barcode_page.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/theme/colors.dart';
 
 void showAddFoodDrawer(BuildContext context) {
   final theme = Theme.of(context);
@@ -13,7 +15,7 @@ void showAddFoodDrawer(BuildContext context) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     
-    backgroundColor: colorScheme.secondary,
+    backgroundColor: colorScheme.tertiary,
     isScrollControlled: true,
     builder: (context) {
       return SizedBox(
@@ -61,13 +63,13 @@ void showAddFoodDrawer(BuildContext context) {
                       );
                     },
                     borderRadius: BorderRadius.circular(12),
-                    child: const SizedBox(
+                    child: SizedBox(
                       width: 100, // adjust width
                       height: 100, // adjust height
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.food_bank, size: 32),
+                          Icon(Icons.food_bank, size: 32, color: colorScheme.primary,),
                           SizedBox(height: 8),
                           Text('Log Food', textAlign: TextAlign.center),
                         ],
@@ -123,13 +125,13 @@ void showAddFoodDrawer(BuildContext context) {
                 },
                 
                   borderRadius: BorderRadius.circular(12),
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 100,
                     height: 100,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.qr_code_scanner, size: 32),
+                        Icon(Icons.qr_code_scanner, size: 32, color: colorScheme.primary,),
                         SizedBox(height: 8),
                         Text('Scan', textAlign: TextAlign.center),
                       ],
@@ -210,9 +212,9 @@ void showAddFoodDrawer(BuildContext context) {
                           );
                         },
                         borderRadius: BorderRadius.circular(12),
-                        child: const SizedBox(
+                        child:  SizedBox(
                           child: ListTile(
-                            leading: Icon(Icons.monitor_weight, color: Colors.greenAccent,),
+                            leading: Icon(FontAwesomeIcons.weightScale, color: colorScheme.primary,),
                             title: Text('Weight')
                           )
                         ),
