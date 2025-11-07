@@ -161,6 +161,7 @@ class _LogFoodState extends State<LogFood> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Food added successfully!')),
                     );
+                    Navigator.pop(context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Please enter a valid food name and calories')),

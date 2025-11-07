@@ -4,7 +4,6 @@ import 'package:fuel_iq/pages/secondary/log_food_page.dart';
 import 'package:fuel_iq/pages/secondary/scan_barcode_page.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
-import 'package:fuel_iq/theme/colors.dart';
 
 void showAddFoodDrawer(BuildContext context) {
   final theme = Theme.of(context);

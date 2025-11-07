@@ -207,8 +207,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 Text(
                   caloriesTarget.toString(),
                   style: TextStyle(
-                    color: colorScheme.tertiary,
-                    fontSize: 14,
+                    color: colorScheme.secondary,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -239,8 +239,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 Text(
                   proteinTarget.toString(),
                   style: TextStyle(
-                    color: colorScheme.tertiary,
-                    fontSize: 14,
+                    color: colorScheme.secondary,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -271,8 +271,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 Text(
                   carbsTarget.toString(),
                   style: TextStyle(
-                    color: colorScheme.tertiary,
-                    fontSize: 14,
+                    color: colorScheme.secondary,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -303,8 +303,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 Text(
                   fatsTarget.toString(),
                   style: TextStyle(
-                    color: colorScheme.tertiary,
-                    fontSize: 14,
+                    color: colorScheme.secondary,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -333,8 +333,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                 Text(
                   waterTarget.toString(),
                   style: TextStyle(
-                    color: colorScheme.tertiary,
-                    fontSize: 14,
+                    color: colorScheme.secondary,
+                    fontSize: 15,
                   ),
                 ),
               ],

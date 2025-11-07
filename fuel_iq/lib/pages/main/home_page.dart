@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+
                         // Carbs
                         Expanded(
                           child: Card(
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+
                         // Fats
                         Expanded(
                           child: Card(
@@ -293,7 +293,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
               // Water & Weight Section
               Column(
                 children: [
@@ -376,7 +375,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
                   // Weight
                   Card(
                     elevation: 2,
@@ -463,13 +461,26 @@ class _HomePageState extends State<HomePage> {
               ),
 
               //food eaten
-              const SizedBox(height: 20),
-              Center(child: Text(
-                'Todays Food',
-                style: TextStyle(
-                  fontSize: 20
-                ),
-              )),
+              const SizedBox(height: 40),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Divider(thickness: 1.2, endIndent: 10),
+                  ),
+                  Text(
+                    "Today's Food",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(thickness: 1.2, indent: 10),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               Container(
                 child: foods.isEmpty
@@ -480,47 +491,16 @@ class _HomePageState extends State<HomePage> {
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final food = foods[index];
-                  return Card(
-                    elevation: 3,
-                    color: colorScheme.secondary,
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    child: ListTile(
-                      tileColor: colorScheme.surface,
-                      title: Text(food['name']),
-                      subtitle: Text(
-                        'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}',
-                      ),
-                      onTap:() {
-                        Navigator.push(
-                          context,
-                          //transition and page builder
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => FoodView(
-                              foodName: food['name'],
-                              quantity: food['quantity'],
-                              calories: food['calories'],
-                              protein: food['protein'],
-                              carbs:  food['carbs'],
-                              fats: food['fats'],
-                              dateOfFood: todaysDate,
-                            ),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 150),
-                          )
-                        );
-                      },
-                    ),
+                  return FoodCard(
+                    food: {
+                      'name': food['name'],
+                      'quantity': food['quantity'],
+                      'calories': food['calories'],
+                      'protein': food['protein'],
+                      'carbs': food['carbs'],
+                      'fats': food['fats'],
+                    },
+                    todaysDate: todaysDate,
                   );
                 },
               ),

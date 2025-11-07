@@ -264,7 +264,7 @@ class _DailyDataState extends State<DailyData> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+
                       // Carbs
                       Expanded(
                         child: Card(
@@ -307,7 +307,7 @@ class _DailyDataState extends State<DailyData> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+
                       // Fats
                       Expanded(
                         child: Card(
@@ -401,7 +401,6 @@ class _DailyDataState extends State<DailyData> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
                     //Weight
                     Expanded(
                       child: Card(
@@ -438,6 +437,26 @@ class _DailyDataState extends State<DailyData> {
                   ],
                 ),
               ),
+              const SizedBox(height: 40),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Divider(thickness: 1.2, endIndent: 10),
+                  ),
+                  Text(
+                    "Food",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(thickness: 1.2, indent: 10),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               foods.isEmpty
               ? const Center(child: Text('No foods logged yet'))
@@ -447,47 +466,16 @@ class _DailyDataState extends State<DailyData> {
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final food = foods[index];
-                  return Card(
-                    elevation: 3,
-                    color: colorScheme.secondary,
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    child: ListTile(
-                      tileColor: colorScheme.surface,
-                      title: Text(food['name']),
-                      subtitle: Text(
-                        'Qty: ${food['quantity']}g  •  Calories: ${food['calories']}  •  P: ${food['protein']}  C: ${food['carbs']}  F: ${food['fats']}',
-                      ),
-                      onTap:() {
-                        Navigator.push(
-                          context,
-                          //transition and page builder
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => FoodView(
-                              foodName: food['name'],
-                              quantity: food['quantity'],
-                              calories: food['calories'],
-                              protein: food['protein'],
-                              carbs:  food['carbs'],
-                              fats: food['fats'],
-                              dateOfFood: widget.dateSelected,
-                            ),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(1.0, 0.0),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                                );
-                              },
-                              transitionDuration: const Duration(milliseconds: 150),
-                          )
-                        );
-                      },
-                    ),
+                  return FoodCard(
+                    food: {
+                      'name': food['name'],
+                      'quantity': food['quantity'],
+                      'calories': food['calories'],
+                      'protein': food['protein'],
+                      'carbs': food['carbs'],
+                      'fats': food['fats'],
+                    },
+                    todaysDate: todaysDate,
                   );
                 },
               ),
@@ -498,6 +486,7 @@ class _DailyDataState extends State<DailyData> {
     );
   }
 }
+
 
 
 class FoodView extends StatefulWidget {
@@ -649,6 +638,163 @@ class _FoodViewState extends State<FoodView> {
         },
       )
 
+    );
+  }
+}
+
+
+class FoodCard extends StatelessWidget {
+  final Map<String, dynamic> food;
+  final String todaysDate;
+
+  const FoodCard({
+    super.key,
+    required this.food,
+    required this.todaysDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      color: colorScheme.surface,
+      shadowColor: colorScheme.shadow.withValues(alpha: 0.15),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => FoodView(
+                foodName: food['name'],
+                quantity: food['quantity'],
+                calories: food['calories'],
+                protein: food['protein'],
+                carbs: food['carbs'],
+                fats: food['fats'],
+                dateOfFood: todaysDate,
+              ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: FadeTransition(opacity: animation, child: child),
+                );
+              },
+              transitionDuration: const Duration(milliseconds: 180),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🍴 Food Icon Circle
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.restaurant_menu_rounded, size: 26),
+              ),
+              const SizedBox(width: 14),
+
+              // 🧾 Text info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      food['name'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.scale_rounded,
+                            size: 16, color: colorScheme.onSurface.withValues(alpha: 0.6)),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${food['quantity']}g',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Icon(Icons.local_fire_department_rounded,
+                            size: 16, color: colorScheme.onSurface),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${food['calories']} kcal',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(Icons.fitness_center_rounded,
+                            size: 16, color: AppColors.proteinColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          'P: ${food['protein']}g',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 12.5,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Icon(Icons.breakfast_dining_rounded,
+                            size: 16, color: AppColors.carbsColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          'C: ${food['carbs']}g',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 12.5,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Icon(Icons.water_drop_rounded,
+                            size: 16, color: AppColors.fatColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          'F: ${food['fats']}g',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 12.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              Icon(Icons.chevron_right_rounded,
+                  color: colorScheme.onSurface.withValues(alpha: 0.5)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
