@@ -99,6 +99,8 @@ void showAddFoodDrawer(BuildContext context) {
                       transitionDuration: const Duration(milliseconds: 150),
                     ),
                   );
+                  if (!context.mounted) return;
+
 
                   if (code != null && code is String) {
                     Navigator.of(context, rootNavigator: true).push(

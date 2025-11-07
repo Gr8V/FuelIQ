@@ -49,6 +49,7 @@ class _ScanBarcodeState extends State<ScanBarcode> {
 
       // Return scanned code
       Future.delayed(const Duration(milliseconds: 800), () {
+        if (!mounted) return;
         Navigator.pop(context, code);
       });
     }
@@ -344,7 +345,7 @@ Widget build(BuildContext context) {
               
                           await provider.addFood(todaysDate, foodEntry);
                           await provider.updateDailyData(todaysDate, updatedData);
-              
+                          
                           // Optional: clear fields after adding
                           foodNameController.clear();
                           quantityController.clear();
@@ -352,7 +353,7 @@ Widget build(BuildContext context) {
                           proteinController.clear();
                           carbsController.clear();
                           fatsController.clear();
-              
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Food added successfully!')),
                           );

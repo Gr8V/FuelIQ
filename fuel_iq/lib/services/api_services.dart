@@ -32,7 +32,6 @@ class OpenFoodFactsService {
         throw Exception('Failed to load product: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching product: $e');
       rethrow;
     }
   }
@@ -97,7 +96,6 @@ class OpenFoodFactsService {
         throw Exception('Failed to search products: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error searching products: $e');
       rethrow;
     }
   }

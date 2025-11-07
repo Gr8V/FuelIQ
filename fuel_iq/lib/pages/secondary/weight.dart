@@ -91,6 +91,7 @@ class _WeightPageState extends State<WeightPage> {
     setState(() {
       _weights = provider.getAllLoadedWeights();
     });
+    if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Weight saved successfully!")),

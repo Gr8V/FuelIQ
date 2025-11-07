@@ -157,7 +157,7 @@ class _LogFoodState extends State<LogFood> {
                     proteinController.clear();
                     carbsController.clear();
                     fatsController.clear();
-        
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Food added successfully!')),
                     );

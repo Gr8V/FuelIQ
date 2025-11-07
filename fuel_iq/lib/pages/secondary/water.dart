@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/home_page.dart';
 import 'package:provider/provider.dart';
@@ -48,26 +49,34 @@ class _WaterPageState extends State<WaterPage> {
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Text(
                           'Water Drunk',
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width *0.07,
-                            color: colorScheme.onSurface
+                            fontSize: MediaQuery.of(context).size.width * 0.07,
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
                           ),
                         ),
-                        CaloriesCircularChart(
-                              eaten: waterDrunk,
-                              goal: waterTarget,
-                              size: 100,
-                              backgroundArcColor: theme.colorScheme.onSurface,
-                              foregroundArcColor: colorScheme.primary,
-                              centerTextColor: colorScheme.onSurface,
-                              strokeWidth: 10,
-                            )
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 16),
+                      MacroTile(
+                        eaten: waterDrunk,
+                        goal: waterTarget,
+                        size: 140,
+                        bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                        fgColor: colorScheme.primary,
+                        icon: FontAwesomeIcons.glassWater,
+                        strokeWidth: 7,
+                        label: 'Water',
+                      ),
+                    ],
+                  )
+
                   ),
               ),
               const SizedBox(height: 100,),

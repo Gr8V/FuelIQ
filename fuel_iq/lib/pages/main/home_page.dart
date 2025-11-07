@@ -6,6 +6,7 @@ import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'dart:math';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:fuel_iq/theme/colors.dart';
 
@@ -73,6 +74,10 @@ class _HomePageState extends State<HomePage> {
             children: [
               const SizedBox(height: 20),
               InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -103,167 +108,358 @@ class _HomePageState extends State<HomePage> {
                       color: colorScheme.surface,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Calories Eaten',
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *0.07,
-                                color: colorScheme.onSurface
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${(caloriesTarget - caloriesEaten).toInt()}',
+                                      style: TextStyle(
+                                        fontSize: MediaQuery.of(context).size.width * 0.13,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.onSurface,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Calories Left',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            CaloriesCircularChart(
-                              eaten: caloriesEaten,
-                              goal: caloriesTarget,
-                              size: 100,
-                              backgroundArcColor: theme.colorScheme.onSurface,
-                              foregroundArcColor: colorScheme.primary,
-                              centerTextColor: colorScheme.onSurface,
-                              strokeWidth: 10,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    //Macros
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        //protein
-                        Expanded(
-                          child: Card(
-                            elevation: 3,
-                            color: theme.cardColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: MacroTile(
-                                    label: 'Protein',
-                                    eaten: proteinEaten, 
-                                    goal: proteinTarget,
-                                    bgColor: colorScheme.onSurface,
-                                    fgColor: AppColors.proteinColor,
-                                    centerTextColor: colorScheme.onSurface,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        //carbs
-                        Expanded(
-                          child: Card(
-                            elevation: 3,
-                            color: theme.cardColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: MacroTile(
-                                    label: 'Carbs',
-                                    eaten: carbsEaten, 
-                                    goal: carbsTarget,
-                                    bgColor: colorScheme.onSurface,
-                                    fgColor: AppColors.carbsColor,
-                                    centerTextColor: colorScheme.onSurface,
-                                  ),
-                            ),
-                          ),
-                        ),
-                        //fats
-                        Expanded(
-                          child: Card(
-                            elevation: 3,
-                            color: theme.cardColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: MacroTile(
-                                    label: 'Fats',
-                                    eaten: fatsEaten, 
-                                    goal: fatsTarget,
-                                    bgColor: colorScheme.onSurface,
-                                    fgColor: AppColors.fatColor,
-                                    centerTextColor: colorScheme.onSurface,
-                                  ),
-                            ),
+                              const SizedBox(width: 16),
+                              MacroTile(
+                                eaten: caloriesEaten,
+                                goal: caloriesTarget,
+                                size: 140,
+                                bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                fgColor: colorScheme.primary,
+                                icon: FontAwesomeIcons.fireFlameCurved,
+                                strokeWidth: 7,
+                                label: 'Calories',
+                              ),
+                            ],
                           ),
                         )
-                      ],
+                      ),
                     ),
+                    // Macros
+                    Row(
+                      children: [
+                        // Protein
+                        Expanded(
+                          child: Card(
+                            elevation: 2,
+                            color: theme.cardColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                              child: Column(
+                                children: [
+                                  MacroTile(
+                                    label: 'Protein',
+                                    eaten: proteinEaten,
+                                    goal: proteinTarget,
+                                    bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                    fgColor: AppColors.proteinColor,
+                                    icon: FontAwesomeIcons.drumstickBite,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Protein',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${proteinEaten.toInt()}/${proteinTarget.toInt()}g',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Carbs
+                        Expanded(
+                          child: Card(
+                            elevation: 2,
+                            color: theme.cardColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                              child: Column(
+                                children: [
+                                  MacroTile(
+                                    label: 'Carbs',
+                                    eaten: carbsEaten,
+                                    goal: carbsTarget,
+                                    bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                    fgColor: AppColors.carbsColor,
+                                    icon: FontAwesomeIcons.breadSlice,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Carbs',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${carbsEaten.toInt()}/${carbsTarget.toInt()}g',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Fats
+                        Expanded(
+                          child: Card(
+                            elevation: 2,
+                            color: theme.cardColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                              child: Column(
+                                children: [
+                                  MacroTile(
+                                    label: 'Fats',
+                                    eaten: fatsEaten,
+                                    goal: fatsTarget,
+                                    bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                    fgColor: AppColors.fatColor,
+                                    icon: FontAwesomeIcons.seedling,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Fats',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${fatsEaten.toInt()}/${fatsTarget.toInt()}g',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              //water
-              Card(
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  ),
-                  leading: CaloriesCircularChart(
-                    eaten: waterDrunk,
-                    goal: waterTarget,
-                    size: 40,
-                    backgroundArcColor: colorScheme.surface,
-                    foregroundArcColor: colorScheme.primary,
-                    centerTextColor: colorScheme.onSurface,
-                    strokeWidth: 2,
-                    icon: Icons.water_drop,
-                  ),
-                  title: const Text('Water Intake'),
-                  subtitle:  Text('${waterTarget- waterDrunk}L remaining'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      //transition and page builder
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
+              // Water & Weight Section
+              Column(
+                children: [
+                  // Water
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(1.0, 0.0),
+                                  end: Offset.zero,
+                                ).animate(animation),
+                                child: FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            transitionDuration: const Duration(milliseconds: 150),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        child: Row(
+                          children: [
+                            MacroTile(
+                              eaten: waterDrunk,
+                              goal: waterTarget,
+                              size: 48,
+                              bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                              fgColor: colorScheme.primary,
+                              strokeWidth: 3,
+                              icon: FontAwesomeIcons.glassWater,
+                              label: 'Water',
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Water Intake',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${(waterTarget - waterDrunk).toStringAsFixed(1)}L remaining',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 150),
-                      )
-                    );
-                  },
-                )
-              ),
-              //weight
-              Card(
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                            ),
+                            Icon(
+                              Icons.chevron_right,
+                              color: colorScheme.onSurface.withValues(alpha: 0.3),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  leading: Icon(Icons.monitor_weight_outlined, size: 40, color: colorScheme.primary,), // Icon instead of chart
-                  title: const Text('Weight'),
-                  subtitle: Text('${weightToday.toStringAsFixed(1)} kg'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      //transition and page builder
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
+                  const SizedBox(height: 8),
+                  // Weight
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(1.0, 0.0),
+                                  end: Offset.zero,
+                                ).animate(animation),
+                                child: FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            transitionDuration: const Duration(milliseconds: 150),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
                               ),
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 150),
-                      )
-                    );
-                  },
-                )
+                              child: Icon(
+                                Icons.monitor_weight_outlined,
+                                size: 28,
+                                color: colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Weight',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${weightToday.toStringAsFixed(1)} kg',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.chevron_right,
+                              color: colorScheme.onSurface.withValues(alpha: 0.3),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               //food eaten
@@ -338,68 +534,35 @@ class _HomePageState extends State<HomePage> {
 }
 
 
-class MacroTile extends StatelessWidget {
+class MacroTile extends StatefulWidget {
   final String label;
   final double eaten;
   final double goal;
   final Color bgColor;
   final Color fgColor;
-  final Color centerTextColor;
-
-  const MacroTile({super.key, required this.label, required this.eaten, required this.goal,
-    required this.bgColor, required this.fgColor, required this.centerTextColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CaloriesCircularChart(
-          eaten: eaten,
-          goal: goal,
-          size: 70,
-          backgroundArcColor: bgColor,
-          foregroundArcColor: fgColor,
-          centerTextColor: centerTextColor,
-          strokeWidth: 5,
-          ),
-        const SizedBox(height: 4),
-        Text(label),
-      ],
-    );
-  }
-}
-
-
-/// Reusable animated circular chart with optional icon in center.
-class CaloriesCircularChart extends StatefulWidget {
-  final double eaten;
-  final double goal;
-  final double size; // diameter
-  final Color backgroundArcColor;
-  final Color foregroundArcColor;
-  final Color centerTextColor;
+  final IconData icon;
+  final double size;
   final double strokeWidth;
   final Duration animationDuration;
-  final IconData? icon; // 🔹 NEW optional icon field
 
-  const CaloriesCircularChart({
-    Key? key,
+  const MacroTile({
+    super.key,
+    required this.label,
     required this.eaten,
     required this.goal,
-    this.size = 160,
-    this.backgroundArcColor = const Color(0xFF2E2E2E),
-    this.foregroundArcColor = const Color(0xFF00C853),
-    this.centerTextColor = Colors.white,
-    this.strokeWidth = 16.0,
+    required this.bgColor,
+    required this.fgColor,
+    required this.icon,
+    this.size = 70,
+    this.strokeWidth = 5,
     this.animationDuration = const Duration(milliseconds: 700),
-    this.icon, // 🔹 optional
-  }) : super(key: key);
+  });
 
   @override
-  State<CaloriesCircularChart> createState() => _CaloriesCircularChartState();
+  State<MacroTile> createState() => _MacroTileState();
 }
 
-class _CaloriesCircularChartState extends State<CaloriesCircularChart>
+class _MacroTileState extends State<MacroTile>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -421,7 +584,7 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
   }
 
   @override
-  void didUpdateWidget(covariant CaloriesCircularChart oldWidget) {
+  void didUpdateWidget(covariant MacroTile oldWidget) {
     super.didUpdateWidget(oldWidget);
     final newPercent = _clampPercent(widget.eaten / max(widget.goal, 1));
     _oldPercent = _animation.value;
@@ -444,9 +607,6 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
   @override
   Widget build(BuildContext context) {
     final percent = _animation.value;
-    final eatenAmount = widget.eaten;
-    final goalAmount = widget.goal;
-    final displayedPercent = (percent * 100).round();
 
     return SizedBox(
       width: widget.size,
@@ -454,47 +614,20 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Background + progress arcs
           CustomPaint(
             size: Size(widget.size, widget.size),
-            painter: _DonutPainter(
+            painter: _CircularProgressPainter(
               progress: percent,
-              backgroundArcColor: widget.backgroundArcColor,
-              foregroundArcColor: widget.foregroundArcColor,
+              backgroundArcColor: widget.bgColor,
+              foregroundArcColor: widget.fgColor,
               strokeWidth: widget.strokeWidth,
             ),
           ),
-
-          // 🔹 Center content (text or icon)
-          if (widget.icon == null)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${eatenAmount.toInt()} / ${goalAmount.toInt()}',
-                  style: TextStyle(
-                    color: widget.centerTextColor,
-                    fontSize: widget.size * 0.14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '$displayedPercent%',
-                  style: TextStyle(
-                    color: widget.centerTextColor,
-                    fontSize: widget.size * 0.18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            )
-          else
-            Icon(
-              widget.icon,
-              size: widget.size * 0.45,
-              color: widget.foregroundArcColor,
-            ),
+          Icon(
+            widget.icon,
+            size: widget.size * 0.32,
+            color: widget.fgColor,
+          ),
         ],
       ),
     );
@@ -502,13 +635,13 @@ class _CaloriesCircularChartState extends State<CaloriesCircularChart>
 }
 
 /// Draws circular arcs for progress visualization.
-class _DonutPainter extends CustomPainter {
+class _CircularProgressPainter extends CustomPainter {
   final double progress;
   final Color backgroundArcColor;
   final Color foregroundArcColor;
   final double strokeWidth;
 
-  _DonutPainter({
+  _CircularProgressPainter({
     required this.progress,
     required this.backgroundArcColor,
     required this.foregroundArcColor,
@@ -541,7 +674,7 @@ class _DonutPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DonutPainter old) {
+  bool shouldRepaint(covariant _CircularProgressPainter old) {
     return old.progress != progress ||
         old.backgroundArcColor != backgroundArcColor ||
         old.foregroundArcColor != foregroundArcColor ||
