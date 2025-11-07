@@ -4,7 +4,7 @@ import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fuel_iq/services/api_services.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:io' show Platform;
 class ScanBarcode extends StatefulWidget {
   const ScanBarcode({super.key});
 
@@ -20,6 +20,7 @@ class _ScanBarcodeState extends State<ScanBarcode> {
 
   bool isScanned = false;
   bool isTorchOn = false;
+  bool supportsCamera = Platform.isAndroid || Platform.isIOS;
 
   @override
   void dispose() {
@@ -72,73 +73,83 @@ class _ScanBarcodeState extends State<ScanBarcode> {
         backgroundColor: colorScheme.primary,
         actions: [
           // Toggle flashlight
-          IconButton(
-            icon: Icon(
-              isTorchOn ? Icons.flash_on : Icons.flash_off,
-              color: colorScheme.onPrimary,
+          if (supportsCamera) 
+          ...[
+            IconButton(
+              icon: Icon(
+                isTorchOn ? Icons.flash_on : Icons.flash_off,
+                color: colorScheme.onPrimary,
+              ),
+              onPressed: () {
+                setState(() => isTorchOn = !isTorchOn);
+                cameraController.toggleTorch();
+              },
             ),
-            onPressed: () {
-              setState(() => isTorchOn = !isTorchOn);
-              cameraController.toggleTorch();
-            },
-          ),
-          // Switch camera
-          IconButton(
-            icon: Icon(Icons.cameraswitch, color: colorScheme.onPrimary),
-            onPressed: () => cameraController.switchCamera(),
-          ),
+            // Switch camera
+            IconButton(
+              icon: Icon(Icons.cameraswitch, color: colorScheme.onPrimary),
+              onPressed: () => cameraController.switchCamera(),
+            ),
+          ]
         ],
       ),
       body: Stack(
         alignment: Alignment.center,
         children: [
-          // Camera view
-          MobileScanner(
-            controller: cameraController,
-            onDetect: _onBarcodeDetect,
-          ),
-
-          // Overlay box for scan focus area
-          Container(
-            width: 250,
-            height: 250,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: colorScheme.primary,
-                width: 3,
+          if (supportsCamera)
+            ...[
+              MobileScanner(
+                controller: cameraController,
+                onDetect: _onBarcodeDetect,
               ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-
-          // Dimmed background outside scanning box
-          ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.4),
-              BlendMode.srcOut,
-            ),
-            child: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    backgroundBlendMode: BlendMode.dstOut,
+              // Overlay box for scan focus area
+              Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: colorScheme.primary,
+                    width: 3,
                   ),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 250,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16),
+              ),
+              // Dimmed background outside scanning box
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Colors.black,
+                  BlendMode.srcOut,
+                ),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        backgroundBlendMode: BlendMode.dstOut,
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 250,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              )
+            ]
+          else
+            const Center(
+              child: Text(
+                "Camera not supported on this platform.",
+                style: TextStyle(fontSize: 18),
+              )
             ),
-          ),
         ],
       ),
     );
