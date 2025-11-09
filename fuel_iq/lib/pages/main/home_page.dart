@@ -50,238 +50,454 @@ class _HomePageState extends State<HomePage> {
     
 
     return Scaffold(
-      //app bar
-      appBar: AppBar(
-        title:  Text(
-          appBarTitle,
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.25,
-            height: 1.3,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: colorScheme.primary,
-        ),
+
       //body
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      //transition and page builder
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => DailyData(dateSelected: todaysDate, showAppBar: true,),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 150),
-                      )
-                    );
+      body: CustomScrollView(
+        slivers: [
+           // 🔹 Scrollable AppBar
+          SliverAppBar(
+            elevation: 0,
+            pinned: false,
+            floating: true, // makes it scroll with content
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: [colorScheme.primary, colorScheme.secondary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ).createShader(bounds),
+                  child: Text(
+                    'Fuel IQ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.3,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Performance Meets Precision',
+                  style: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 12,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+              ],
+            ),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    colorScheme.onSurface.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.notifications, color: colorScheme.primary),
+                onPressed: () {
+
                 },
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    //calories eaten
-                    Card(
-                      elevation: 3,
-                      color: colorScheme.surface,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
+                    const SizedBox(height: 20),
+                    //Calories & Macros Section
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            //transition and page builder
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => DailyData(dateSelected: todaysDate, showAppBar: true,),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1.0, 0.0),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                transitionDuration: const Duration(milliseconds: 150),
+                            )
+                          );
+                      },
+                      child: Column(
+                        children: [
+                          //calories eaten
+                          Card(
+                            elevation: 3,
+                            color: colorScheme.surface,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '${(caloriesTarget - caloriesEaten).toInt()}',
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.width * 0.13,
-                                        fontWeight: FontWeight.bold,
-                                        color: colorScheme.onSurface,
-                                        overflow: TextOverflow.ellipsis,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            '${(caloriesTarget - caloriesEaten).toInt()}',
+                                            style: TextStyle(
+                                              fontSize: MediaQuery.of(context).size.width * 0.13,
+                                              fontWeight: FontWeight.bold,
+                                              color: colorScheme.onSurface,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Calories Left',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                              fontWeight: FontWeight.w500,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Calories Left',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                    const SizedBox(width: 16),
+                                    MacroTile(
+                                      eaten: caloriesEaten,
+                                      goal: caloriesTarget,
+                                      size: 80,
+                                      bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                      fgColor:colorScheme.onSurface,
+                                      icon: FontAwesomeIcons.fireFlameCurved,
+                                      strokeWidth: 7,
+                                      label: 'Calories',
                                     ),
                                   ],
                                 ),
+                              )
+                            ),
+                          ),
+                          // Macros
+                          Row(
+                            children: [
+                              // Protein
+                              Expanded(
+                                child: Card(
+                                  elevation: 2,
+                                  color: theme.cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                                    child: Column(
+                                      children: [
+                                        MacroTile(
+                                          label: 'Protein',
+                                          eaten: proteinEaten,
+                                          goal: proteinTarget,
+                                          bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                          fgColor: AppColors.proteinColor,
+                                          icon: FontAwesomeIcons.drumstickBite,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Protein',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${proteinEaten.toInt()}/${proteinTarget.toInt()}g',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 16),
-                              MacroTile(
-                                eaten: caloriesEaten,
-                                goal: caloriesTarget,
-                                size: 80,
-                                bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                                fgColor:colorScheme.onSurface,
-                                icon: FontAwesomeIcons.fireFlameCurved,
-                                strokeWidth: 7,
-                                label: 'Calories',
+                              // Carbs
+                              Expanded(
+                                child: Card(
+                                  elevation: 2,
+                                  color: theme.cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                                    child: Column(
+                                      children: [
+                                        MacroTile(
+                                          label: 'Carbs',
+                                          eaten: carbsEaten,
+                                          goal: carbsTarget,
+                                          bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                          fgColor: AppColors.carbsColor,
+                                          icon: FontAwesomeIcons.breadSlice,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Carbs',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${carbsEaten.toInt()}/${carbsTarget.toInt()}g',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Fats
+                              Expanded(
+                                child: Card(
+                                  elevation: 2,
+                                  color: theme.cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                                    child: Column(
+                                      children: [
+                                        MacroTile(
+                                          label: 'Fats',
+                                          eaten: fatsEaten,
+                                          goal: fatsTarget,
+                                          bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                                          fgColor: AppColors.fatColor,
+                                          icon: FontAwesomeIcons.seedling,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Fats',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${fatsEaten.toInt()}/${fatsTarget.toInt()}g',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
-                          ),
-                        )
+                          )
+                        ],
                       ),
                     ),
-                    // Macros
-                    Row(
+                    // Water & Weight Section
+                    Column(
                       children: [
-                        // Protein
-                        Expanded(
-                          child: Card(
-                            elevation: 2,
-                            color: theme.cardColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                        // Water
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    return SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(1.0, 0.0),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      child: FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                                  transitionDuration: const Duration(milliseconds: 150),
+                                ),
+                              );
+                            },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                              child: Column(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              child: Row(
                                 children: [
                                   MacroTile(
-                                    label: 'Protein',
-                                    eaten: proteinEaten,
-                                    goal: proteinTarget,
+                                    eaten: waterDrunk,
+                                    goal: waterTarget,
+                                    size: 48,
                                     bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                    fgColor: AppColors.proteinColor,
-                                    icon: FontAwesomeIcons.drumstickBite,
+                                    fgColor: AppColors.waterColor,
+                                    strokeWidth: 3,
+                                    icon: FontAwesomeIcons.glassWater,
+                                    label: 'Water',
                                   ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Protein',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurface,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Water Intake',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${(waterTarget - waterDrunk).toStringAsFixed(1)}L remaining',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${proteinEaten.toInt()}/${proteinTarget.toInt()}g',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                    ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: colorScheme.onSurface.withValues(alpha: 0.3),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-
-                        // Carbs
-                        Expanded(
-                          child: Card(
-                            elevation: 2,
-                            color: theme.cardColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                              child: Column(
-                                children: [
-                                  MacroTile(
-                                    label: 'Carbs',
-                                    eaten: carbsEaten,
-                                    goal: carbsTarget,
-                                    bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                    fgColor: AppColors.carbsColor,
-                                    icon: FontAwesomeIcons.breadSlice,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Carbs',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${carbsEaten.toInt()}/${carbsTarget.toInt()}g',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        // Weight
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                        ),
-
-                        // Fats
-                        Expanded(
-                          child: Card(
-                            elevation: 2,
-                            color: theme.cardColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    return SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(1.0, 0.0),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      child: FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                                  transitionDuration: const Duration(milliseconds: 150),
+                                ),
+                              );
+                            },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                              child: Column(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              child: Row(
                                 children: [
-                                  MacroTile(
-                                    label: 'Fats',
-                                    eaten: fatsEaten,
-                                    goal: fatsTarget,
-                                    bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                    fgColor: AppColors.fatColor,
-                                    icon: FontAwesomeIcons.seedling,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Fats',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurface,
+                                  Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.primary.withValues(alpha: 0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      FontAwesomeIcons.weightScale,
+                                      size: 28,
+                                      color: colorScheme.primary,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${fatsEaten.toInt()}/${fatsTarget.toInt()}g',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Weight',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${weightToday.toStringAsFixed(1)} kg',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: colorScheme.onSurface.withValues(alpha: 0.3),
                                   ),
                                 ],
                               ),
@@ -289,225 +505,58 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ],
+                    ),
+                    //Food Eaten
+                    const SizedBox(height: 40),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Divider(thickness: 1.2, endIndent: 10),
+                        ),
+                        Text(
+                          "Today's Food",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const Expanded(
+                          child: Divider(thickness: 1.2, indent: 10),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      child: foods.isEmpty
+                    ? const Center(child: Text('No foods logged yet'))
+                      : ListView.builder(
+                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                        itemCount: foods.length,
+                        itemBuilder: (context, index) {
+                          final food = foods[index];
+                          return FoodCard(
+                            food: {
+                              'name': food['name'],
+                              'quantity': food['quantity'],
+                              'calories': food['calories'],
+                              'protein': food['protein'],
+                              'carbs': food['carbs'],
+                              'fats': food['fats'],
+                            },
+                            todaysDate: todaysDate,
+                          );
+                        },
+                      ),
                     )
                   ],
                 ),
               ),
-              // Water & Weight Section
-              Column(
-                children: [
-                  // Water
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).animate(animation),
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              );
-                            },
-                            transitionDuration: const Duration(milliseconds: 150),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: Row(
-                          children: [
-                            MacroTile(
-                              eaten: waterDrunk,
-                              goal: waterTarget,
-                              size: 48,
-                              bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                              fgColor: AppColors.waterColor,
-                              strokeWidth: 3,
-                              icon: FontAwesomeIcons.glassWater,
-                              label: 'Water',
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Water Intake',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${(waterTarget - waterDrunk).toStringAsFixed(1)}L remaining',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(
-                              Icons.chevron_right,
-                              color: colorScheme.onSurface.withValues(alpha: 0.3),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Weight
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).animate(animation),
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              );
-                            },
-                            transitionDuration: const Duration(milliseconds: 150),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                FontAwesomeIcons.weightScale,
-                                size: 28,
-                                color: colorScheme.primary,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Weight',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${weightToday.toStringAsFixed(1)} kg',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(
-                              Icons.chevron_right,
-                              color: colorScheme.onSurface.withValues(alpha: 0.3),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              //food eaten
-              const SizedBox(height: 40),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Divider(thickness: 1.2, endIndent: 10),
-                  ),
-                  Text(
-                    "Today's Food",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const Expanded(
-                    child: Divider(thickness: 1.2, indent: 10),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Container(
-                child: foods.isEmpty
-              ? const Center(child: Text('No foods logged yet'))
-              : ListView.builder(
-                shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  return FoodCard(
-                    food: {
-                      'name': food['name'],
-                      'quantity': food['quantity'],
-                      'calories': food['calories'],
-                      'protein': food['protein'],
-                      'carbs': food['carbs'],
-                      'fats': food['fats'],
-                    },
-                    todaysDate: todaysDate,
-                  );
-                },
-              ),
-              )
-            ],
+            ),
           ),
-        ),
+        ]
       )
     );
   }

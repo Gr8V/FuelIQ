@@ -43,63 +43,109 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      //app bar
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title:  Text(
-          "Details",
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Details',
           style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.25,
-            height: 1.3,
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
           ),
         ),
-        centerTitle: true,
-        backgroundColor: colorScheme.primary,
-    ),
-      //body
-    body: Padding(
-      padding: const EdgeInsets.all(8.0),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: InkWell(
-                onTap:() {
-                  _pickDate();
-                },
+            const SizedBox(height: 8),
+
+            //Date Picker
+            InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: _pickDate,
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colorScheme.primary.withValues(alpha: 0.15),
+                      colorScheme.primary.withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: colorScheme.primary.withValues(alpha: 0.4),
+                    width: 1.2,
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 12,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Icon(Icons.calendar_today_rounded,
+                        color: colorScheme.primary, size: 20),
+                    const SizedBox(width: 8),
                     Text(
                       selectedDate != null
                           ? "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}"
                           : todaysDate,
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                        fontFamily: 'Poppins',
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    Icon(Icons.expand_more_rounded,
+                        color: colorScheme.primary, size: 22),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Divider(height: 1, color: colorScheme.onSurface),
-            ),
+            const SizedBox(height: 20),
+            //Page content
             Expanded(
               child: DailyData(
                 showAppBar: false,
                 key: ValueKey(selectedDate),
                 dateSelected: selectedDate != null
-                      ? "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}"
-                      : todaysDate,
-                )
-              )
+                    ? "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}"
+                    : todaysDate,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+
 }
 
 
@@ -142,20 +188,35 @@ class _DailyDataState extends State<DailyData> {
     final foods = context.watch<DailyDataProvider>().getDailyData(widget.dateSelected)?['foods'] ?? [];
 
     return Scaffold(
+      //app bar
       appBar: widget.showAppBar ? AppBar(
-        title:  Text(
-            "Today's Data",
-            style: TextStyle(
-              color: colorScheme.onPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.25,
-              height: 1.3,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Today\'s Data',
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-          centerTitle: true,
-          backgroundColor: colorScheme.primary,
+        ),
       ) : null,
+
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

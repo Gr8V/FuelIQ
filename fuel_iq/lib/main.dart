@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
+import 'package:fuel_iq/pages/main/insights.dart';
 import 'package:provider/provider.dart';
 //pages
 import 'pages/main/home_page.dart';
 import 'pages/main/details.dart';
-import 'pages/main/settings.dart';
-import 'pages/main/user_profile.dart';
+import 'pages/main/settings.dart'; 
 import 'services/daily_data_provider.dart';
 //theme
 import 'globals/theme_controller.dart';
@@ -88,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
           DetailsPage(),
           // 2 - Add Food
           SizedBox.shrink(),
-          // 3 - Settings
+          // 3 - Profile
+          Insights(),
+          // 4 - Settings
           SettingsPage(),
-          // 4 - Profile
-          UserProfile()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
+            icon: Icon(Icons.calendar_month),
             label: '',
           ),
           BottomNavigationBarItem(
@@ -124,11 +124,11 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.bar_chart_rounded),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.settings),
             label: '',
           ),
         ],

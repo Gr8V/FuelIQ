@@ -60,6 +60,22 @@ class DailyDataProvider extends ChangeNotifier {
     return weights;
   }
 
+  /// Get all loaded calories from cache
+  /// Returns map where key = date, value = dailyCal
+  /// Only includes dates with non-zero calories
+  Map<String, double> getAllLoadedCalories() {
+    final calories = <String, double>{};
+    
+    _cache.forEach((date, data) {
+      final dailyCal = data['calories'];
+      if (dailyCal != null && dailyCal != 0.0) {
+        calories[date] = dailyCal as double;
+      }
+    });
+    
+    return calories;
+  }
+
   /// Get the most recent targets from storage
   /// Returns null if no targets have been set yet
   /// 

@@ -60,18 +60,43 @@ class _ScanBarcodeState extends State<ScanBarcode> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final screenSize = MediaQuery.of(context).size;
+    const cutoutSize = Size(250, 250);
+
+    // Centered scan window in widget coordinates (left, top, width, height)
+    final scanWindow = Rect.fromCenter(
+      center: Offset(screenSize.width / 2, screenSize.height / 2),
+      width: cutoutSize.width,
+      height: cutoutSize.height,
+    );
+
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
         title: Text(
-          "Scan Barcode",
+          'Scan',
           style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
           ),
         ),
-        centerTitle: true,
-        backgroundColor: colorScheme.primary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
         actions: [
           // Toggle flashlight
           if (supportsCamera) 
@@ -99,50 +124,31 @@ class _ScanBarcodeState extends State<ScanBarcode> {
         children: [
           if (supportsCamera)
             ...[
+               //Camera feed
               MobileScanner(
                 controller: cameraController,
                 onDetect: _onBarcodeDetect,
+                scanWindow: scanWindow,
               ),
-              // Overlay box for scan focus area
-              Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: colorScheme.primary,
-                    width: 3,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
+
+              //Dimming layer with transparent cutout
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _ScannerOverlayPainter(),
                 ),
               ),
-              // Dimmed background outside scanning box
-              ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Colors.black,
-                  BlendMode.srcOut,
+
+              //Corner-only border scan area
+              CustomPaint(
+                size: const Size(250, 250),
+                painter: _CornerBorderPainter(
+                  color: colorScheme.primary,
+                  strokeWidth: 4,
+                  cornerLength: 28,
+                  borderRadius: 16,
                 ),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                        backgroundBlendMode: BlendMode.dstOut,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              ),
+
             ]
           else
             const Center(
@@ -155,6 +161,102 @@ class _ScanBarcodeState extends State<ScanBarcode> {
       ),
     );
   }
+}
+
+/// Painter for stylish corner-only scanner borders
+class _CornerBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double cornerLength;
+  final double borderRadius;
+
+  _CornerBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.cornerLength,
+    required this.borderRadius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final rect = RRect.fromLTRBR(
+      0,
+      0,
+      size.width,
+      size.height,
+      Radius.circular(borderRadius),
+    );
+
+    // Draw four corners only
+    final path = Path();
+
+    // Top-left
+    path.moveTo(rect.left, rect.top + cornerLength);
+    path.lineTo(rect.left, rect.top);
+    path.lineTo(rect.left + cornerLength, rect.top);
+
+    // Top-right
+    path.moveTo(rect.right - cornerLength, rect.top);
+    path.lineTo(rect.right, rect.top);
+    path.lineTo(rect.right, rect.top + cornerLength);
+
+    // Bottom-right
+    path.moveTo(rect.right, rect.bottom - cornerLength);
+    path.lineTo(rect.right, rect.bottom);
+    path.lineTo(rect.right - cornerLength, rect.bottom);
+
+    // Bottom-left
+    path.moveTo(rect.left + cornerLength, rect.bottom);
+    path.lineTo(rect.left, rect.bottom);
+    path.lineTo(rect.left, rect.bottom - cornerLength);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+
+/// 🎨 Custom painter that dims the screen but leaves a transparent rectangle
+class _ScannerOverlayPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.5)
+      ..style = PaintingStyle.fill;
+
+    // Full screen dim
+    final overlayRect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    // Center transparent box
+    final cutoutWidth = 250.0;
+    final cutoutHeight = 250.0;
+    final left = (size.width - cutoutWidth) / 2;
+    final top = (size.height - cutoutHeight) / 2;
+    final cutoutRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(left, top, cutoutWidth, cutoutHeight),
+      const Radius.circular(16),
+    );
+
+    // Create path for the full screen
+    final overlayPath = Path()..addRect(overlayRect);
+    // Subtract the cutout area (transparent part)
+    overlayPath.addRRect(cutoutRect);
+    overlayPath.fillType = PathFillType.evenOdd;
+
+    // Draw
+    canvas.drawPath(overlayPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 
