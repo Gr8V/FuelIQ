@@ -22,6 +22,7 @@ class _WaterPageState extends State<WaterPage> {
 
     final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
     final waterDrunk = dailyData?['water'] ?? 0.0; // in liters
+    final dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
     return Scaffold(
       //app bar
       appBar: AppBar(
@@ -79,7 +80,7 @@ class _WaterPageState extends State<WaterPage> {
                     const SizedBox(width: 16),
                     MacroTile(
                       eaten: waterDrunk,
-                      goal: waterTarget,
+                      goal: dailyWaterTarget,
                       size: 140,
                       bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       fgColor: AppColors.waterColor,

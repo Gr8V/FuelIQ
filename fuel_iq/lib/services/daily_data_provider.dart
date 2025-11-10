@@ -8,6 +8,136 @@ class DailyDataProvider extends ChangeNotifier {
   final Map<String, Map<String, dynamic>> _cache = {};
 
   // ============================================================================
+  // INITIALIZATION & AUTO-FILL
+  // ============================================================================
+
+  /// Initialize the provider and auto-fill missing days
+  /// Call this when the app starts (e.g., in main.dart or home screen)
+  /// 
+  /// Usage:
+  /// ```dart
+  /// await Provider.of<DailyDataProvider>(context, listen: false).initialize(
+  ///   defaultCaloriesTarget: 2300,
+  ///   defaultProteinTarget: 150,
+  ///   defaultCarbsTarget: 250,
+  ///   defaultFatsTarget: 70,
+  ///   defaultWaterTarget: 3,
+  /// );
+  /// ```
+  Future<void> initialize({
+    double defaultCaloriesTarget = 2300,
+    double defaultProteinTarget = 150,
+    double defaultCarbsTarget = 250,
+    double defaultFatsTarget = 70,
+    double defaultWaterTarget = 3,
+  }) async {
+    await _autoFillMissingDays(
+      defaultCaloriesTarget: defaultCaloriesTarget,
+      defaultProteinTarget: defaultProteinTarget,
+      defaultCarbsTarget: defaultCarbsTarget,
+      defaultFatsTarget: defaultFatsTarget,
+      defaultWaterTarget: defaultWaterTarget,
+    );
+  }
+
+  /// Automatically fill missing days between last stored date and today
+  /// Copies targets from the last available day, or uses defaults if no data exists
+  Future<void> _autoFillMissingDays({
+    required double defaultCaloriesTarget,
+    required double defaultProteinTarget,
+    required double defaultCarbsTarget,
+    required double defaultFatsTarget,
+    required double defaultWaterTarget,
+  }) async {
+    final allData = await LocalStorageService.getAllData();
+    final today = DateTime.now();
+    
+    Map<String, double> targets;
+    DateTime startDate;
+    
+    if (allData.isEmpty) {
+      // No previous data - use defaults and start from today
+      targets = {
+        'calorieTarget': defaultCaloriesTarget,
+        'proteinTarget': defaultProteinTarget,
+        'carbsTarget': defaultCarbsTarget,
+        'fatsTarget': defaultFatsTarget,
+        'waterTarget': defaultWaterTarget,
+      };
+      startDate = today;
+    } else {
+      // Find the most recent date in storage
+      final sortedDates = allData.keys.toList()..sort((a, b) {
+        final dateA = _parseDate(a);
+        final dateB = _parseDate(b);
+        return dateB.compareTo(dateA); // Most recent first
+      });
+      
+      final lastStoredDate = _parseDate(sortedDates.first);
+      
+      // If last stored date is today or in the future, no need to fill
+      if (_isSameDay(lastStoredDate, today) || lastStoredDate.isAfter(today)) {
+        return;
+      }
+      
+      // Get targets from the last stored day
+      final lastDayData = allData[sortedDates.first];
+      targets = {
+        'calorieTarget': lastDayData?['calorieTarget'] ?? defaultCaloriesTarget,
+        'proteinTarget': lastDayData?['proteinTarget'] ?? defaultProteinTarget,
+        'carbsTarget': lastDayData?['carbsTarget'] ?? defaultCarbsTarget,
+        'fatsTarget': lastDayData?['fatsTarget'] ?? defaultFatsTarget,
+        'waterTarget': lastDayData?['waterTarget'] ?? defaultWaterTarget,
+      };
+      
+      startDate = lastStoredDate.add(const Duration(days: 1));
+    }
+    
+    // Fill in missing days
+    DateTime currentDate = startDate;
+    
+    while (currentDate.isBefore(today) || _isSameDay(currentDate, today)) {
+      final dateString = _formatDate(currentDate);
+      
+      // Check if this date already exists
+      final existingData = await LocalStorageService.getDailyData(dateString);
+      
+      if (existingData == null) {
+        // Create empty day with targets
+        await LocalStorageService.saveDailyData(
+          date: dateString,
+          calories: 0.0,
+          protein: 0.0,
+          carbs: 0.0,
+          fats: 0.0,
+          water: 0.0,
+          weight: 0.0,
+          calorieTarget: targets['calorieTarget'],
+          proteinTarget: targets['proteinTarget'],
+          carbsTarget: targets['carbsTarget'],
+          fatsTarget: targets['fatsTarget'],
+          waterTarget: targets['waterTarget'],
+        );
+      }
+      
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+  }
+
+  /// Check if two dates are the same day (ignoring time)
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  /// Format DateTime to dd-MM-yyyy string
+  String _formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString();
+    return '$day-$month-$year';
+  }
+
+  // ============================================================================
   // DATE NORMALIZATION
   // ============================================================================
 
@@ -60,21 +190,61 @@ class DailyDataProvider extends ChangeNotifier {
     return weights;
   }
 
-  /// Get all loaded calories from cache
-  /// Returns map where key = date, value = dailyCal
-  /// Only includes dates with non-zero calories
-  Map<String, double> getAllLoadedCalories() {
-    final calories = <String, double>{};
-    
+  //calories load
+  List<Map<String, dynamic>> getAllLoadedCalories() {
+    final results = <Map<String, dynamic>>[];
+
     _cache.forEach((date, data) {
       final dailyCal = data['calories'];
+      final targetCal = data['calorieTarget'];
+      
       if (dailyCal != null && dailyCal != 0.0) {
-        calories[date] = dailyCal as double;
+        results.add({
+          'date': date,
+          'calories': dailyCal as double,
+          'calorieTarget': targetCal ?? 0.0, // default 0 if not found
+        });
       }
     });
-    
-    return calories;
+    return results;
   }
+  //protein load
+  List<Map<String, dynamic>> getAllLoadedProtein() {
+    final results = <Map<String, dynamic>>[];
+
+    _cache.forEach((date, data) {
+      final dailyCal = data['protein'];
+      final targetCal = data['proteinTarget'];
+      
+      if (dailyCal != null && dailyCal != 0.0) {
+        results.add({
+          'date': date,
+          'protein': dailyCal as double,
+          'proteinTarget': targetCal ?? 0.0, // default 0 if not found
+        });
+      }
+    });
+    return results;
+  }
+  //fats load
+  List<Map<String, dynamic>> getAllLoadedCarbs() {
+    final results = <Map<String, dynamic>>[];
+
+    _cache.forEach((date, data) {
+      final dailyCal = data['carbs'];
+      final targetCal = data['carbsTarget'];
+      
+      if (dailyCal != null && dailyCal != 0.0) {
+        results.add({
+          'date': date,
+          'carbs': dailyCal as double,
+          'carbsTarget': targetCal ?? 0.0, // default 0 if not found
+        });
+      }
+    });
+    return results;
+  }
+
 
   /// Get the most recent targets from storage
   /// Returns null if no targets have been set yet
@@ -301,7 +471,6 @@ class DailyDataProvider extends ChangeNotifier {
     await _reloadDateData(normalizedDate);
   }
 
-
   Future<void> clearAllData() async {
     // Clear storage
     await LocalStorageService.clearAllData();
@@ -312,7 +481,6 @@ class DailyDataProvider extends ChangeNotifier {
     // Notify all listeners to update UI
     notifyListeners();
   }
-
 
   // ============================================================================
   // PRIVATE HELPER METHODS

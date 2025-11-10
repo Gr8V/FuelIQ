@@ -20,16 +20,8 @@ void main() async {
   // Initialize provider
   final dataProvider = DailyDataProvider();
   
-  // Load last targets (or use defaults)
-  final lastTargets = await dataProvider.getLastTargets();
-  
-  // Set global targets
-  caloriesTarget = lastTargets?['calorieTarget'] ?? defaultCaloriesTarget;
-  proteinTarget = lastTargets?['proteinTarget'] ?? defaultProteinTarget;
-  carbsTarget = lastTargets?['carbsTarget'] ?? defaultCarbsTarget;
-  fatsTarget = lastTargets?['fatsTarget'] ?? defaultFatsTarget;
-  waterTarget = lastTargets?['waterTarget'] ?? defaultWaterTarget;
-  
+  await dataProvider.initialize();
+
   runApp(
     MultiProvider(
       providers: [

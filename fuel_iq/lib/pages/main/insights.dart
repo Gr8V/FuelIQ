@@ -12,7 +12,6 @@ class Insights extends StatefulWidget {
 }
 
 class _InsightsState extends State<Insights> {
-  Map<String, double> _calories = {};
   @override
   void initState() {
     super.initState();
@@ -37,10 +36,6 @@ class _InsightsState extends State<Insights> {
     for (final date in dates) {
       await provider.loadDailyData(date);
     }
-    
-    setState(() {
-      _calories = provider.getAllLoadedCalories();
-    });
   }
 
   @override
@@ -78,27 +73,43 @@ class _InsightsState extends State<Insights> {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            /* TODO the bar chart does not update when i change the data
-            SimpleCalorieBarChart(
-              calories: _calories
-            )
-            */
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Consumer<DailyDataProvider>(
+                builder: (context, provider, _) {
+                  final calories = provider.getAllLoadedCalories();
+                  return SimpleMacroBarChart(
+                    data: calories,
+                    title: 'Calories',
+                    valueKey: 'calories',
+                    targetKey: 'calorieTarget',
+                    unit: 'kcal',
+                    );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
+class SimpleMacroBarChart extends StatelessWidget {
+  final List<Map<String, dynamic>> data;
+  final String title;
+  final String valueKey;
+  final String targetKey;
+  final String unit; // e.g. "g" or "cal"
 
-class SimpleCalorieBarChart extends StatelessWidget {
-  final Map<String, double> calories;
-
-  const SimpleCalorieBarChart({
+  const SimpleMacroBarChart({
     super.key,
-    required this.calories,
+    required this.data,
+    required this.title,
+    required this.valueKey,
+    required this.targetKey,
+    this.unit = "",
   });
 
   DateTime _parseDate(String dateString) {
@@ -113,13 +124,17 @@ class SimpleCalorieBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    final sortedData = [...data]..sort((a, b) {
+      return _parseDate(a['date']).compareTo(_parseDate(b['date']));
+    });
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Daily Calories',
+            'Daily $title',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -127,7 +142,6 @@ class SimpleCalorieBarChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          
           SizedBox(
             height: 300,
             child: BarChart(
@@ -140,10 +154,15 @@ class SimpleCalorieBarChart extends StatelessWidget {
                     tooltipBorder: BorderSide(color: colorScheme.outline),
                     tooltipPadding: const EdgeInsets.all(8),
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      final date = calories.keys.elementAt(group.x.toInt());
-                      final value = rod.toY;
+                      final item = sortedData[group.x.toInt()];
+                      final date = item['date'];
+                      final value = (item[valueKey] ?? 0.0) as double;
+                      final target = (item[targetKey] ?? 0.0) as double;
+                      final diff = value - target;
+
                       return BarTooltipItem(
-                        '$date\n${value.toStringAsFixed(0)} cal',
+                        '$date\n${value.toStringAsFixed(0)} / ${target.toStringAsFixed(0)} $unit\n'
+                        '${diff >= 0 ? 'Goal met ✅' : 'Goal missed ❌'}',
                         TextStyle(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
@@ -159,10 +178,10 @@ class SimpleCalorieBarChart extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= calories.length) return const Text('');
-                        final dateString = calories.keys.elementAt(value.toInt());
+                        if (value.toInt() >= sortedData.length) return const Text('');
+                        final dateString = sortedData[value.toInt()]['date'];
                         final date = _parseDate(dateString);
-                        
+
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
@@ -215,15 +234,19 @@ class SimpleCalorieBarChart extends StatelessWidget {
                     left: BorderSide(color: colorScheme.outline),
                   ),
                 ),
-                barGroups: calories.entries.toList().asMap().entries.map((entry) {
+                barGroups: sortedData.asMap().entries.map((entry) {
                   final index = entry.key;
-                  final calorie = entry.value.value;
+                  final item = entry.value;
+                  final value = (item[valueKey] ?? 0.0) as double;
+                  final target = (item[targetKey] ?? 0.0) as double;
+                  final metGoal = value >= target;
+
                   return BarChartGroupData(
                     x: index,
                     barRods: [
                       BarChartRodData(
-                        toY: calorie,
-                        color: colorScheme.primary,
+                        toY: value,
+                        color: metGoal ? Colors.green : Colors.red,
                         width: 24,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4),

@@ -45,6 +45,11 @@ class _HomePageState extends State<HomePage> {
     final fatsEaten = (dailyData?['fats'] ?? 0).toDouble();
     final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
     final weightToday = (dailyData?['weight'] ?? 0).toDouble();
+    final dailyCalorieTarget = (dailyData?['calorieTarget'] ?? 0).toDouble();
+    final dailyProteinTarget = (dailyData?['proteinTarget'] ?? 0).toDouble();
+    final dailyCarbsTarget = (dailyData?['carbsTarget'] ?? 0).toDouble();
+    final dailyFatsTarget = (dailyData?['fatsTarget'] ?? 0).toDouble();
+    final dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
 
     final foods = context.watch<DailyDataProvider>().getDailyData(todaysDate)?['foods'] ?? [];
     
@@ -169,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            '${(caloriesTarget - caloriesEaten).toInt()}',
+                                            '${(dailyCalorieTarget - caloriesEaten).toInt()}',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context).size.width * 0.13,
                                               fontWeight: FontWeight.bold,
@@ -193,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                                     const SizedBox(width: 16),
                                     MacroTile(
                                       eaten: caloriesEaten,
-                                      goal: caloriesTarget,
+                                      goal: dailyCalorieTarget,
                                       size: 80,
                                       bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                                       fgColor:colorScheme.onSurface,
@@ -224,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                                         MacroTile(
                                           label: 'Protein',
                                           eaten: proteinEaten,
-                                          goal: proteinTarget,
+                                          goal: dailyProteinTarget,
                                           bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
                                           fgColor: AppColors.proteinColor,
                                           icon: FontAwesomeIcons.drumstickBite,
@@ -240,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '${proteinEaten.toInt()}/${proteinTarget.toInt()}g',
+                                          '${proteinEaten.toInt()}/${dailyProteinTarget.toInt()}g',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -266,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                                         MacroTile(
                                           label: 'Carbs',
                                           eaten: carbsEaten,
-                                          goal: carbsTarget,
+                                          goal: dailyCarbsTarget,
                                           bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
                                           fgColor: AppColors.carbsColor,
                                           icon: FontAwesomeIcons.breadSlice,
@@ -282,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '${carbsEaten.toInt()}/${carbsTarget.toInt()}g',
+                                          '${carbsEaten.toInt()}/${dailyCarbsTarget.toInt()}g',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -308,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                                         MacroTile(
                                           label: 'Fats',
                                           eaten: fatsEaten,
-                                          goal: fatsTarget,
+                                          goal: dailyFatsTarget,
                                           bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
                                           fgColor: AppColors.fatColor,
                                           icon: FontAwesomeIcons.seedling,
@@ -324,7 +329,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '${fatsEaten.toInt()}/${fatsTarget.toInt()}g',
+                                          '${fatsEaten.toInt()}/${dailyFatsTarget.toInt()}g',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -381,7 +386,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   MacroTile(
                                     eaten: waterDrunk,
-                                    goal: waterTarget,
+                                    goal: dailyWaterTarget,
                                     size: 48,
                                     bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
                                     fgColor: AppColors.waterColor,
@@ -404,7 +409,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '${(waterTarget - waterDrunk).toStringAsFixed(1)}L remaining',
+                                          '${(dailyWaterTarget - waterDrunk).toStringAsFixed(1)}L remaining',
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: colorScheme.onSurface.withValues(alpha: 0.6),

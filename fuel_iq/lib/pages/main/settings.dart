@@ -236,9 +236,25 @@ class TargetSelectionPage extends StatefulWidget {
 
 class _TargetSelectionPageState extends State<TargetSelectionPage> {
   @override
+  void initState() {
+    super.initState();
+    // Load initial data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DailyDataProvider>(context, listen: false)
+          .loadDailyData(todaysDate);
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
+    var dailyCalorieTarget = (dailyData?['calorieTarget'] ?? 0).toDouble();
+    var dailyProteinTarget = (dailyData?['proteinTarget'] ?? 0).toDouble();
+    var dailyCarbsTarget = (dailyData?['carbsTarget'] ?? 0).toDouble();
+    var dailyFatsTarget = (dailyData?['fatsTarget'] ?? 0).toDouble();
+    var dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
     return Scaffold(
       body: ListView(
         children: [
@@ -282,7 +298,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  caloriesTarget.toString(),
+                  dailyCalorieTarget.toString(),
                   style: TextStyle(
                     color: colorScheme.secondary,
                     fontSize: 15,
@@ -294,10 +310,10 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
               showEditTargetDialog(
                 context: context,
                 title: 'Calorie Target',
-                initialValue: caloriesTarget,
+                initialValue: dailyCalorieTarget,
                 onSave: (newValue) async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => caloriesTarget = newValue);
+                  setState(() => dailyCalorieTarget = newValue);
                   await provider.updateSingleTarget(getTodaysDate(), 'calorieTarget', newValue);
                 },
               );
@@ -314,7 +330,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  proteinTarget.toString(),
+                  dailyProteinTarget.toString(),
                   style: TextStyle(
                     color: colorScheme.secondary,
                     fontSize: 15,
@@ -326,10 +342,10 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
               showEditTargetDialog(
                 context: context,
                 title: 'Protein Target',
-                initialValue: proteinTarget,
+                initialValue: dailyProteinTarget,
                 onSave: (newValue) async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => proteinTarget = newValue);
+                  setState(() => dailyProteinTarget = newValue);
                   await provider.updateSingleTarget(getTodaysDate(), 'proteinTarget', newValue);
                 },
               );
@@ -346,7 +362,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  carbsTarget.toString(),
+                  dailyCarbsTarget.toString(),
                   style: TextStyle(
                     color: colorScheme.secondary,
                     fontSize: 15,
@@ -358,10 +374,10 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
               showEditTargetDialog(
                 context: context,
                 title: 'Carbs Target',
-                initialValue: carbsTarget,
+                initialValue: dailyCarbsTarget,
                 onSave: (newValue) async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => carbsTarget = newValue);
+                  setState(() => dailyCarbsTarget = newValue);
                   await provider.updateSingleTarget(getTodaysDate(), 'carbsTarget', newValue);
                 },
               );
@@ -378,7 +394,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  fatsTarget.toString(),
+                  dailyFatsTarget.toString(),
                   style: TextStyle(
                     color: colorScheme.secondary,
                     fontSize: 15,
@@ -390,10 +406,10 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
               showEditTargetDialog(
                 context: context,
                 title: 'Fats Target',
-                initialValue: fatsTarget,
+                initialValue: dailyFatsTarget,
                 onSave: (newValue) async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => fatsTarget = newValue);
+                  setState(() => dailyFatsTarget = newValue);
                   await provider.updateSingleTarget(getTodaysDate(), 'fatsTarget', newValue);
                 },
               );
@@ -408,7 +424,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  waterTarget.toString(),
+                  dailyWaterTarget.toString(),
                   style: TextStyle(
                     color: colorScheme.secondary,
                     fontSize: 15,
@@ -420,10 +436,10 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
               showEditTargetDialog(
                 context: context,
                 title: 'Water Target',
-                initialValue: waterTarget,
+                initialValue: dailyWaterTarget,
                 onSave: (newValue) async {
                   final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => waterTarget = newValue);
+                  setState(() => dailyWaterTarget = newValue);
                   await provider.updateSingleTarget(
                     getTodaysDate(), 
                     'waterTarget', 
