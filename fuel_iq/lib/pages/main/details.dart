@@ -184,11 +184,30 @@ class _DailyDataState extends State<DailyData> {
     final fatsEaten = (dailyData?['fats'] ?? 0).toDouble();
     final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
     final weightToday = (dailyData?['weight'] ?? 0).toDouble();
-    final dailyCalorieTarget = (dailyData?['calorieTarget'] ?? 0).toDouble();
-    final dailyProteinTarget = (dailyData?['proteinTarget'] ?? 0).toDouble();
-    final dailyCarbsTarget = (dailyData?['carbsTarget'] ?? 0).toDouble();
-    final dailyFatsTarget = (dailyData?['fatsTarget'] ?? 0).toDouble();
-    final dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
+        final dailyCalorieTarget = 
+    ((dailyData?['calorieTarget'] ?? 0).toDouble() != 0)
+        ? (dailyData?['calorieTarget'] ?? 0).toDouble()
+        : defaultCaloriesTarget.toDouble();
+
+    final dailyProteinTarget = 
+        ((dailyData?['proteinTarget'] ?? 0).toDouble() != 0)
+            ? (dailyData?['proteinTarget'] ?? 0).toDouble()
+            : defaultProteinTarget.toDouble();
+
+    final dailyCarbsTarget = 
+        ((dailyData?['carbsTarget'] ?? 0).toDouble() != 0)
+            ? (dailyData?['carbsTarget'] ?? 0).toDouble()
+            : defaultCaloriesTarget.toDouble();
+
+    final dailyFatsTarget = 
+        ((dailyData?['fatsTarget'] ?? 0).toDouble() != 0)
+            ? (dailyData?['fatsTarget'] ?? 0).toDouble()
+            : defaultFatsTarget.toDouble();
+
+    final dailyWaterTarget = 
+        ((dailyData?['waterTarget'] ?? 0).toDouble() != 0)
+            ? (dailyData?['waterTarget'] ?? 0).toDouble()
+            : defaultWaterTarget.toDouble();
     
     final foods = context.watch<DailyDataProvider>().getDailyData(widget.dateSelected)?['foods'] ?? [];
 

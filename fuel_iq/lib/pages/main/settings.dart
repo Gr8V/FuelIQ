@@ -571,6 +571,10 @@ Future<void> showEraseDataDialog({
                 listen: false,
               );
               await provider.clearAllData();
+              // Initialize provider
+              final dataProvider = DailyDataProvider();
+              
+              await dataProvider.initialize();
 
               if (context.mounted) {
                 Navigator.pop(context);
