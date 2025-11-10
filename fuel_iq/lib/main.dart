@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
 import 'package:fuel_iq/pages/main/insights.dart';
 import 'package:provider/provider.dart';

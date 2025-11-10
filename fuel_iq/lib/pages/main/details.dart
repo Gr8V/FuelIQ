@@ -789,7 +789,7 @@ class FoodCard extends StatelessWidget {
                     // Quantity + Calories
                     Row(
                       children: [
-                        Icon(Icons.scale_rounded,
+                        Icon(FontAwesomeIcons.weightHanging,
                             size: 16,
                             color: colorScheme.onSurface.withValues(alpha: 0.6)),
                         const SizedBox(width: 4),
@@ -804,7 +804,7 @@ class FoodCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Icon(Icons.local_fire_department_rounded,
+                        Icon(FontAwesomeIcons.fireFlameCurved,
                             size: 16, color: colorScheme.onSurface),
                         const SizedBox(width: 4),
                         Flexible(
@@ -830,7 +830,7 @@ class FoodCard extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.fitness_center_rounded,
+                            Icon(FontAwesomeIcons.drumstickBite,
                                 size: 16, color: AppColors.proteinColor),
                             const SizedBox(width: 4),
                             Text(
@@ -846,7 +846,7 @@ class FoodCard extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.breakfast_dining_rounded,
+                            Icon(FontAwesomeIcons.breadSlice,
                                 size: 16, color: AppColors.carbsColor),
                             const SizedBox(width: 4),
                             Text(
@@ -862,7 +862,7 @@ class FoodCard extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.water_drop_rounded,
+                            Icon(FontAwesomeIcons.seedling,
                                 size: 16, color: AppColors.fatColor),
                             const SizedBox(width: 4),
                             Text(

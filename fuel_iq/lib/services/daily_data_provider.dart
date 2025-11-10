@@ -226,7 +226,7 @@ class DailyDataProvider extends ChangeNotifier {
     });
     return results;
   }
-  //fats load
+  //carbs load
   List<Map<String, dynamic>> getAllLoadedCarbs() {
     final results = <Map<String, dynamic>>[];
 
@@ -239,6 +239,24 @@ class DailyDataProvider extends ChangeNotifier {
           'date': date,
           'carbs': dailyCal as double,
           'carbsTarget': targetCal ?? 0.0, // default 0 if not found
+        });
+      }
+    });
+    return results;
+  }
+  //fats load
+  List<Map<String, dynamic>> getAllLoadedFats() {
+    final results = <Map<String, dynamic>>[];
+
+    _cache.forEach((date, data) {
+      final dailyCal = data['fats'];
+      final targetCal = data['fatsTarget'];
+      
+      if (dailyCal != null && dailyCal != 0.0) {
+        results.add({
+          'date': date,
+          'fats': dailyCal as double,
+          'fatsTarget': targetCal ?? 0.0, // default 0 if not found
         });
       }
     });

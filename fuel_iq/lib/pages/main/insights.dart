@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -79,13 +78,41 @@ class _InsightsState extends State<Insights> {
               Consumer<DailyDataProvider>(
                 builder: (context, provider, _) {
                   final calories = provider.getAllLoadedCalories();
-                  return SimpleMacroBarChart(
-                    data: calories,
-                    title: 'Calories',
-                    valueKey: 'calories',
-                    targetKey: 'calorieTarget',
-                    unit: 'kcal',
-                    );
+                  final protein = provider.getAllLoadedProtein();
+                  final carbs = provider.getAllLoadedCarbs();
+                  final fats = provider.getAllLoadedFats();
+                  return Column(
+                    children: [
+                      SimpleMacroBarChart(
+                        data: calories,
+                        title: 'Calories',
+                        valueKey: 'calories',
+                        targetKey: 'calorieTarget',
+                        unit: 'kcal',
+                      ),
+                      SimpleMacroBarChart(
+                        data: protein,
+                        title: 'Protein',
+                        valueKey: 'protein',
+                        targetKey: 'proteinTarget',
+                        unit: 'g',
+                      ),
+                      SimpleMacroBarChart(
+                        data: carbs,
+                        title: 'Carbs',
+                        valueKey: 'carbs',
+                        targetKey: 'carbsTarget',
+                        unit: 'g',
+                      ),
+                      SimpleMacroBarChart(
+                        data: fats,
+                        title: 'Fats',
+                        valueKey: 'fats',
+                        targetKey: 'fatsTarget',
+                        unit: 'g',
+                      ),
+                    ],
+                  );
                 },
               ),
             ],
