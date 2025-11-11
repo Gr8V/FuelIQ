@@ -163,38 +163,36 @@ class ThemeSelectionPage extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (context, currentTheme, child) {
         return Scaffold(
-          body: Column(
-            children: [
-              AppBar(
-              title:Text(
-                'Theme', // Replace with your app name
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.2,
-                  height: 1.2,
-                  fontFamily: 'serif', // Gives it an elegant look
-                  shadows: [
-                    Shadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 3),
-                      blurRadius: 8,
-                    ),
-                    Shadow(
-                      color: Colors.white24,
-                      offset: Offset(0, -1),
-                      blurRadius: 4,
-                    ),
+          //app bar
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            title: Text(
+              'Theme',
+              style: TextStyle(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w700,
+                fontSize: 22,
+                letterSpacing: 1.1,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    colorScheme.onSurface.withValues(alpha: 0.1),
+                    colorScheme.surface.withValues(alpha: 0.1),
                   ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-              centerTitle: true,
-              ),
-              Divider(
-                thickness: 2,        // line thickness
-                color: Colors.grey,  // line color
-              ),
+            ),
+          ),
+          body: Column(
+            children: [
               RadioGroup<ThemeMode>(
                 groupValue: currentTheme,
                 onChanged: (ThemeMode? value) {
@@ -256,38 +254,36 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
     var dailyFatsTarget = (dailyData?['fatsTarget'] ?? 0).toDouble();
     var dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
     return Scaffold(
+      //app bar
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Targets',
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
       body: ListView(
         children: [
-          AppBar(
-            title:Text(
-              'Targets', // Replace with your app name
-              style: TextStyle(
-                color: colorScheme.onSurface,
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-                height: 1.2,
-                fontFamily: 'serif', // Gives it an elegant look
-                shadows: [
-                  Shadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 3),
-                    blurRadius: 8,
-                  ),
-                  Shadow(
-                    color: Colors.white24,
-                    offset: Offset(0, -1),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-            centerTitle: true,
-          ),
-          Divider(
-            thickness: 2,        // line thickness
-            color: Colors.grey,  // line color
-          ),
           // Calorie Target
           ListTile(
             title: Row(

@@ -41,8 +41,8 @@ class _WeightPageState extends State<WeightPage> {
       await provider.loadDailyData(date);
     }
     
-    setState(() {
-      _weights = provider.getAllLoadedWeights();
+    setState(() async {
+      _weights = await provider.getAllWeights();
       _isLoading = false;
     });
     
@@ -88,8 +88,8 @@ class _WeightPageState extends State<WeightPage> {
     
     await provider.updateDailyData(todaysDate, currentData);
     
-    setState(() {
-      _weights = provider.getAllLoadedWeights();
+    setState(() async {
+      _weights = await provider.getAllWeights();
     });
     if (!mounted) return;
 

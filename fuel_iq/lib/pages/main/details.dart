@@ -253,55 +253,69 @@ class _DailyDataState extends State<DailyData> {
                   Card(
                     elevation: 3,
                     color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '${(dailyCalorieTarget - caloriesEaten).toInt()}',
-                                    style: TextStyle(
-                                      fontSize: MediaQuery.of(context).size.width * 0.13,
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onSurface,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Builder(
+                              builder: (context) {
+                                final int difference =
+                                    (dailyCalorieTarget - caloriesEaten).toInt();
+
+                                final bool isOver = difference < 0;
+                                final int displayValue = difference.abs();
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '$displayValue',
+                                      style: TextStyle(
+                                        fontSize: MediaQuery.of(context).size.width * 0.13,
+                                        fontWeight: FontWeight.bold,
+                                        color: isOver
+                                            ? Colors.deepOrangeAccent // 🔥 red if over target
+                                            : colorScheme.onSurface, // normal color if under
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Calories Left',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.ellipsis,
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      isOver ? ' Calories Over' : 'Calories Left',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: isOver
+                                            ? Colors.deepOrangeAccent.withValues(alpha: 0.8)
+                                            : colorScheme.onSurface.withValues(alpha: 0.6),
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                );
+                              },
                             ),
-                            const SizedBox(width: 16),
-                            MacroTile(
-                              eaten: caloriesEaten,
-                              goal: dailyCalorieTarget,
-                              size: 80,
-                              bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                              fgColor: colorScheme.onSurface,
-                              icon: FontAwesomeIcons.fireFlameCurved,
-                              strokeWidth: 7,
-                              label: 'Calories',
-                            ),
-                          ],
-                        ),
-                      )
+                          ),
+                          const SizedBox(width: 16),
+                          MacroTile(
+                            eaten: caloriesEaten,
+                            goal: dailyCalorieTarget,
+                            size: 80,
+                            bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                            fgColor: colorScheme.onSurface,
+                            icon: FontAwesomeIcons.fireFlameCurved,
+                            strokeWidth: 7,
+                            label: 'Calories',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   // Macros
@@ -608,18 +622,31 @@ class _FoodViewState extends State<FoodView> {
     return Scaffold(
       //app bar
       appBar: AppBar(
-        title:  Text(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
           widget.foodName,
           style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.25,
-            height: 1.3,
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
           ),
         ),
-        centerTitle: true,
-        backgroundColor: colorScheme.primary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
       ),
       //body
       body: Padding(

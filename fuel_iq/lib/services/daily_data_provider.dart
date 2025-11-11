@@ -174,94 +174,184 @@ class DailyDataProvider extends ChangeNotifier {
     return _cache[normalizedDate]?['weight'];
   }
 
-  /// Get all loaded weights from cache
-  /// Returns map where key = date, value = weight
-  /// Only includes dates with non-zero weights
-  Map<String, double> getAllLoadedWeights() {
-    final weights = <String, double>{};
+  // Replace your existing getAllLoaded methods with these:
+
+/// Get all calories data from storage (not just cache)
+/// Optionally limit to last N days
+Future<List<Map<String, dynamic>>> getAllLoadedCalories({int? lastDays}) async {
+  final allData = await LocalStorageService.getAllData();
+  final results = <Map<String, dynamic>>[];
+  
+  // Filter by date if lastDays is specified
+  DateTime? cutoffDate;
+  if (lastDays != null) {
+    cutoffDate = DateTime.now().subtract(Duration(days: lastDays));
+  }
+
+  allData.forEach((date, data) {
+    final dailyCal = data['calories'];
+    final targetCal = data['calorieTarget'];
     
-    _cache.forEach((date, data) {
-      final weight = data['weight'];
-      if (weight != null && weight != 0.0) {
-        weights[date] = weight as double;
-      }
-    });
+    // Check date filter
+    if (cutoffDate != null) {
+      final dateTime = _parseDate(date);
+      if (dateTime.isBefore(cutoffDate)) return;
+    }
     
-    return weights;
+    if (dailyCal != null && dailyCal != 0.0) {
+      results.add({
+        'date': date,
+        'calories': dailyCal is num ? dailyCal.toDouble() : 0.0,
+        'calorieTarget': targetCal is num ? targetCal.toDouble() : 0.0,
+      });
+    }
+  });
+  
+  // Sort by date (most recent first)
+  results.sort((a, b) {
+    final dateA = _parseDate(a['date']);
+    final dateB = _parseDate(b['date']);
+    return dateB.compareTo(dateA);
+  });
+  
+  return results;
+}
+
+/// Get all protein data from storage (not just cache)
+Future<List<Map<String, dynamic>>> getAllLoadedProtein({int? lastDays}) async {
+  final allData = await LocalStorageService.getAllData();
+  final results = <Map<String, dynamic>>[];
+  
+  DateTime? cutoffDate;
+  if (lastDays != null) {
+    cutoffDate = DateTime.now().subtract(Duration(days: lastDays));
   }
 
-  //calories load
-  List<Map<String, dynamic>> getAllLoadedCalories() {
-    final results = <Map<String, dynamic>>[];
+  allData.forEach((date, data) {
+    final dailyProtein = data['protein'];
+    final targetProtein = data['proteinTarget'];
+    
+    if (cutoffDate != null) {
+      final dateTime = _parseDate(date);
+      if (dateTime.isBefore(cutoffDate)) return;
+    }
+    
+    if (dailyProtein != null && dailyProtein != 0.0) {
+      results.add({
+        'date': date,
+        'protein': dailyProtein is num ? dailyProtein.toDouble() : 0.0,
+        'proteinTarget': targetProtein is num ? targetProtein.toDouble() : 0.0,
+      });
+    }
+  });
+  
+  results.sort((a, b) {
+    final dateA = _parseDate(a['date']);
+    final dateB = _parseDate(b['date']);
+    return dateB.compareTo(dateA);
+  });
+  
+  return results;
+}
 
-    _cache.forEach((date, data) {
-      final dailyCal = data['calories'];
-      final targetCal = data['calorieTarget'];
-      
-      if (dailyCal != null && dailyCal != 0.0) {
-        results.add({
-          'date': date,
-          'calories': dailyCal as double,
-          'calorieTarget': targetCal ?? 0.0, // default 0 if not found
-        });
-      }
-    });
-    return results;
+/// Get all carbs data from storage (not just cache)
+Future<List<Map<String, dynamic>>> getAllLoadedCarbs({int? lastDays}) async {
+  final allData = await LocalStorageService.getAllData();
+  final results = <Map<String, dynamic>>[];
+  
+  DateTime? cutoffDate;
+  if (lastDays != null) {
+    cutoffDate = DateTime.now().subtract(Duration(days: lastDays));
   }
-  //protein load
-  List<Map<String, dynamic>> getAllLoadedProtein() {
-    final results = <Map<String, dynamic>>[];
 
-    _cache.forEach((date, data) {
-      final dailyCal = data['protein'];
-      final targetCal = data['proteinTarget'];
-      
-      if (dailyCal != null && dailyCal != 0.0) {
-        results.add({
-          'date': date,
-          'protein': dailyCal as double,
-          'proteinTarget': targetCal ?? 0.0, // default 0 if not found
-        });
-      }
-    });
-    return results;
-  }
-  //carbs load
-  List<Map<String, dynamic>> getAllLoadedCarbs() {
-    final results = <Map<String, dynamic>>[];
+  allData.forEach((date, data) {
+    final dailyCarbs = data['carbs'];
+    final targetCarbs = data['carbsTarget'];
+    
+    if (cutoffDate != null) {
+      final dateTime = _parseDate(date);
+      if (dateTime.isBefore(cutoffDate)) return;
+    }
+    
+    if (dailyCarbs != null && dailyCarbs != 0.0) {
+      results.add({
+        'date': date,
+        'carbs': dailyCarbs is num ? dailyCarbs.toDouble() : 0.0,
+        'carbsTarget': targetCarbs is num ? targetCarbs.toDouble() : 0.0,
+      });
+    }
+  });
+  
+  results.sort((a, b) {
+    final dateA = _parseDate(a['date']);
+    final dateB = _parseDate(b['date']);
+    return dateB.compareTo(dateA);
+  });
+  
+  return results;
+}
 
-    _cache.forEach((date, data) {
-      final dailyCal = data['carbs'];
-      final targetCal = data['carbsTarget'];
-      
-      if (dailyCal != null && dailyCal != 0.0) {
-        results.add({
-          'date': date,
-          'carbs': dailyCal as double,
-          'carbsTarget': targetCal ?? 0.0, // default 0 if not found
-        });
-      }
-    });
-    return results;
+/// Get all fats data from storage (not just cache)
+Future<List<Map<String, dynamic>>> getAllLoadedFats({int? lastDays}) async {
+  final allData = await LocalStorageService.getAllData();
+  final results = <Map<String, dynamic>>[];
+  
+  DateTime? cutoffDate;
+  if (lastDays != null) {
+    cutoffDate = DateTime.now().subtract(Duration(days: lastDays));
   }
-  //fats load
-  List<Map<String, dynamic>> getAllLoadedFats() {
-    final results = <Map<String, dynamic>>[];
 
-    _cache.forEach((date, data) {
-      final dailyCal = data['fats'];
-      final targetCal = data['fatsTarget'];
-      
-      if (dailyCal != null && dailyCal != 0.0) {
-        results.add({
-          'date': date,
-          'fats': dailyCal as double,
-          'fatsTarget': targetCal ?? 0.0, // default 0 if not found
-        });
-      }
-    });
-    return results;
+  allData.forEach((date, data) {
+    final dailyFats = data['fats'];
+    final targetFats = data['fatsTarget'];
+    
+    if (cutoffDate != null) {
+      final dateTime = _parseDate(date);
+      if (dateTime.isBefore(cutoffDate)) return;
+    }
+    
+    if (dailyFats != null && dailyFats != 0.0) {
+      results.add({
+        'date': date,
+        'fats': dailyFats is num ? dailyFats.toDouble() : 0.0,
+        'fatsTarget': targetFats is num ? targetFats.toDouble() : 0.0,
+      });
+    }
+  });
+  
+  results.sort((a, b) {
+    final dateA = _parseDate(a['date']);
+    final dateB = _parseDate(b['date']);
+    return dateB.compareTo(dateA);
+  });
+  
+  return results;
+}
+
+/// Get all weights from storage (not just cache)
+Future<Map<String, double>> getAllWeights({int? lastDays}) async {
+  final allData = await LocalStorageService.getAllData();
+  final weights = <String, double>{};
+  
+  DateTime? cutoffDate;
+  if (lastDays != null) {
+    cutoffDate = DateTime.now().subtract(Duration(days: lastDays));
   }
+  
+  allData.forEach((date, data) {
+    if (cutoffDate != null) {
+      final dateTime = _parseDate(date);
+      if (dateTime.isBefore(cutoffDate)) return;
+    }
+    
+    final weight = data['weight'];
+    if (weight != null && weight != 0.0) {
+      weights[date] = weight is num ? weight.toDouble() : 0.0;
+    }
+  });
+  
+  return weights;
+}
 
 
   /// Get the most recent targets from storage

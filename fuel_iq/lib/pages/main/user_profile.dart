@@ -13,41 +13,39 @@ class _UserProfileState extends State<UserProfile> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Scaffold(
+      //app bar
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            //app bar
-            AppBar(
-              title:Text(
-                'Profile', // Replace with your app name
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.2,
-                  height: 1.2,
-                  fontFamily: 'serif', // Gives it an elegant look
-                  shadows: [
-                    Shadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 3),
-                      blurRadius: 8,
-                    ),
-                    Shadow(
-                      color: Colors.white24,
-                      offset: Offset(0, -1),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-              centerTitle: true,
-            ),
-            Divider(
-              thickness: 2,        // line thickness
-              color: Colors.grey,  // line color
-            ),
+            
           ],
         ),
       ),

@@ -180,55 +180,69 @@ class _HomePageState extends State<HomePage> {
                           Card(
                             elevation: 3,
                             color: colorScheme.surface,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '${(dailyCalorieTarget - caloriesEaten).toInt()}',
-                                            style: TextStyle(
-                                              fontSize: MediaQuery.of(context).size.width * 0.13,
-                                              fontWeight: FontWeight.bold,
-                                              color: colorScheme.onSurface,
-                                              overflow: TextOverflow.ellipsis,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Builder(
+                                      builder: (context) {
+                                        final int difference =
+                                            (dailyCalorieTarget - caloriesEaten).toInt();
+
+                                        final bool isOver = difference < 0;
+                                        final int displayValue = difference.abs();
+
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              '$displayValue',
+                                              style: TextStyle(
+                                                fontSize: MediaQuery.of(context).size.width * 0.13,
+                                                fontWeight: FontWeight.bold,
+                                                color: isOver
+                                                    ? Colors.deepOrangeAccent // 🔥 red if over target
+                                                    : colorScheme.onSurface, // normal color if under
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            'Calories Left',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                              fontWeight: FontWeight.w500,
-                                              overflow: TextOverflow.ellipsis,
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              isOver ? ' Calories Over' : 'Calories Left',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: isOver
+                                                    ? Colors.deepOrangeAccent.withValues(alpha: 0.8)
+                                                    : colorScheme.onSurface.withValues(alpha: 0.6),
+                                                fontWeight: FontWeight.w500,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        );
+                                      },
                                     ),
-                                    const SizedBox(width: 16),
-                                    MacroTile(
-                                      eaten: caloriesEaten,
-                                      goal: dailyCalorieTarget,
-                                      size: 80,
-                                      bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                                      fgColor:colorScheme.onSurface,
-                                      icon: FontAwesomeIcons.fireFlameCurved,
-                                      strokeWidth: 7,
-                                      label: 'Calories',
-                                    ),
-                                  ],
-                                ),
-                              )
+                                  ),
+                                  const SizedBox(width: 16),
+                                  MacroTile(
+                                    eaten: caloriesEaten,
+                                    goal: dailyCalorieTarget,
+                                    size: 80,
+                                    bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                    fgColor: colorScheme.onSurface,
+                                    icon: FontAwesomeIcons.fireFlameCurved,
+                                    strokeWidth: 7,
+                                    label: 'Calories',
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           // Macros
