@@ -14,7 +14,7 @@ class NotificationService {
     final androidImplementation =
         _notifications.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
-
+    await androidImplementation?.requestNotificationsPermission();
 
 
     // iOS support (for completeness)
@@ -27,10 +27,10 @@ class NotificationService {
   static Future<void> showNotification({
     required String title,
     required String body,
-    int id = 0,
+    int? id,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'fuel_iq_notifications', // ✅ unique channel ID
+      'fuel_iq_notifications',
       'FuelIQ Alerts',
       channelDescription: 'Notifications from the FuelIQ app',
       importance: Importance.max,
@@ -41,6 +41,22 @@ class NotificationService {
 
     const notificationDetails = NotificationDetails(android: androidDetails);
 
-    await _notifications.show(id, title, body, notificationDetails);
+    // If id isn’t provided, generate one based on timestamp
+    final uniqueId = id ?? DateTime.now().millisecondsSinceEpoch.remainder(100000);
+
+    await _notifications.show(uniqueId, title, body, notificationDetails);
   }
+
+  static Future<void> sendQueuedNotifications(List<Map<String, String>> notifications) async {
+    for (int i = 0; i < notifications.length; i++) {
+      final n = notifications[i];
+      await Future.delayed(Duration(milliseconds: i * 300)); // 0.3 sec gap
+      await NotificationService.showNotification(
+        title: n['title']!,
+        body: n['body']!,
+      );
+    }
+  }
+
+
 }

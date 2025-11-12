@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
 
 class LogFood extends StatefulWidget {
@@ -162,6 +163,51 @@ class _LogFoodState extends State<LogFood> {
         
                     await provider.addFood(todaysDate, foodEntry);
                     await provider.updateDailyData(todaysDate, updatedData);
+
+                    final List<Map<String, String>> notifs = [];
+
+                    //calorie notifs
+                    if (currentData['calories'] >= currentData['calorieTarget']) {
+                      notifs.add({
+                      'title': 'Calories Overflow!!!',
+                      'body': "You have gone ${updatedData['calories']-currentData['calorieTarget']}kcal over your calorie target."
+                      });
+                    } else if (updatedData['calories'] >= currentData['calorieTarget'] && currentData['calories'] != currentData['calorieTarget']) {
+                      notifs.add({
+                      'title': 'Calorie Goal Reached!',
+                      'body': 'You have reached today\'s calorie goal.',
+                      });
+                    }
+                    
+                    //protein notifs
+                    if (updatedData['protein'] >= currentData['proteinTarget'] && currentData['protein'] <= currentData['proteinTarget']) {
+                      notifs.add({
+                      'title': 'Protein Goal Reached!',
+                      'body': 'You have reached today\'s protein goal.',
+                      });
+                    }
+                    //carbs notifs
+                    if (updatedData['carbs'] >= currentData['carbsTarget'] && currentData['carbs'] <= currentData['carbsTarget']) {
+                      notifs.add({
+                      'title': 'Carbs Goal Reached!',
+                      'body': 'You have reached today\'s carbs goal.',
+                      });
+                    }
+                    //protein notifs
+                    if (updatedData['fats'] >= currentData['fatsTarget'] && currentData['fats'] <= currentData['fatsTarget']) {
+                      notifs.add({
+                      'title': 'Fats Goal Reached!',
+                      'body': 'You have reached today\'s fats goal.',
+                      });
+                    }
+                    //water notifs
+                    if (updatedData['water'] >= currentData['waterTarget'] && currentData['water'] <= currentData['waterTarget']) {
+                      notifs.add({
+                      'title': 'Water Goal Reached!',
+                      'body': 'You have reached today\'s water goal.',
+                      });
+                    }
+                    await NotificationService.sendQueuedNotifications(notifs);
         
                     // Optional: clear fields after adding
                     foodNameController.clear();
