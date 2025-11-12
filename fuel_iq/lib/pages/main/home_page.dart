@@ -5,6 +5,7 @@ import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'dart:math';
 import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -133,7 +134,10 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: Icon(Icons.notifications, color: colorScheme.primary),
                 onPressed: () {
-
+                  NotificationService.showNotification(
+                    title: 'TEST NOTIFICATION',
+                    body: 'This is a test notification.',
+                    );
                 },
               ),
             ],

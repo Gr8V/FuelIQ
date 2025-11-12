@@ -40,9 +40,10 @@ class _WeightPageState extends State<WeightPage> {
     for (final date in dates) {
       await provider.loadDailyData(date);
     }
-    
-    setState(() async {
-      _weights = await provider.getAllWeights();
+
+    final loadedWeights = await provider.getAllWeights();
+    setState(() {
+      _weights = loadedWeights;
       _isLoading = false;
     });
     

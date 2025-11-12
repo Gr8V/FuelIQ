@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
 import 'package:fuel_iq/pages/main/insights.dart';
+import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //pages
 import 'pages/main/home_page.dart';
 import 'pages/main/details.dart';
@@ -11,15 +13,19 @@ import 'services/daily_data_provider.dart';
 import 'globals/theme_controller.dart';
 import 'theme/app_theme.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  //load theme
   await loadSavedTheme();
-
   // Initialize provider
   final dataProvider = DailyDataProvider();
-  
   await dataProvider.initialize();
+  //notifications initialization
+  await NotificationService.init();
+  await NotificationService.requestPermission();
 
   runApp(
     MultiProvider(
