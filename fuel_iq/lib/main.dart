@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           DetailsPage(),
           // 2 - Add Food
           SizedBox.shrink(),
-          // 3 - Profile
+          // 3 - Insights
           Insights(),
           // 4 - Settings
           SettingsPage(),

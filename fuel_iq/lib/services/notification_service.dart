@@ -5,7 +5,21 @@ class NotificationService {
 
   static Future<void> init() async {
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
+    // Add initialization settings for other platforms
+    const initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: DarwinInitializationSettings(),
+      macOS: DarwinInitializationSettings(),
+      linux: LinuxInitializationSettings(
+        defaultActionName: 'Open notification',
+      ),
+      windows: WindowsInitializationSettings(
+        appName: 'FuelIQ',
+        appUserModelId: 'com.company.fueliq',
+        guid: 'a8c22b2c-4f3e-4e3d-a9b1-8c7f6e5d4c3b', // Generate a unique GUID
+      ),
+    );
+    
     await _notifications.initialize(initSettings);
   }
 

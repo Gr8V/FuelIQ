@@ -588,6 +588,7 @@ class _HomePageState extends State<HomePage> {
                               'protein': food['protein'],
                               'carbs': food['carbs'],
                               'fats': food['fats'],
+                              'time': food['time']
                             },
                             todaysDate: todaysDate,
                           );

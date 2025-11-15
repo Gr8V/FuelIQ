@@ -3,7 +3,6 @@ import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
-
 class LogFood extends StatefulWidget {
   const LogFood({super.key});
 
@@ -18,6 +17,7 @@ class _LogFoodState extends State<LogFood> {
   final proteinController = TextEditingController();
   final carbsController = TextEditingController();
   final fatsController = TextEditingController();
+  String? time;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +65,15 @@ class _LogFoodState extends State<LogFood> {
                   labelText: 'Food Name',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
+              ),
+              const SizedBox(height: 16),
+
+              // Time
+              DropTile(
+                label: "Time",
+                value: time,
+                options: ["Breakfast", "Lunch", "Snacks", "Dinner"],
+                onChanged: (val) => setState(() => time = val),
               ),
               const SizedBox(height: 16),
         
@@ -141,7 +150,7 @@ class _LogFoodState extends State<LogFood> {
                   final double? calories = double.tryParse(caloriesController.text.trim());
         
                   // Only add if name and calories are valid
-                  if (foodName.isNotEmpty && calories != null) {
+                  if (foodName.isNotEmpty && calories != null && time != null) {
                     final foodEntry = {
                       'name': foodName,
                       'quantity': double.tryParse(quantityController.text.trim()) ?? 0,
@@ -149,6 +158,7 @@ class _LogFoodState extends State<LogFood> {
                       'protein': double.tryParse(proteinController.text.trim()) ?? 0,
                       'carbs': double.tryParse(carbsController.text.trim()) ?? 0,
                       'fats': double.tryParse(fatsController.text.trim()) ?? 0,
+                      'time': time ?? 'noTime',
                     };
                   // Sum the totals
                   final updatedData = {
@@ -167,7 +177,7 @@ class _LogFoodState extends State<LogFood> {
                     final List<Map<String, String>> notifs = [];
 
                     //calorie notifs
-                    if (currentData['calories'] >= currentData['calorieTarget']) {
+                    if ((currentData['calories'] ?? 0.0) >= currentData['calorieTarget']) {
                       notifs.add({
                       'title': 'Calories Overflow!!!',
                       'body': "You have gone ${updatedData['calories']-currentData['calorieTarget']}kcal over your calorie target."
@@ -223,7 +233,7 @@ class _LogFoodState extends State<LogFood> {
                     Navigator.pop(context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter a valid food name and calories')),
+                      const SnackBar(content: Text('Please enter a valid food name, calories and time')),
                     );
                   }
                 },
@@ -242,6 +252,105 @@ class _LogFoodState extends State<LogFood> {
           ),
         ),
       )
+    );
+  }
+}
+
+class DropTile extends StatefulWidget {
+  final String label;
+  final String? value;
+  final List<String> options;
+  final void Function(String) onChanged;
+
+  const DropTile({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.options,
+    required this.onChanged,
+  });
+
+  @override
+  State<DropTile> createState() => _DropTileState();
+}
+
+class _DropTileState extends State<DropTile> {
+  bool isOpen = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Main dropdown container
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade800),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => setState(() => isOpen = !isOpen),
+
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.value ?? widget.label,   // 👈 default placeholder
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: widget.value == null
+                              ? Colors.grey.shade600
+                              : Colors.white,
+                        ),
+                      ),
+                      AnimatedRotation(
+                        duration: const Duration(milliseconds: 200),
+                        turns: isOpen ? 0.5 : 0,
+                        child: const Icon(Icons.arrow_drop_down),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // OPTIONS
+              AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                child: isOpen
+                    ? Column(
+                        children: widget.options.map((opt) {
+                          return InkWell(
+                            onTap: () {
+                              widget.onChanged(opt);
+                              setState(() => isOpen = false);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 14),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  opt,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    : const SizedBox.shrink(),
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }

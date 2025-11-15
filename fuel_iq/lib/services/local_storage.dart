@@ -14,20 +14,6 @@ class LocalStorageService {
   // ============================================================================
   // DAILY DATA OPERATIONS
   // ============================================================================
-
-  /// Save or update daily nutrition data for a specific date
-  /// 
-  /// Example usage:
-  /// ```dart
-  /// await LocalStorageService.saveDailyData(
-  ///   date: '21-10-2025',
-  ///   calories: 2000.0,
-  ///   protein: 150.0,
-  ///   calorieTarget: 2500.0,
-  ///   proteinTarget: 180.0,
-  ///   foodEntry: {'name': 'Chicken', 'calories': 200, 'protein': 40},
-  /// );
-  /// ```
   static Future<void> saveDailyData({
     required String date,
     double? calories,
@@ -65,15 +51,6 @@ class LocalStorageService {
     await prefs.setString(_dailyDataKey, jsonEncode(allData));
   }
 
-  /// Delete a specific food entry and update the day's totals
-  /// 
-  /// Example usage:
-  /// ```dart
-  /// await LocalStorageService.deleteFood(
-  ///   date: '21-10-2025',
-  ///   foodName: 'Chicken Breast',
-  /// );
-  /// ```
   static Future<void> deleteFood({
     required String date,
     required String foodName,

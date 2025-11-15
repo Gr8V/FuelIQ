@@ -596,6 +596,7 @@ class FoodView extends StatefulWidget {
   final double protein;
   final double carbs;
   final double fats;
+  final String time;
   final String dateOfFood;
 
 
@@ -606,6 +607,7 @@ class FoodView extends StatefulWidget {
                   required this.protein,
                   required this.carbs,
                   required this.fats,
+                  required this.time,
                   required this.dateOfFood
                   });
 
@@ -657,6 +659,16 @@ class _FoodViewState extends State<FoodView> {
             children: [
 
               const SizedBox(height: 20),
+
+              // Time
+              Card(
+                elevation: 3,
+                child: ListTile(
+                  title: const Text('Time'),
+                  trailing: Text(widget.time),
+                ),
+              ),
+              const SizedBox(height: 8),
 
               // Quantity
               Card(
@@ -792,6 +804,7 @@ class FoodCard extends StatelessWidget {
                 protein: food['protein'],
                 carbs: food['carbs'],
                 fats: food['fats'],
+                time: food['time'],
                 dateOfFood: todaysDate,
               ),
               transitionsBuilder:
