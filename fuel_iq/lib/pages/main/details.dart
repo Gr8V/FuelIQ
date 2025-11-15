@@ -557,27 +557,162 @@ class _DailyDataState extends State<DailyData> {
                 ],
               ),
               const SizedBox(height: 20),
-              foods.isEmpty
-              ? const Center(child: Text('No foods logged yet'))
-              : ListView.builder(
-                shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  return FoodCard(
-                    food: {
-                      'name': food['name'],
-                      'quantity': food['quantity'],
-                      'calories': food['calories'],
-                      'protein': food['protein'],
-                      'carbs': food['carbs'],
-                      'fats': food['fats'],
-                    },
-                    todaysDate: todaysDate,
-                  );
-                },
+              //breakfast foods
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ExpansionTile(
+                  title: Text('Breakfast'),
+                  children: [
+                    Container(
+                    child: foods.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Center(child: Text('No foods logged yet')),
+                    )
+                      : ListView.builder(
+                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                        itemCount: foods.where((food) => food['time'] == 'Breakfast').length,
+                        itemBuilder: (context, index) {
+                          final food = foods[index];
+                          return FoodCard(
+                            food: {
+                              'name': food['name'],
+                              'quantity': food['quantity'],
+                              'calories': food['calories'],
+                              'protein': food['protein'],
+                              'carbs': food['carbs'],
+                              'fats': food['fats'],
+                              'time': food['time']
+                            },
+                            todaysDate: todaysDate,
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
+              const SizedBox(height: 20),
+              //lunch foods
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ExpansionTile(
+                  title: Text('Lunch'),
+                  children: [
+                    Container(
+                    child: foods.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Center(child: Text('No foods logged yet')),
+                    )
+                      : ListView.builder(
+                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                        itemCount: foods.where((food) => food['time'] == 'Lunch').length,
+                        itemBuilder: (context, index) {
+                          final food = foods[index];
+                          return FoodCard(
+                            food: {
+                              'name': food['name'],
+                              'quantity': food['quantity'],
+                              'calories': food['calories'],
+                              'protein': food['protein'],
+                              'carbs': food['carbs'],
+                              'fats': food['fats'],
+                              'time': food['time']
+                            },
+                            todaysDate: todaysDate,
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              //Snacks foods
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ExpansionTile(
+                  title: Text('Snacks'),
+                  children: [
+                    Container(
+                    child: foods.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Center(child: Text('No foods logged yet')),
+                    )
+                      : ListView.builder(
+                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                        itemCount: foods.where((food) => food['time'] == 'Snacks').length,
+                        itemBuilder: (context, index) {
+                          final food = foods[index];
+                          return FoodCard(
+                            food: {
+                              'name': food['name'],
+                              'quantity': food['quantity'],
+                              'calories': food['calories'],
+                              'protein': food['protein'],
+                              'carbs': food['carbs'],
+                              'fats': food['fats'],
+                              'time': food['time']
+                            },
+                            todaysDate: todaysDate,
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              //dinner foods
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ExpansionTile(
+                  title: Text('Dinner'),
+                  children: [
+                    Container(
+                    child: foods.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Center(child: Text('No foods logged yet')),
+                    )
+                      : ListView.builder(
+                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
+                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
+                        itemCount: foods.where((food) => food['time'] == 'Dinner').length,
+                        itemBuilder: (context, index) {
+                          final food = foods[index];
+                          return FoodCard(
+                            food: {
+                              'name': food['name'],
+                              'quantity': food['quantity'],
+                              'calories': food['calories'],
+                              'protein': food['protein'],
+                              'carbs': food['carbs'],
+                              'fats': food['fats'],
+                              'time': food['time']
+                            },
+                            todaysDate: todaysDate,
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -789,7 +924,7 @@ class FoodCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      color: colorScheme.surface,
+      color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow.withValues(alpha: 0.15),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
