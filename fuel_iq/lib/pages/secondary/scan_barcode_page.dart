@@ -217,6 +217,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
   }
 
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -246,7 +247,6 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
                   final carbsController = TextEditingController(text: carbs.toString());
                   final fatsController = TextEditingController(text: fats.toString());
                   String? time;
-                  final _formKey = GlobalKey<FormState>();
 
                   return Form(
                     key: _formKey,

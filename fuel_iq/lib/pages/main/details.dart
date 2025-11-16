@@ -159,8 +159,6 @@ class DailyData extends StatefulWidget {
   @override
   State<DailyData> createState() => _DailyDataState();
 }
-
-
 class _DailyDataState extends State<DailyData> {
   @override
   void initState() {
@@ -790,7 +788,7 @@ class _FoodViewState extends State<FoodView> {
         padding: const EdgeInsets.all(12.0),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
 
               const SizedBox(height: 20),
@@ -853,56 +851,85 @@ class _FoodViewState extends State<FoodView> {
                   trailing: Text('${widget.fats.toStringAsFixed(1)} g'),
                 ),
               ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.edit),
+                label: const Text("Edit"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    //transition and page builder
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => const EditFood(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                          );
+                        },
+                        transitionDuration: const Duration(milliseconds: 150),
+                    )
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.delete),
+                label: const Text("Delete"),
+                onPressed: () async {
+                  // Confirm deletion
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Food'),
+                      content: Text('Are you sure you want to delete "${widget.foodName}"?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (!context.mounted) return;
+
+                  if (confirm == true) {
+                    final provider =
+                        Provider.of<DailyDataProvider>(context, listen: false);
+
+                    // Delete food
+                    await provider.deleteFood(widget.dateOfFood, widget.foodName);
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${widget.foodName} deleted successfully')),
+                      );
+                    }
+                  }
+                },
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        backgroundColor: Colors.redAccent,
-        child: const Icon(Icons.delete, color: Colors.white),
-        onPressed: () async {
-          // ✅ Confirm deletion
-          final confirm = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Delete Food'),
-              content: Text('Are you sure you want to delete "$widget.foodName"?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                ),
-              ],
-            ),
-          );
-          if (!context.mounted) return;
-          if (confirm == true) {
-            final provider = Provider.of<DailyDataProvider>(context, listen: false);
-
-            // ✅ Delete the specific food
-            await provider.deleteFood(widget.dateOfFood, widget.foodName);
-
-            if (context.mounted) {
-              Navigator.pop(context); // Go back after deletion
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${widget.foodName} deleted successfully')),
-              );
-            }
-          }
-        },
-      )
-
     );
   }
 }
-
-
-
 
 class FoodCard extends StatelessWidget {
   final Map<String, dynamic> food;
@@ -1081,6 +1108,57 @@ class FoodCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class EditFood extends StatefulWidget {
+  const EditFood({super.key});
+
+  @override
+  State<EditFood> createState() => _EditFoodState();
+}
+
+class _EditFoodState extends State<EditFood> {
+  @override
+  Widget build(BuildContext context) {
+    //theme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          'Details',
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            letterSpacing: 1.1,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.onSurface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Text('edit food page')
+        ],
       ),
     );
   }
