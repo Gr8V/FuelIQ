@@ -12,20 +12,23 @@ class LogFood extends StatefulWidget {
 }
 
 class _LogFoodState extends State<LogFood> {
+  final _formKey = GlobalKey<FormState>();
+
   final foodNameController = TextEditingController();
   final quantityController = TextEditingController();
   final caloriesController = TextEditingController();
   final proteinController = TextEditingController();
   final carbsController = TextEditingController();
   final fatsController = TextEditingController();
+
   String? time;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      //app bar
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -53,92 +56,196 @@ class _LogFoodState extends State<LogFood> {
           ),
         ),
       ),
-      body:  SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Food Name
-              TextField(
+
+              /// FOOD NAME
+              TextFormField(
                 controller: foodNameController,
                 decoration: InputDecoration(
                   labelText: 'Food Name',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Food name cannot be empty";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 16),
 
-              // Time
+              /// TIME
               DropTile(
                 label: "Time",
                 value: time,
                 options: ["Breakfast", "Lunch", "Snacks", "Dinner"],
                 onChanged: (val) => setState(() => time = val),
               ),
+
               const SizedBox(height: 16),
-        
-              // Quantity (grams/ml)
-              TextField(
+
+              /// QUANTITY
+              TextFormField(
                 controller: quantityController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Quantity (g/ml)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter quantity";
+                  }
+                  final numValue = double.tryParse(value);
+                  if (numValue == null) {
+                    return "Enter a number";
+                  }
+                  if (numValue < 0) {
+                    return "Value cannot be negative";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 16),
-        
-              // Calories
-              TextField(
+
+              /// CALORIES
+              TextFormField(
                 controller: caloriesController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Calories',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter calories";
+                  }
+                  final numValue = double.tryParse(value);
+                  if (numValue == null) {
+                    return "Enter a number";
+                  }
+                  if (numValue < 0) {
+                    return "Value cannot be negative";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 16),
-        
-              // Protein
-              TextField(
+
+              /// PROTEIN
+              TextFormField(
                 controller: proteinController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Protein (g)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter protein";
+                  }
+                  final numValue = double.tryParse(value);
+                  if (numValue == null) {
+                    return "Enter a number";
+                  }
+                  if (numValue < 0) {
+                    return "Value cannot be negative";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 16),
-        
-              // Carbs
-              TextField(
+
+              /// CARBS
+              TextFormField(
                 controller: carbsController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Carbs (g)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter carbs";
+                  }
+                  final numValue = double.tryParse(value);
+                  if (numValue == null) {
+                    return "Enter a number";
+                  }
+                  if (numValue < 0) {
+                    return "Value cannot be negative";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 16),
-        
-              // Fats
-              TextField(
+
+              /// FATS
+              TextFormField(
                 controller: fatsController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Fats (g)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter fats";
+                  }
+                  final numValue = double.tryParse(value);
+                  if (numValue == null) {
+                    return "Enter a number";
+                  }
+                  if (numValue < 0) {
+                    return "Value cannot be negative";
+                  }
+                  return null;
+                },
               ),
+
               const SizedBox(height: 24),
-        
-              // Save Button
+
+              /// SAVE BUTTON
               ElevatedButton(
                 onPressed: () async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
+                  if (time == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Please select time')),
+                    );
+                    return;
+                  }
+                  else if (!_formKey.currentState!.validate() || time == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Please correct the errors')),
+                    );
+                    return;
+                  }
 
-                  //gets current calorie data
+
+                  // NOW your inputs are guaranteed valid
+                  final provider =
+                      Provider.of<DailyDataProvider>(context, listen: false);
+
                   final currentData = provider.getDailyData(todaysDate) ?? {
                     'calories': 0.0,
                     'protein': 0.0,
@@ -147,112 +254,52 @@ class _LogFoodState extends State<LogFood> {
                     'water': 0.0,
                     'weight': 0.0,
                   };
-                  final String foodName = foodNameController.text.trim();
-                  final double? calories = double.tryParse(caloriesController.text.trim());
-        
-                  // Only add if name and calories are valid
-                  if (foodName.isNotEmpty && calories != null && time != null) {
-                    final foodEntry = {
-                      'name': foodName,
-                      'quantity': double.tryParse(quantityController.text.trim()) ?? 0,
-                      'calories': calories,
-                      'protein': double.tryParse(proteinController.text.trim()) ?? 0,
-                      'carbs': double.tryParse(carbsController.text.trim()) ?? 0,
-                      'fats': double.tryParse(fatsController.text.trim()) ?? 0,
-                      'time': time ?? 'noTime',
-                    };
-                  // Sum the totals
+
+                  final foodEntry = {
+                    'name': foodNameController.text.trim(),
+                    'quantity': double.parse(quantityController.text),
+                    'calories': double.parse(caloriesController.text),
+                    'protein': double.tryParse(proteinController.text) ?? 0,
+                    'carbs': double.tryParse(carbsController.text) ?? 0,
+                    'fats': double.tryParse(fatsController.text) ?? 0,
+                    'time': time,
+                  };
+
                   final updatedData = {
-                    'calories': (currentData['calories'] ?? 0.0) + foodEntry['calories'],
-                    'protein': (currentData['protein'] ?? 0.0) + foodEntry['protein'],
-                    'carbs': (currentData['carbs'] ?? 0.0) + foodEntry['carbs'],
-                    'fats': (currentData['fats'] ?? 0.0) + foodEntry['fats'],
+                    'calories':
+                        currentData['calories'] + foodEntry['calories'],
+                    'protein':
+                        currentData['protein'] + foodEntry['protein'],
+                    'carbs': currentData['carbs'] + foodEntry['carbs'],
+                    'fats': currentData['fats'] + foodEntry['fats'],
                     'water': currentData['water'],
                     'weight': currentData['weight'],
                   };
-        
-        
-                    await provider.addFood(todaysDate, foodEntry);
-                    await provider.updateDailyData(todaysDate, updatedData);
 
-                    final List<Map<String, String>> notifs = [];
+                  await provider.addFood(todaysDate, foodEntry);
+                  await provider.updateDailyData(todaysDate, updatedData);
 
-                    //calorie notifs
-                    if ((currentData['calories'] ?? 0.0) >= currentData['calorieTarget']) {
-                      notifs.add({
-                      'title': 'Calories Overflow!!!',
-                      'body': "You have gone ${updatedData['calories']-currentData['calorieTarget']}kcal over your calorie target."
-                      });
-                    } else if (updatedData['calories'] >= currentData['calorieTarget'] && currentData['calories'] != currentData['calorieTarget']) {
-                      notifs.add({
-                      'title': 'Calorie Goal Reached!',
-                      'body': 'You have reached today\'s calorie goal.',
-                      });
-                    }
-                    
-                    //protein notifs
-                    if (updatedData['protein'] >= currentData['proteinTarget'] && currentData['protein'] <= currentData['proteinTarget']) {
-                      notifs.add({
-                      'title': 'Protein Goal Reached!',
-                      'body': 'You have reached today\'s protein goal.',
-                      });
-                    }
-                    //carbs notifs
-                    if (updatedData['carbs'] >= currentData['carbsTarget'] && currentData['carbs'] <= currentData['carbsTarget']) {
-                      notifs.add({
-                      'title': 'Carbs Goal Reached!',
-                      'body': 'You have reached today\'s carbs goal.',
-                      });
-                    }
-                    //protein notifs
-                    if (updatedData['fats'] >= currentData['fatsTarget'] && currentData['fats'] <= currentData['fatsTarget']) {
-                      notifs.add({
-                      'title': 'Fats Goal Reached!',
-                      'body': 'You have reached today\'s fats goal.',
-                      });
-                    }
-                    //water notifs
-                    if (updatedData['water'] >= currentData['waterTarget'] && currentData['water'] <= currentData['waterTarget']) {
-                      notifs.add({
-                      'title': 'Water Goal Reached!',
-                      'body': 'You have reached today\'s water goal.',
-                      });
-                    }
-                    await NotificationService.sendQueuedNotifications(notifs);
-        
-                    // Optional: clear fields after adding
-                    foodNameController.clear();
-                    quantityController.clear();
-                    caloriesController.clear();
-                    proteinController.clear();
-                    carbsController.clear();
-                    fatsController.clear();
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Food added successfully!')),
-                    );
-                    Navigator.pop(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter a valid food name, calories and time')),
-                    );
-                  }
+                  foodNameController.clear();
+                  quantityController.clear();
+                  caloriesController.clear();
+                  proteinController.clear();
+                  carbsController.clear();
+                  fatsController.clear();
+
+                  if (!context.mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Food added successfully!')),
+                  );
+
+                  Navigator.pop(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Add Food',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Add Food', style: TextStyle(fontSize: 18)),
               ),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
