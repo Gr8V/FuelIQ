@@ -3,12 +3,11 @@ import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
-import 'dart:math';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:fuel_iq/services/utils.dart';
 import 'package:fuel_iq/theme/colors.dart';
 
 
@@ -735,154 +734,5 @@ class _HomePageState extends State<HomePage> {
         ]
       )
     );
-  }
-}
-
-
-class MacroTile extends StatefulWidget {
-  final String label;
-  final double eaten;
-  final double goal;
-  final Color bgColor;
-  final Color fgColor;
-  final IconData icon;
-  final double size;
-  final double strokeWidth;
-  final Duration animationDuration;
-
-  const MacroTile({
-    super.key,
-    required this.label,
-    required this.eaten,
-    required this.goal,
-    required this.bgColor,
-    required this.fgColor,
-    required this.icon,
-    this.size = 70,
-    this.strokeWidth = 5,
-    this.animationDuration = const Duration(milliseconds: 700),
-  });
-
-  @override
-  State<MacroTile> createState() => _MacroTileState();
-}
-
-class _MacroTileState extends State<MacroTile>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  double _oldPercent = 0.0;
-  double _targetPercent = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    _oldPercent = _clampPercent(widget.eaten / max(widget.goal, 1));
-    _targetPercent = _oldPercent;
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration,
-    );
-    _animation = Tween<double>(begin: _oldPercent, end: _targetPercent)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut))
-      ..addListener(() => setState(() {}));
-  }
-
-  @override
-  void didUpdateWidget(covariant MacroTile oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final newPercent = _clampPercent(widget.eaten / max(widget.goal, 1));
-    _oldPercent = _animation.value;
-    _targetPercent = newPercent;
-    _animation = Tween<double>(begin: _oldPercent, end: _targetPercent)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _controller
-      ..duration = widget.animationDuration
-      ..forward(from: 0.0);
-  }
-
-  double _clampPercent(double v) => v.isFinite ? v.clamp(0.0, 1.0) : 0.0;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final percent = _animation.value;
-
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CustomPaint(
-            size: Size(widget.size, widget.size),
-            painter: _CircularProgressPainter(
-              progress: percent,
-              backgroundArcColor: widget.bgColor,
-              foregroundArcColor: widget.fgColor,
-              strokeWidth: widget.strokeWidth,
-            ),
-          ),
-          Icon(
-            widget.icon,
-            size: widget.size * 0.32,
-            color: widget.fgColor,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Draws circular arcs for progress visualization.
-class _CircularProgressPainter extends CustomPainter {
-  final double progress;
-  final Color backgroundArcColor;
-  final Color foregroundArcColor;
-  final double strokeWidth;
-
-  _CircularProgressPainter({
-    required this.progress,
-    required this.backgroundArcColor,
-    required this.foregroundArcColor,
-    required this.strokeWidth,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final radius = (min(size.width, size.height) - strokeWidth) / 2;
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    const startAngle = -pi / 2;
-
-    final bgPaint = Paint()
-      ..color = backgroundArcColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..isAntiAlias = true;
-
-    final fgPaint = Paint()
-      ..color = foregroundArcColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..isAntiAlias = true;
-
-    canvas.drawArc(rect, startAngle, 2 * pi, false, bgPaint);
-    canvas.drawArc(rect, startAngle, 2 * pi * progress, false, fgPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _CircularProgressPainter old) {
-    return old.progress != progress ||
-        old.backgroundArcColor != backgroundArcColor ||
-        old.foregroundArcColor != foregroundArcColor ||
-        old.strokeWidth != strokeWidth;
   }
 }

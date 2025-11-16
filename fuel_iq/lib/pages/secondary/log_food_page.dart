@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
+import 'package:fuel_iq/services/utils.dart';
 import 'package:provider/provider.dart';
 class LogFood extends StatefulWidget {
   const LogFood({super.key});
@@ -252,105 +253,6 @@ class _LogFoodState extends State<LogFood> {
           ),
         ),
       )
-    );
-  }
-}
-
-class DropTile extends StatefulWidget {
-  final String label;
-  final String? value;
-  final List<String> options;
-  final void Function(String) onChanged;
-
-  const DropTile({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.options,
-    required this.onChanged,
-  });
-
-  @override
-  State<DropTile> createState() => _DropTileState();
-}
-
-class _DropTileState extends State<DropTile> {
-  bool isOpen = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Main dropdown container
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade800),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () => setState(() => isOpen = !isOpen),
-
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 18),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.value ?? widget.label,   // 👈 default placeholder
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: widget.value == null
-                              ? Colors.grey.shade600
-                              : Colors.white,
-                        ),
-                      ),
-                      AnimatedRotation(
-                        duration: const Duration(milliseconds: 200),
-                        turns: isOpen ? 0.5 : 0,
-                        child: const Icon(Icons.arrow_drop_down),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // OPTIONS
-              AnimatedSize(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-                child: isOpen
-                    ? Column(
-                        children: widget.options.map((opt) {
-                          return InkWell(
-                            onTap: () {
-                              widget.onChanged(opt);
-                              setState(() => isOpen = false);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 14),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  opt,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    : const SizedBox.shrink(),
-              )
-            ],
-          ),
-        )
-      ],
     );
   }
 }

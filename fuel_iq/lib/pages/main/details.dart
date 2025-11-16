@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/pages/main/home_page.dart';
+import 'package:fuel_iq/services/utils.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:provider/provider.dart';

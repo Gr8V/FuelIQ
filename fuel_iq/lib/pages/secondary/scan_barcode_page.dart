@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/pages/secondary/log_food_page.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
+import 'package:fuel_iq/services/utils.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fuel_iq/services/api_services.dart';
 import 'package:provider/provider.dart';
@@ -165,101 +165,6 @@ class _ScanBarcodeState extends State<ScanBarcode> {
   }
 }
 
-/// Painter for stylish corner-only scanner borders
-class _CornerBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double cornerLength;
-  final double borderRadius;
-
-  _CornerBorderPainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.cornerLength,
-    required this.borderRadius,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final rect = RRect.fromLTRBR(
-      0,
-      0,
-      size.width,
-      size.height,
-      Radius.circular(borderRadius),
-    );
-
-    // Draw four corners only
-    final path = Path();
-
-    // Top-left
-    path.moveTo(rect.left, rect.top + cornerLength);
-    path.lineTo(rect.left, rect.top);
-    path.lineTo(rect.left + cornerLength, rect.top);
-
-    // Top-right
-    path.moveTo(rect.right - cornerLength, rect.top);
-    path.lineTo(rect.right, rect.top);
-    path.lineTo(rect.right, rect.top + cornerLength);
-
-    // Bottom-right
-    path.moveTo(rect.right, rect.bottom - cornerLength);
-    path.lineTo(rect.right, rect.bottom);
-    path.lineTo(rect.right - cornerLength, rect.bottom);
-
-    // Bottom-left
-    path.moveTo(rect.left + cornerLength, rect.bottom);
-    path.lineTo(rect.left, rect.bottom);
-    path.lineTo(rect.left, rect.bottom - cornerLength);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-
-/// 🎨 Custom painter that dims the screen but leaves a transparent rectangle
-class _ScannerOverlayPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.5)
-      ..style = PaintingStyle.fill;
-
-    // Full screen dim
-    final overlayRect = Rect.fromLTWH(0, 0, size.width, size.height);
-
-    // Center transparent box
-    final cutoutWidth = 250.0;
-    final cutoutHeight = 250.0;
-    final left = (size.width - cutoutWidth) / 2;
-    final top = (size.height - cutoutHeight) / 2;
-    final cutoutRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(left, top, cutoutWidth, cutoutHeight),
-      const Radius.circular(16),
-    );
-
-    // Create path for the full screen
-    final overlayPath = Path()..addRect(overlayRect);
-    // Subtract the cutout area (transparent part)
-    overlayPath.addRRect(cutoutRect);
-    overlayPath.fillType = PathFillType.evenOdd;
-
-    // Draw
-    canvas.drawPath(overlayPath, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
 
 
 class BarcodeResultPage extends StatefulWidget {
@@ -550,4 +455,101 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
             ),
     );
   }
+}
+
+
+/// Painter for stylish corner-only scanner borders
+class _CornerBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double cornerLength;
+  final double borderRadius;
+
+  _CornerBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.cornerLength,
+    required this.borderRadius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final rect = RRect.fromLTRBR(
+      0,
+      0,
+      size.width,
+      size.height,
+      Radius.circular(borderRadius),
+    );
+
+    // Draw four corners only
+    final path = Path();
+
+    // Top-left
+    path.moveTo(rect.left, rect.top + cornerLength);
+    path.lineTo(rect.left, rect.top);
+    path.lineTo(rect.left + cornerLength, rect.top);
+
+    // Top-right
+    path.moveTo(rect.right - cornerLength, rect.top);
+    path.lineTo(rect.right, rect.top);
+    path.lineTo(rect.right, rect.top + cornerLength);
+
+    // Bottom-right
+    path.moveTo(rect.right, rect.bottom - cornerLength);
+    path.lineTo(rect.right, rect.bottom);
+    path.lineTo(rect.right - cornerLength, rect.bottom);
+
+    // Bottom-left
+    path.moveTo(rect.left + cornerLength, rect.bottom);
+    path.lineTo(rect.left, rect.bottom);
+    path.lineTo(rect.left, rect.bottom - cornerLength);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+
+/// 🎨 Custom painter that dims the screen but leaves a transparent rectangle
+class _ScannerOverlayPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.5)
+      ..style = PaintingStyle.fill;
+
+    // Full screen dim
+    final overlayRect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    // Center transparent box
+    final cutoutWidth = 250.0;
+    final cutoutHeight = 250.0;
+    final left = (size.width - cutoutWidth) / 2;
+    final top = (size.height - cutoutHeight) / 2;
+    final cutoutRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(left, top, cutoutWidth, cutoutHeight),
+      const Radius.circular(16),
+    );
+
+    // Create path for the full screen
+    final overlayPath = Path()..addRect(overlayRect);
+    // Subtract the cutout area (transparent part)
+    overlayPath.addRRect(cutoutRect);
+    overlayPath.fillType = PathFillType.evenOdd;
+
+    // Draw
+    canvas.drawPath(overlayPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
