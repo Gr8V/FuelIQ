@@ -1444,12 +1444,10 @@ class _EditFoodState extends State<EditFood> {
                             };
 
                             final updatedData = {
-                              'calories':
-                                  currentData['calories'] + foodEntry['calories'],
-                              'protein':
-                                  currentData['protein'] + foodEntry['protein'],
-                              'carbs': currentData['carbs'] + foodEntry['carbs'],
-                              'fats': currentData['fats'] + foodEntry['fats'],
+                              'calories': (currentData['calories']-widget.calories)+ foodEntry['calories'],
+                              'protein': (currentData['protein']-widget.protein) + foodEntry['protein'],
+                              'carbs': (currentData['carbs']-widget.carbs) + foodEntry['carbs'],
+                              'fats': (currentData['fats']-widget .fats) + foodEntry['fats'],
                               'water': currentData['water'],
                               'weight': currentData['weight'],
                             };
