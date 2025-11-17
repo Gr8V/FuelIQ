@@ -51,6 +51,40 @@ class LocalStorageService {
     await prefs.setString(_dailyDataKey, jsonEncode(allData));
   }
 
+  static Future<void> saveOrUpdateFoodEntry({
+    required String date,
+    required Map<String, dynamic> foodEntry,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final allData = await _getAllStoredData(prefs);
+
+    // Get or create day data
+    final dayData = _getOrCreateDayData(allData, date);
+
+    // Ensure the "foods" list exists
+    dayData["foods"] ??= [];
+
+    List foods = dayData["foods"];
+
+    // Extract food name (unique identifier)
+    final entryName = foodEntry["foodName"];
+
+    // Try to find existing index
+    final idx = foods.indexWhere((f) => f["foodName"] == entryName);
+
+    if (idx != -1) {
+      // Update existing entry
+      foods[idx] = foodEntry;
+    } else {
+      // Add new entry
+      foods.add(foodEntry);
+    }
+
+    // Save back to storage
+    allData[date] = dayData;
+    await prefs.setString(_dailyDataKey, jsonEncode(allData));
+  }
+
   static Future<void> deleteFood({
     required String date,
     required String foodName,

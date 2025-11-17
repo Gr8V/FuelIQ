@@ -550,7 +550,7 @@ Future<Map<String, double>> getAllWeights({int? lastDays}) async {
     final normalizedDate = _normalizeDate(date);
     
     // Save to storage (this also updates totals)
-    await LocalStorageService.saveDailyData(
+    await LocalStorageService.saveOrUpdateFoodEntry(
       date: normalizedDate,
       foodEntry: foodEntry,
     );

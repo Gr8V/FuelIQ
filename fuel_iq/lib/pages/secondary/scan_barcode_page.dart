@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
-import 'package:fuel_iq/services/notification_service.dart';
+
 import 'package:fuel_iq/services/utils.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fuel_iq/services/api_services.dart';

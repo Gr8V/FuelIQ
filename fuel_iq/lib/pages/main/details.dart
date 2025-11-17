@@ -851,78 +851,128 @@ class _FoodViewState extends State<FoodView> {
                   trailing: Text('${widget.fats.toStringAsFixed(1)} g'),
                 ),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.edit),
-                label: const Text("Edit"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    //transition and page builder
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => const EditFood(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1.0, 0.0),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: FadeTransition(
-                              opacity: animation,
-                              child: child,
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  // ===== EDIT BUTTON =====
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                      minimumSize: const Size(110, 40),
+                    ),
+                    icon: const Icon(Icons.edit, size: 20),
+                    label: const Text(
+                      "Edit",
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) =>
+                              EditFood(
+                                foodName: widget.foodName,
+                                time:  widget.time,
+                                quantity: widget.quantity,
+                                calories: widget.calories,
+                                protein: widget.protein,
+                                carbs: widget.carbs,
+                                fats: widget.fats,
+                                dateOfFood: widget.dateOfFood,
+                              ),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(1.0, 0.0),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 150),
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(width: 16), // spacing between buttons
+
+                  // ===== DELETE BUTTON =====
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                      minimumSize: const Size(110, 40),
+                    ),
+                    icon: const Icon(Icons.delete, size: 20),
+                    label: const Text(
+                      "Delete",
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Delete Food'),
+                          content: Text(
+                            'Are you sure you want to delete "${widget.foodName}"?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (!context.mounted) return;
+
+                      if (confirm == true) {
+                        final provider =
+                            Provider.of<DailyDataProvider>(context, listen: false);
+
+                        await provider.deleteFood(widget.dateOfFood, widget.foodName);
+
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('${widget.foodName} deleted successfully'),
                             ),
                           );
-                        },
-                        transitionDuration: const Duration(milliseconds: 150),
-                    )
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.delete),
-                label: const Text("Delete"),
-                onPressed: () async {
-                  // Confirm deletion
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Delete Food'),
-                      content: Text('Are you sure you want to delete "${widget.foodName}"?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                        }
+                      }
+                    },
+                  ),
 
-                  if (!context.mounted) return;
-
-                  if (confirm == true) {
-                    final provider =
-                        Provider.of<DailyDataProvider>(context, listen: false);
-
-                    // Delete food
-                    await provider.deleteFood(widget.dateOfFood, widget.foodName);
-
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${widget.foodName} deleted successfully')),
-                      );
-                    }
-                  }
-                },
-              ),
+                ],
+              )
             ],
           ),
         ),
@@ -1115,13 +1165,32 @@ class FoodCard extends StatelessWidget {
 
 
 class EditFood extends StatefulWidget {
-  const EditFood({super.key});
+    final String foodName;
+  final double quantity;
+  final double calories;
+  final double protein;
+  final double carbs;
+  final double fats;
+  final String time;
+  final String dateOfFood;
+
+  const EditFood({super.key,
+                  required this.foodName,
+                  required this.quantity,
+                  required this.calories,
+                  required this.protein,
+                  required this.carbs,
+                  required this.fats,
+                  required this.time,
+                  required this.dateOfFood
+                  });
 
   @override
   State<EditFood> createState() => _EditFoodState();
 }
 
 class _EditFoodState extends State<EditFood> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     //theme
@@ -1155,11 +1224,271 @@ class _EditFoodState extends State<EditFood> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Text('edit food page')
-        ],
-      ),
+      body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Builder(
+                builder: (context) {
+                  // ✅ Safe to access here
+                  final String foodName = widget.foodName;
+                  final double quantity = widget.quantity;
+                  final double calories = widget.calories;
+                  final double protein = widget.protein;
+                  final double carbs = widget.carbs;
+                  final double fats = widget.fats;
+
+                  final foodNameController = TextEditingController(text: foodName);
+                  final quantityController = TextEditingController(text: quantity.toString());
+                  final caloriesController = TextEditingController(text: calories.toString());
+                  final proteinController = TextEditingController(text: protein.toString());
+                  final carbsController = TextEditingController(text: carbs.toString());
+                  final fatsController = TextEditingController(text: fats.toString());
+                  String time = widget.time;
+
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+
+                        /// FOOD NAME
+                        TextFormField(
+                          controller: foodNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Food Name',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Food name cannot be empty";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// TIME
+                        DropTile(
+                          label: "Time",
+                          value: time,
+                          options: ["Breakfast", "Lunch", "Snacks", "Dinner"],
+                          onChanged: (val) => setState(() => time = val),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// QUANTITY
+                        TextFormField(
+                          controller: quantityController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Quantity (g/ml)',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter quantity";
+                            }
+                            final numValue = double.tryParse(value);
+                            if (numValue == null) {
+                              return "Enter a number";
+                            }
+                            if (numValue < 0) {
+                              return "Value cannot be negative";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// CALORIES
+                        TextFormField(
+                          controller: caloriesController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Calories',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter calories";
+                            }
+                            final numValue = double.tryParse(value);
+                            if (numValue == null) {
+                              return "Enter a number";
+                            }
+                            if (numValue < 0) {
+                              return "Value cannot be negative";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// PROTEIN
+                        TextFormField(
+                          controller: proteinController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Protein (g)',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter protein";
+                            }
+                            final numValue = double.tryParse(value);
+                            if (numValue == null) {
+                              return "Enter a number";
+                            }
+                            if (numValue < 0) {
+                              return "Value cannot be negative";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// CARBS
+                        TextFormField(
+                          controller: carbsController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Carbs (g)',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter carbs";
+                            }
+                            final numValue = double.tryParse(value);
+                            if (numValue == null) {
+                              return "Enter a number";
+                            }
+                            if (numValue < 0) {
+                              return "Value cannot be negative";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        /// FATS
+                        TextFormField(
+                          controller: fatsController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Fats (g)',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter fats";
+                            }
+                            final numValue = double.tryParse(value);
+                            if (numValue == null) {
+                              return "Enter a number";
+                            }
+                            if (numValue < 0) {
+                              return "Value cannot be negative";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        /// SAVE BUTTON
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Please correct the errors')),
+                              );
+                              return;
+                            }
+
+
+                            // NOW your inputs are guaranteed valid
+                            final provider =
+                                Provider.of<DailyDataProvider>(context, listen: false);
+
+                            final currentData = provider.getDailyData(todaysDate) ?? {
+                              'calories': 0.0,
+                              'protein': 0.0,
+                              'carbs': 0.0,
+                              'fats': 0.0,
+                              'water': 0.0,
+                              'weight': 0.0,
+                            };
+
+                            final foodEntry = {
+                              'name': foodNameController.text.trim(),
+                              'quantity': double.parse(quantityController.text),
+                              'calories': double.parse(caloriesController.text),
+                              'protein': double.tryParse(proteinController.text) ?? 0,
+                              'carbs': double.tryParse(carbsController.text) ?? 0,
+                              'fats': double.tryParse(fatsController.text) ?? 0,
+                              'time': time,
+                            };
+
+                            final updatedData = {
+                              'calories':
+                                  currentData['calories'] + foodEntry['calories'],
+                              'protein':
+                                  currentData['protein'] + foodEntry['protein'],
+                              'carbs': currentData['carbs'] + foodEntry['carbs'],
+                              'fats': currentData['fats'] + foodEntry['fats'],
+                              'water': currentData['water'],
+                              'weight': currentData['weight'],
+                            };
+
+                            await provider.addFood(todaysDate, foodEntry);
+                            await provider.updateDailyData(todaysDate, updatedData);
+
+                            foodNameController.clear();
+                            quantityController.clear();
+                            caloriesController.clear();
+                            proteinController.clear();
+                            carbsController.clear();
+                            fatsController.clear();
+
+                            if (!context.mounted) return;
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Food added successfully!')),
+                            );
+
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Add Food', style: TextStyle(fontSize: 18)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(fontSize: 18, color: Colors.red),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 }
