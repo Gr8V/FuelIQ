@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/models/food_entry.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:provider/provider.dart';
 
 class SavedFoods extends StatelessWidget {
@@ -11,8 +13,6 @@ class SavedFoods extends StatelessWidget {
     //theme
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    final savedFoods = context.watch<DailyDataProvider>().savedFoods;
     return Scaffold(
       //app bar
       appBar: AppBar(
@@ -42,9 +42,9 @@ class SavedFoods extends StatelessWidget {
           ),
         ),
       ),
-      body: Consumer<DailyDataProvider>(
-        builder: (context, provider, child) {
-          final savedFoods = provider.getAllSavedFoodsWithDetails();
+      body: Consumer<SavedFoodsProvider>(
+        builder: (context, savedFoodsProvider, child) {
+          final savedFoods = savedFoodsProvider.getAllSavedFoodsWithDetails();
           
           if (savedFoods.isEmpty) {
             return const Center(
@@ -116,17 +116,18 @@ class SavedFoods extends StatelessWidget {
                         tooltip: 'Add to today',
                         onPressed: () async {
                           
-                          final foodEntry = {
-                            'foodName': foodName,
-                            'quantity': quantity,
-                            'calories': calories,
-                            'protein': protein,
-                            'carbs': carbs,
-                            'fats': fats,
-                            'time': time,
-                          };
-                          
-                          await provider.addFood(todaysDate, foodEntry);
+                          final entry = FoodEntry(
+                            name: foodName,
+                            calories: calories,
+                            protein: protein,
+                            carbs: carbs,
+                            fats: fats,
+                            quantity: quantity,
+                            time: time
+                          );
+
+                          final dailyDataProvider = Provider.of<DailyDataProvider>(context, listen: false);
+                          await dailyDataProvider.addFood(todaysDate, entry);
                           
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -159,8 +160,9 @@ class SavedFoods extends StatelessWidget {
                             ),
                           );
                           
-                          if (confirm == true) {
-                            await provider.deleteSavedFood(foodName);
+                          if (confirm == true && context.mounted) {
+                            final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
+                            await savedFoodsProvider.deleteFood(foodName);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('$foodName deleted')),

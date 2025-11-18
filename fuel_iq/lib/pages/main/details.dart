@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/services/utils.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/models/food_entry.dart';
+import 'package:fuel_iq/providers/saved_foods_provider.dart';
+import 'package:fuel_iq/utils/utils.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -163,7 +165,6 @@ class _DailyDataState extends State<DailyData> {
   @override
   void initState() {
     super.initState();
-    // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DailyDataProvider>(context, listen: false)
           .loadDailyData(widget.dateSelected);
@@ -175,69 +176,70 @@ class _DailyDataState extends State<DailyData> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final dailyData = context.watch<DailyDataProvider>().getDailyData(widget.dateSelected);
-    final caloriesEaten = (dailyData?['calories'] ?? 0).toDouble();
-    final proteinEaten = (dailyData?['protein'] ?? 0).toDouble();
-    final carbsEaten = (dailyData?['carbs'] ?? 0).toDouble();
-    final fatsEaten = (dailyData?['fats'] ?? 0).toDouble();
-    final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
-    final weightToday = (dailyData?['weight'] ?? 0).toDouble();
-        final dailyCalorieTarget = 
-    ((dailyData?['calorieTarget'] ?? 0).toDouble() != 0)
-        ? (dailyData?['calorieTarget'] ?? 0).toDouble()
-        : defaultCaloriesTarget.toDouble();
+    final dailyData =
+        context.watch<DailyDataProvider>().getDailyData(widget.dateSelected);
 
-    final dailyProteinTarget = 
-        ((dailyData?['proteinTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['proteinTarget'] ?? 0).toDouble()
-            : defaultProteinTarget.toDouble();
+    // ====== FIXED: Model-safe lookups ======
+    final caloriesEaten = dailyData?.calories ?? 0.0;
+    final proteinEaten = dailyData?.protein ?? 0.0;
+    final carbsEaten = dailyData?.carbs ?? 0.0;
+    final fatsEaten = dailyData?.fats ?? 0.0;
+    final waterDrunk = dailyData?.water ?? 0.0;
+    final weightToday = dailyData?.weight ?? 0.0;
 
-    final dailyCarbsTarget = 
-        ((dailyData?['carbsTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['carbsTarget'] ?? 0).toDouble()
-            : defaultCaloriesTarget.toDouble();
+    final dailyCalorieTarget =
+        (dailyData?.calorieTarget ?? 0) != 0 ? dailyData!.calorieTarget : defaultCaloriesTarget.toDouble();
 
-    final dailyFatsTarget = 
-        ((dailyData?['fatsTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['fatsTarget'] ?? 0).toDouble()
-            : defaultFatsTarget.toDouble();
+    final dailyProteinTarget =
+        (dailyData?.proteinTarget ?? 0) != 0 ? dailyData!.proteinTarget : defaultProteinTarget.toDouble();
 
-    final dailyWaterTarget = 
-        ((dailyData?['waterTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['waterTarget'] ?? 0).toDouble()
-            : defaultWaterTarget.toDouble();
-    
-    final foods = context.watch<DailyDataProvider>().getDailyData(widget.dateSelected)?['foods'] ?? [];
+    final dailyCarbsTarget =
+        (dailyData?.carbsTarget ?? 0) != 0 ? dailyData!.carbsTarget : defaultCarbsTarget.toDouble();
+
+    final dailyFatsTarget =
+        (dailyData?.fatsTarget ?? 0) != 0 ? dailyData!.fatsTarget : defaultFatsTarget.toDouble();
+
+    final dailyWaterTarget =
+        (dailyData?.waterTarget ?? 0) != 0 ? dailyData!.waterTarget : defaultWaterTarget.toDouble();
+
+    // ====== FIXED: foods is now List<FoodEntry> ======
+    final List<FoodEntry> foods = dailyData?.foods ?? [];
+
+    // Helper for filtering foods by time
+    List<FoodEntry> filterFoods(String mealTime) {
+      return foods.where((f) => f.time == mealTime).toList();
+    }
 
     return Scaffold(
-      //app bar
-      appBar: widget.showAppBar ? AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Today\'s Data',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ) : null,
+      appBar: widget.showAppBar
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              centerTitle: true,
+              title: Text(
+                "Today's Data",
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22,
+                  letterSpacing: 1.1,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colorScheme.onSurface.withValues(alpha: 0.1),
+                      colorScheme.surface.withValues(alpha: 0.1),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            )
+          : null,
 
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -245,9 +247,11 @@ class _DailyDataState extends State<DailyData> {
           child: Column(
             children: [
               const SizedBox(height: 20),
+
+              // ================= CALORIES + MACROS CARDS =================
               Column(
                 children: [
-                  //calories eaten
+                  // CALORIES
                   Card(
                     elevation: 3,
                     color: colorScheme.surface,
@@ -258,57 +262,50 @@ class _DailyDataState extends State<DailyData> {
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Builder(
-                              builder: (context) {
-                                final int difference =
-                                    (dailyCalorieTarget - caloriesEaten).toInt();
+                            child: Builder(builder: (context) {
+                              final difference =
+                                  (dailyCalorieTarget - caloriesEaten).toInt();
+                              final isOver = difference < 0;
+                              final displayValue = difference.abs();
 
-                                final bool isOver = difference < 0;
-                                final int displayValue = difference.abs();
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '$displayValue',
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.width * 0.13,
-                                        fontWeight: FontWeight.bold,
-                                        color: isOver
-                                            ? Colors.deepOrangeAccent // 🔥 red if over target
-                                            : colorScheme.onSurface, // normal color if under
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$displayValue',
+                                    style: TextStyle(
+                                      fontSize: MediaQuery.of(context).size.width * 0.13,
+                                      fontWeight: FontWeight.bold,
+                                      color: isOver
+                                          ? Colors.deepOrangeAccent
+                                          : colorScheme.onSurface,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      isOver ? ' Calories Over' : 'Calories Left',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: isOver
-                                            ? Colors.deepOrangeAccent.withValues(alpha: 0.8)
-                                            : colorScheme.onSurface.withValues(alpha: 0.6),
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    isOver ? 'Calories Over' : 'Calories Left',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: isOver
+                                          ? Colors.deepOrangeAccent.withValues(alpha: 0.8)
+                                          : colorScheme.onSurface.withValues(alpha: 0.6),
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
+                                  ),
+                                ],
+                              );
+                            }),
                           ),
-                          const SizedBox(width: 16),
+
                           MacroTile(
                             eaten: caloriesEaten,
                             goal: dailyCalorieTarget,
                             size: 80,
-                            bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                            fgColor: colorScheme.onSurface,
                             icon: FontAwesomeIcons.fireFlameCurved,
+                            bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
+                            fgColor: colorScheme.onSurface,
                             strokeWidth: 7,
                             label: 'Calories',
                           ),
@@ -316,189 +313,71 @@ class _DailyDataState extends State<DailyData> {
                       ),
                     ),
                   ),
-                  // Macros
+
+                  // ========== MACROS (PROTEIN - CARBS - FATS) =============
                   Row(
                     children: [
-                      // Protein
+                      // PROTEIN
                       Expanded(
-                        child: Card(
-                          elevation: 2,
-                          color: theme.cardColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                            child: Column(
-                              children: [
-                                MacroTile(
-                                  label: 'Protein',
-                                  eaten: proteinEaten,
-                                  goal: dailyProteinTarget,
-                                  bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                  fgColor: AppColors.proteinColor,
-                                  icon: FontAwesomeIcons.drumstickBite,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Protein',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${proteinEaten.toInt()}/${dailyProteinTarget.toInt()}g',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: _macroCard(
+                          theme: theme,
+                          color: colorScheme,
+                          label: "Protein",
+                          eaten: proteinEaten,
+                          goal: dailyProteinTarget,
+                          icon: FontAwesomeIcons.drumstickBite,
+                          colorFill: AppColors.proteinColor,
                         ),
                       ),
 
-                      // Carbs
+                      // CARBS
                       Expanded(
-                        child: Card(
-                          elevation: 2,
-                          color: theme.cardColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                            child: Column(
-                              children: [
-                                MacroTile(
-                                  label: 'Carbs',
-                                  eaten: carbsEaten,
-                                  goal: dailyCarbsTarget,
-                                  bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                  fgColor: AppColors.carbsColor,
-                                  icon: FontAwesomeIcons.breadSlice,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Carbs',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${carbsEaten.toInt()}/${dailyCarbsTarget.toInt()}g',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: _macroCard(
+                          theme: theme,
+                          color: colorScheme,
+                          label: "Carbs",
+                          eaten: carbsEaten,
+                          goal: dailyCarbsTarget,
+                          icon: FontAwesomeIcons.breadSlice,
+                          colorFill: AppColors.carbsColor,
                         ),
                       ),
 
-                      // Fats
+                      // FATS
                       Expanded(
-                        child: Card(
-                          elevation: 2,
-                          color: theme.cardColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                            child: Column(
-                              children: [
-                                MacroTile(
-                                  label: 'Fats',
-                                  eaten: fatsEaten,
-                                  goal: dailyFatsTarget,
-                                  bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                  fgColor: AppColors.fatColor,
-                                  icon: FontAwesomeIcons.seedling,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Fats',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${fatsEaten.toInt()}/${dailyFatsTarget.toInt()}g',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: _macroCard(
+                          theme: theme,
+                          color: colorScheme,
+                          label: "Fats",
+                          eaten: fatsEaten,
+                          goal: dailyFatsTarget,
+                          icon: FontAwesomeIcons.seedling,
+                          colorFill: AppColors.fatColor,
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
-              
+
+              // ================= WATER + WEIGHT =====================
               IntrinsicHeight(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    //Water
+                    // WATER
                     Expanded(
-                      child: Card(
-                        elevation: 2,
-                        color: theme.cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                          child: Column(
-                            children: [
-                              MacroTile(
-                                label: 'Water',
-                                eaten: waterDrunk,
-                                goal: dailyWaterTarget,
-                                bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                fgColor: AppColors.waterColor,
-                                icon: FontAwesomeIcons.glassWater,
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Water',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${waterDrunk.toInt()}/${dailyWaterTarget.toInt()}L',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child: _macroCard(
+                        theme: theme,
+                        color: colorScheme,
+                        label: "Water",
+                        eaten: waterDrunk,
+                        goal: dailyWaterTarget,
+                        icon: FontAwesomeIcons.glassWater,
+                        colorFill: AppColors.waterColor,
                       ),
                     ),
-                    //Weight
+
+                    // WEIGHT
                     Expanded(
                       child: Card(
                         elevation: 3,
@@ -506,214 +385,147 @@ class _DailyDataState extends State<DailyData> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                      '${weightToday.toString()}kg',
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.width * 0.07,
-                                        fontWeight: FontWeight.bold,
-                                        color: colorScheme.onSurface,
-                                      ),
-                                    ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Weight',
+                                "${weightToday.toString()}kg",
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: MediaQuery.of(context).size.width * 0.07,
+                                  fontWeight: FontWeight.bold,
                                   color: colorScheme.onSurface,
                                 ),
                               ),
+                              const SizedBox(height: 12),
+                              const Text("Weight"),
                             ],
-                          )
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 40),
+
+              // ================= SECTION TITLE ==================
               Row(
                 children: [
-                  const Expanded(
-                    child: Divider(thickness: 1.2, endIndent: 10),
-                  ),
+                  const Expanded(child: Divider(thickness: 1.2, endIndent: 10)),
                   Text(
                     "Food",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                      color: colorScheme.onSurface.withValues(alpha: 0.85),
                       letterSpacing: 0.5,
                     ),
                   ),
-                  const Expanded(
-                    child: Divider(thickness: 1.2, indent: 10),
-                  ),
+                  const Expanded(child: Divider(thickness: 1.2, indent: 10)),
                 ],
               ),
+
               const SizedBox(height: 20),
-              //breakfast foods
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ExpansionTile(
-                  title: Text('Breakfast'),
-                  children: [
-                    Container(
-                    child: foods.isEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Center(child: Text('No foods logged yet')),
-                    )
-                      : ListView.builder(
-                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                        itemCount: foods.where((food) => food['time'] == 'Breakfast').length,
-                        itemBuilder: (context, index) {
-                          final food = foods[index];
-                          return FoodCard(
-                            food: {
-                              'foodName': food['foodName'],
-                              'quantity': food['quantity'],
-                              'calories': food['calories'],
-                              'protein': food['protein'],
-                              'carbs': food['carbs'],
-                              'fats': food['fats'],
-                              'time': food['time']
-                            },
-                            todaysDate: todaysDate,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
+
+              // ============= MEAL SECTIONS WITH FIXED FILTERING ===========
+              _mealSection("Breakfast", filterFoods("Breakfast")),
               const SizedBox(height: 20),
-              //lunch foods
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ExpansionTile(
-                  title: Text('Lunch'),
-                  children: [
-                    Container(
-                    child: foods.isEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Center(child: Text('No foods logged yet')),
-                    )
-                      : ListView.builder(
-                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                        itemCount: foods.where((food) => food['time'] == 'Lunch').length,
-                        itemBuilder: (context, index) {
-                          final food = foods[index];
-                          return FoodCard(
-                            food: {
-                              'foodName': food['foodName'],
-                              'quantity': food['quantity'],
-                              'calories': food['calories'],
-                              'protein': food['protein'],
-                              'carbs': food['carbs'],
-                              'fats': food['fats'],
-                              'time': food['time']
-                            },
-                            todaysDate: todaysDate,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
+
+              _mealSection("Lunch", filterFoods("Lunch")),
               const SizedBox(height: 20),
-              //Snacks foods
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ExpansionTile(
-                  title: Text('Snacks'),
-                  children: [
-                    Container(
-                    child: foods.isEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Center(child: Text('No foods logged yet')),
-                    )
-                      : ListView.builder(
-                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                        itemCount: foods.where((food) => food['time'] == 'Snacks').length,
-                        itemBuilder: (context, index) {
-                          final food = foods[index];
-                          return FoodCard(
-                            food: {
-                              'foodName': food['foodName'],
-                              'quantity': food['quantity'],
-                              'calories': food['calories'],
-                              'protein': food['protein'],
-                              'carbs': food['carbs'],
-                              'fats': food['fats'],
-                              'time': food['time']
-                            },
-                            todaysDate: todaysDate,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
+
+              _mealSection("Snacks", filterFoods("Snacks")),
               const SizedBox(height: 20),
-              //dinner foods
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ExpansionTile(
-                  title: Text('Dinner'),
-                  children: [
-                    Container(
-                    child: foods.isEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Center(child: Text('No foods logged yet')),
-                    )
-                      : ListView.builder(
-                        shrinkWrap: true, // 🔹 allows list to fit inside scroll view
-                        physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                        itemCount: foods.where((food) => food['time'] == 'Dinner').length,
-                        itemBuilder: (context, index) {
-                          final food = foods[index];
-                          return FoodCard(
-                            food: {
-                              'foodName': food['foodName'],
-                              'quantity': food['quantity'],
-                              'calories': food['calories'],
-                              'protein': food['protein'],
-                              'carbs': food['carbs'],
-                              'fats': food['fats'],
-                              'time': food['time']
-                            },
-                            todaysDate: todaysDate,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
+
+              _mealSection("Dinner", filterFoods("Dinner")),
               const SizedBox(height: 20),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // ===== Helper: Macro card builder =====
+  Widget _macroCard({
+    required ThemeData theme,
+    required ColorScheme color,
+    required String label,
+    required double eaten,
+    required double goal,
+    required IconData icon,
+    required Color colorFill,
+  }) {
+    return Card(
+      elevation: 2,
+      color: theme.cardColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        child: Column(
+          children: [
+            MacroTile(
+              label: label,
+              eaten: eaten,
+              goal: goal,
+              bgColor: color.onSurface.withValues(alpha: 0.1),
+              fgColor: colorFill,
+              icon: icon,
+            ),
+
+            const SizedBox(height: 12),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: color.onSurface)),
+
+            const SizedBox(height: 4),
+            Text(
+              "${eaten.toInt()}/${goal.toInt()}g",
+              style: TextStyle(
+                fontSize: 12,
+                color: color.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ===== Helper: Meal Section Builder =====
+  Widget _mealSection(String title, List<FoodEntry> foods) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ExpansionTile(
+        title: Text(title),
+        children: [
+          foods.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(child: Text("No foods logged yet")),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: foods.length,
+                  itemBuilder: (context, index) {
+                    final food = foods[index];
+                    return FoodCard(
+                      todaysDate: todaysDate,
+                      food: {
+                        'foodName': food.name,
+                        'quantity': food.quantity,
+                        'calories': food.calories,
+                        'protein': food.protein,
+                        'carbs': food.carbs,
+                        'fats': food.fats,
+                        'time': food.time,
+                      },
+                    );
+                  },
+                ),
+        ],
       ),
     );
   }
@@ -1411,50 +1223,56 @@ class _EditFoodState extends State<EditFood> {
                         /// SAVE BUTTON
                         ElevatedButton(
                           onPressed: () async {
+                            if (time == "No Time") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please select time')),
+                              );
+                              return;
+                            }
                             if (!_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Please correct the errors')),
+                                const SnackBar(content: Text('Please correct the errors')),
                               );
                               return;
                             }
 
+                            final dailyProvider = Provider.of<DailyDataProvider>(context, listen: false);
+                            final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
 
-                            // NOW your inputs are guaranteed valid
-                            final provider =
-                                Provider.of<DailyDataProvider>(context, listen: false);
+                            // Read input
+                            String foodName = foodNameController.text.trim();
+                            double quantity = double.parse(quantityController.text);
+                            double calories = double.parse(caloriesController.text);
+                            double protein = double.parse(proteinController.text);
+                            double carbs = double.parse(carbsController.text);
+                            double fats = double.parse(fatsController.text);
 
-                            final currentData = provider.getDailyData(todaysDate) ?? {
-                              'calories': 0.0,
-                              'protein': 0.0,
-                              'carbs': 0.0,
-                              'fats': 0.0,
-                              'water': 0.0,
-                              'weight': 0.0,
-                            };
+                            // Create typed model entry
+                            final entry = FoodEntry(
+                              name: foodName,
+                              quantity: quantity,
+                              calories: calories,
+                              protein: protein,
+                              carbs: carbs,
+                              fats: fats,
+                              time: time
+                            );
 
-                            final foodEntry = {
-                              'foodName': foodNameController.text.trim(),
-                              'quantity': double.parse(quantityController.text),
-                              'calories': double.parse(caloriesController.text),
-                              'protein': double.tryParse(proteinController.text) ?? 0,
-                              'carbs': double.tryParse(carbsController.text) ?? 0,
-                              'fats': double.tryParse(fatsController.text) ?? 0,
+                            // Add to today's food list
+                            await dailyProvider.addFood(todaysDate, entry);
+
+                            // Save to saved foods library
+                            await savedFoodsProvider.saveFood({
+                              'name': foodName,
+                              'quantity': quantity,
+                              'calories': calories,
+                              'protein': protein,
+                              'carbs': carbs,
+                              'fats': fats,
                               'time': time,
-                            };
+                            });
 
-                            final updatedData = {
-                              'calories': (currentData['calories']-widget.calories)+ foodEntry['calories'],
-                              'protein': (currentData['protein']-widget.protein) + foodEntry['protein'],
-                              'carbs': (currentData['carbs']-widget.carbs) + foodEntry['carbs'],
-                              'fats': (currentData['fats']-widget .fats) + foodEntry['fats'],
-                              'water': currentData['water'],
-                              'weight': currentData['weight'],
-                            };
-
-                            await provider.addFood(todaysDate, foodEntry);
-                            await provider.updateDailyData(todaysDate, updatedData);
-
+                            // Clear inputs
                             foodNameController.clear();
                             quantityController.clear();
                             caloriesController.clear();
@@ -1471,15 +1289,6 @@ class _EditFoodState extends State<EditFood> {
                             Navigator.pop(context);
                           },
                           child: const Text('Add Food', style: TextStyle(fontSize: 18)),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(fontSize: 18, color: Colors.red),
-                          ),
                         )
                       ],
                     ),

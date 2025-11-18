@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
+import 'package:fuel_iq/models/food_entry.dart';
 import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fuel_iq/services/utils.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:fuel_iq/theme/colors.dart';
 
 
@@ -38,41 +39,35 @@ class _HomePageState extends State<HomePage> {
     final colorScheme = theme.colorScheme;
 
     //data
-    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
-    final caloriesEaten = (dailyData?['calories'] ?? 0).toDouble();
-    final proteinEaten = (dailyData?['protein'] ?? 0).toDouble();
-    final carbsEaten = (dailyData?['carbs'] ?? 0).toDouble();
-    final fatsEaten = (dailyData?['fats'] ?? 0).toDouble();
-    final waterDrunk = (dailyData?['water'] ?? 0).toDouble();
-    final weightToday = (dailyData?['weight'] ?? 0).toDouble();
-    final dailyCalorieTarget = 
-    ((dailyData?['calorieTarget'] ?? 0).toDouble() != 0)
-        ? (dailyData?['calorieTarget'] ?? 0).toDouble()
-        : defaultCaloriesTarget.toDouble();
+    final dailyData =
+        context.watch<DailyDataProvider>().getDailyData(todaysDate);
 
-    final dailyProteinTarget = 
-        ((dailyData?['proteinTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['proteinTarget'] ?? 0).toDouble()
-            : defaultProteinTarget.toDouble();
+    // ====== FIXED: Model-safe lookups ======
+    final caloriesEaten = dailyData?.calories ?? 0.0;
+    final proteinEaten = dailyData?.protein ?? 0.0;
+    final carbsEaten = dailyData?.carbs ?? 0.0;
+    final fatsEaten = dailyData?.fats ?? 0.0;
+    final waterDrunk = dailyData?.water ?? 0.0;
+    final weightToday = dailyData?.weight ?? 0.0;
 
-    final dailyCarbsTarget = 
-        ((dailyData?['carbsTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['carbsTarget'] ?? 0).toDouble()
-            : defaultCaloriesTarget.toDouble();
+    final dailyCalorieTarget =
+        (dailyData?.calorieTarget ?? 0) != 0 ? dailyData!.calorieTarget : defaultCaloriesTarget.toDouble();
 
-    final dailyFatsTarget = 
-        ((dailyData?['fatsTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['fatsTarget'] ?? 0).toDouble()
-            : defaultFatsTarget.toDouble();
+    final dailyProteinTarget =
+        (dailyData?.proteinTarget ?? 0) != 0 ? dailyData!.proteinTarget : defaultProteinTarget.toDouble();
 
-    final dailyWaterTarget = 
-        ((dailyData?['waterTarget'] ?? 0).toDouble() != 0)
-            ? (dailyData?['waterTarget'] ?? 0).toDouble()
-            : defaultWaterTarget.toDouble();
+    final dailyCarbsTarget =
+        (dailyData?.carbsTarget ?? 0) != 0 ? dailyData!.carbsTarget : defaultCarbsTarget.toDouble();
 
+    final dailyFatsTarget =
+        (dailyData?.fatsTarget ?? 0) != 0 ? dailyData!.fatsTarget : defaultFatsTarget.toDouble();
 
-    final foods = context.watch<DailyDataProvider>().getDailyData(todaysDate)?['foods'] ?? [];
-    
+    final dailyWaterTarget =
+        (dailyData?.waterTarget ?? 0) != 0 ? dailyData!.waterTarget : defaultWaterTarget.toDouble();
+
+    // ====== FIXED: foods is now List<FoodEntry> ======
+    final List<FoodEntry> foods = dailyData?.foods ?? [];
+
 
     return Scaffold(
 
@@ -587,18 +582,18 @@ class _HomePageState extends State<HomePage> {
                             : ListView.builder(
                               shrinkWrap: true, // 🔹 allows list to fit inside scroll view
                               physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                              itemCount: foods.where((food) => food['time'] == 'Breakfast').length,
+                              itemCount: foods.where((food) => food.time == 'Breakfast').length,
                               itemBuilder: (context, index) {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'foodName': food['foodName'],
-                                    'quantity': food['quantity'],
-                                    'calories': food['calories'],
-                                    'protein': food['protein'],
-                                    'carbs': food['carbs'],
-                                    'fats': food['fats'],
-                                    'time': food['time']
+                                    'foodName': food.name,
+                                    'quantity': food.quantity,
+                                    'calories': food.calories,
+                                    'protein': food.protein,
+                                    'carbs':food.carbs,
+                                    'fats': food.fats,
+                                    'time': food.time
                                   },
                                   todaysDate: todaysDate,
                                 );
@@ -626,18 +621,18 @@ class _HomePageState extends State<HomePage> {
                             : ListView.builder(
                               shrinkWrap: true, // 🔹 allows list to fit inside scroll view
                               physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                              itemCount: foods.where((food) => food['time'] == 'Lunch').length,
+                              itemCount: foods.where((food) => food.time == 'Lunch').length,
                               itemBuilder: (context, index) {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'foodName': food['foodName'],
-                                    'quantity': food['quantity'],
-                                    'calories': food['calories'],
-                                    'protein': food['protein'],
-                                    'carbs': food['carbs'],
-                                    'fats': food['fats'],
-                                    'time': food['time']
+                                    'foodName': food.name,
+                                    'quantity': food.quantity,
+                                    'calories': food.calories,
+                                    'protein': food.protein,
+                                    'carbs':food.carbs,
+                                    'fats': food.fats,
+                                    'time': food.time
                                   },
                                   todaysDate: todaysDate,
                                 );
@@ -665,18 +660,18 @@ class _HomePageState extends State<HomePage> {
                             : ListView.builder(
                               shrinkWrap: true, // 🔹 allows list to fit inside scroll view
                               physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                              itemCount: foods.where((food) => food['time'] == 'Snacks').length,
+                              itemCount: foods.where((food) => food.time == 'Snacks').length,
                               itemBuilder: (context, index) {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'foodName': food['foodName'],
-                                    'quantity': food['quantity'],
-                                    'calories': food['calories'],
-                                    'protein': food['protein'],
-                                    'carbs': food['carbs'],
-                                    'fats': food['fats'],
-                                    'time': food['time']
+                                    'foodName': food.name,
+                                    'quantity': food.quantity,
+                                    'calories': food.calories,
+                                    'protein': food.protein,
+                                    'carbs':food.carbs,
+                                    'fats': food.fats,
+                                    'time': food.time
                                   },
                                   todaysDate: todaysDate,
                                 );
@@ -704,18 +699,18 @@ class _HomePageState extends State<HomePage> {
                             : ListView.builder(
                               shrinkWrap: true, // 🔹 allows list to fit inside scroll view
                               physics: const NeverScrollableScrollPhysics(), // 🔹 disables internal scroll
-                              itemCount: foods.where((food) => food['time'] == 'Dinner').length,
+                              itemCount: foods.where((food) => food.time == 'Dinner').length,
                               itemBuilder: (context, index) {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'foodName': food['foodName'],
-                                    'quantity': food['quantity'],
-                                    'calories': food['calories'],
-                                    'protein': food['protein'],
-                                    'carbs': food['carbs'],
-                                    'fats': food['fats'],
-                                    'time': food['time']
+                                    'foodName': food.name,
+                                    'quantity': food.quantity,
+                                    'calories': food.calories,
+                                    'protein': food.protein,
+                                    'carbs':food.carbs,
+                                    'fats': food.fats,
+                                    'time': food.time
                                   },
                                   todaysDate: todaysDate,
                                 );

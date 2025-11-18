@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/services/utils.dart';
+import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
-
-
+import 'package:fuel_iq/providers/daily_data_provider.dart';
 class WaterPage extends StatefulWidget {
   const WaterPage({super.key});
 
@@ -20,11 +19,13 @@ class _WaterPageState extends State<WaterPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
-    final waterDrunk = dailyData?['water'] ?? 0.0; // in liters
-    final dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
+    final provider = context.watch<DailyDataProvider>();
+    final dailyData = provider.getDailyData(todaysDate) ?? DailyDataModel();
+
+    final double waterDrunk = dailyData.water;
+    final double dailyWaterTarget = dailyData.waterTarget;
+
     return Scaffold(
-      //app bar
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -52,19 +53,23 @@ class _WaterPageState extends State<WaterPage> {
           ),
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // ---- WATER CARD ----
             Card(
               elevation: 3,
-                color: colorScheme.surface,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Row(
+              color: colorScheme.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
                       child: Text(
@@ -82,72 +87,79 @@ class _WaterPageState extends State<WaterPage> {
                       eaten: waterDrunk,
                       goal: dailyWaterTarget,
                       size: 140,
-                      bgColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                      bgColor:
+                          theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       fgColor: AppColors.waterColor,
                       icon: FontAwesomeIcons.glassWater,
                       strokeWidth: 7,
                       label: 'Water',
                     ),
                   ],
-                )
+                ),
               ),
             ),
-            const SizedBox(height: 100,),
+
+            const SizedBox(height: 80),
+
+            // ---- BUTTONS ROW ----
             Row(
-              mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(), // square edges
-                      padding: EdgeInsets.zero, // removes internal spacing
-                      minimumSize: const Size(double.infinity, 60), // adjust height if needed
-                    ),
-                    onPressed: () async {
-                      final provider = Provider.of<DailyDataProvider>(context, listen: false);
-
-                      // Get current water intake
-                      final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
-
-                      // Update only water
-                      final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
-                      updatedData['water'] = currentWater + 0.25; // add 250 ml
-
-                      await provider.updateDailyData(todaysDate, updatedData);
-                    },
-                    child: const Text('Add 250ml'),
-                  ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(), // square edges
+                      shape: const RoundedRectangleBorder(),
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(double.infinity, 60),
                     ),
                     onPressed: () async {
-                      final provider = Provider.of<DailyDataProvider>(context, listen: false);
+                      final provider = 
+                          Provider.of<DailyDataProvider>(context, listen: false);
 
-                      // Get current water intake
-                      final currentWater = provider.getDailyData(todaysDate)?['water'] ?? 0.0;
-                      final updatedData = Map<String, dynamic>.from(provider.getDailyData(todaysDate) ?? {});
+                      DailyDataModel day =
+                          provider.getDailyData(todaysDate) ??
+                              DailyDataModel();
 
-                      if (currentWater > 0) {
-                        // Update only water
-                        updatedData['water'] = currentWater - 0.25; // add 250 ml
-                      } else {
+                      day.water += 0.25; // Add 250ml
+
+                      await provider.updateDailyData(todaysDate, day);
+                    },
+                    child: const Text("Add 250ml"),
+                  ),
+                ),
+
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(),
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(double.infinity, 60),
+                    ),
+                    onPressed: () async {
+                      final provider = 
+                          Provider.of<DailyDataProvider>(context, listen: false);
+
+                      DailyDataModel day =
+                          provider.getDailyData(todaysDate) ??
+                              DailyDataModel();
+
+                      if (day.water <= 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('You Have Not Drank Water Today.')),
+                          const SnackBar(
+                            content: Text("You have not drank water today."),
+                          ),
                         );
+                        return;
                       }
 
-                      await provider.updateDailyData(todaysDate, updatedData);
+                      day.water = (day.water - 0.25).clamp(0.0, 99.0);
+
+                      await provider.updateDailyData(todaysDate, day);
                     },
-                    child: const Text('Remove 250ml'),
+                    child: const Text("Remove 250ml"),
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

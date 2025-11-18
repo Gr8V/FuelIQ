@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
 import 'package:fuel_iq/pages/main/insights.dart';
+import 'package:fuel_iq/providers/history_provider.dart';
+import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,7 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'pages/main/home_page.dart';
 import 'pages/main/details.dart';
 import 'pages/main/settings.dart'; 
-import 'services/daily_data_provider.dart';
+import 'providers/daily_data_provider.dart';
 //theme
 import 'globals/theme_controller.dart';
 import 'theme/app_theme.dart';
@@ -31,6 +33,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: dataProvider),
+        ChangeNotifierProvider(create: (_) => SavedFoodsProvider()),
+      ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: const FuelIQApp(),
     ),

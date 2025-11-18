@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/models/food_entry.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/providers/saved_foods_provider.dart';
 
-import 'package:fuel_iq/services/utils.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fuel_iq/services/api_services.dart';
 import 'package:provider/provider.dart';
@@ -412,62 +414,58 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
 
                         const SizedBox(height: 24),
 
-                        /// SAVE BUTTON
                         ElevatedButton(
                           onPressed: () async {
                             if (time == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Please select time')),
+                                const SnackBar(content: Text('Please select time')),
                               );
                               return;
                             }
-                            else if (!_formKey.currentState!.validate() || time == null) {
+                            if (!_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Please correct the errors')),
+                                const SnackBar(content: Text('Please correct the errors')),
                               );
                               return;
                             }
 
+                            final dailyProvider = Provider.of<DailyDataProvider>(context, listen: false);
+                            final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
 
-                            // NOW your inputs are guaranteed valid
-                            final provider =
-                                Provider.of<DailyDataProvider>(context, listen: false);
+                            // Read input
+                            String foodName = foodNameController.text.trim();
+                            double quantity = double.parse(quantityController.text);
+                            double calories = double.parse(caloriesController.text);
+                            double protein = double.parse(proteinController.text);
+                            double carbs = double.parse(carbsController.text);
+                            double fats = double.parse(fatsController.text);
 
-                            final currentData = provider.getDailyData(todaysDate) ?? {
-                              'calories': 0.0,
-                              'protein': 0.0,
-                              'carbs': 0.0,
-                              'fats': 0.0,
-                              'water': 0.0,
-                              'weight': 0.0,
-                            };
+                            // Create typed model entry
+                            final entry = FoodEntry(
+                              name: foodName,
+                              quantity: quantity,
+                              calories: calories,
+                              protein: protein,
+                              carbs: carbs,
+                              fats: fats,
+                              time: time ?? "No Time"
+                            );
 
-                            final foodEntry = {
-                              'foodName': foodNameController.text.trim(),
-                              'quantity': double.parse(quantityController.text),
-                              'calories': double.parse(caloriesController.text),
-                              'protein': double.tryParse(proteinController.text) ?? 0,
-                              'carbs': double.tryParse(carbsController.text) ?? 0,
-                              'fats': double.tryParse(fatsController.text) ?? 0,
+                            // Add to today's food list
+                            await dailyProvider.addFood(todaysDate, entry);
+
+                            // Save to saved foods library
+                            await savedFoodsProvider.saveFood({
+                              'name': foodName,
+                              'quantity': quantity,
+                              'calories': calories,
+                              'protein': protein,
+                              'carbs': carbs,
+                              'fats': fats,
                               'time': time,
-                            };
+                            });
 
-                            final updatedData = {
-                              'calories':
-                                  currentData['calories'] + foodEntry['calories'],
-                              'protein':
-                                  currentData['protein'] + foodEntry['protein'],
-                              'carbs': currentData['carbs'] + foodEntry['carbs'],
-                              'fats': currentData['fats'] + foodEntry['fats'],
-                              'water': currentData['water'],
-                              'weight': currentData['weight'],
-                            };
-
-                            await provider.addFood(todaysDate, foodEntry);
-                            await provider.updateDailyData(todaysDate, updatedData);
-
+                            // Clear inputs
                             foodNameController.clear();
                             quantityController.clear();
                             caloriesController.clear();
@@ -484,7 +482,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
                             Navigator.pop(context);
                           },
                           child: const Text('Add Food', style: TextStyle(fontSize: 18)),
-                        ),
+              ),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);

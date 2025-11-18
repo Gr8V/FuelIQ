@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
-import 'package:fuel_iq/services/utils.dart';
+import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/providers/history_provider.dart';
+import 'package:fuel_iq/utils/date_utils.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class WeightPage extends StatefulWidget {
@@ -21,82 +24,82 @@ class _WeightPageState extends State<WeightPage> {
     _loadWeights();
   }
 
-  // Helper to format date as dd-MM-yyyy
+  // Format dd-MM-yyyy
   String _formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}";
   }
 
   Future<void> _loadWeights() async {
     setState(() => _isLoading = true);
-    
-    // ✅ Use listen: false in initState
-    final provider = Provider.of<DailyDataProvider>(context, listen: false);
-    
-    // Load last 30 days of data in dd-MM-yyyy format
-    final dates = List.generate(30, (i) {
-      return _formatDate(DateTime.now().subtract(Duration(days: i)));
-    });
-    
-    for (final date in dates) {
-      await provider.loadDailyData(date);
-    }
 
-    final loadedWeights = await provider.getAllWeights();
+    final dailyProvider =
+        Provider.of<DailyDataProvider>(context, listen: false);
+    final historyProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
+
+    // Load last 30 days efficiently (better than 30 awaits in a loop)
+    final futures = <Future>[];
+    for (int i = 0; i < 30; i++) {
+      final date = _formatDate(DateTime.now().subtract(Duration(days: i)));
+      futures.add(dailyProvider.loadDailyData(date));
+    }
+    await Future.wait(futures);
+
+    // Load weight history
+    final loadedWeights = await historyProvider.getWeightHistory();
+
+    if (!mounted) return;
     setState(() {
       _weights = loadedWeights;
       _isLoading = false;
     });
-    
-    // Set today's weight in the text field if it exists
-    final todaysDate = _formatDate(DateTime.now());
-    if (_weights.containsKey(todaysDate) && _weights[todaysDate] != 0.0) {
-      _controller.text = _weights[todaysDate].toString();
+
+    // autofill today's weight into text field
+    final today = _formatDate(DateTime.now());
+    if (_weights.containsKey(today) && _weights[today] != 0.0) {
+      _controller.text = _weights[today]!.toString();
     }
   }
 
   Future<void> _saveWeight() async {
     if (_controller.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter a weight")),
-      );
+      _showMessage("Please enter a weight");
       return;
     }
 
     final weight = double.tryParse(_controller.text);
     if (weight == null || weight <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter a valid weight")),
-      );
+      _showMessage("Please enter a valid weight");
       return;
     }
 
-    final provider = Provider.of<DailyDataProvider>(context, listen: false);
-    final todaysDate = _formatDate(DateTime.now());
-    
-    // Get current day's data
-    final currentData = provider.getDailyData(todaysDate) ?? {
-      'calories': 0.0,
-      'protein': 0.0,
-      'carbs': 0.0,
-      'fats': 0.0,
-      'water': 0.0,
-      'weight': 0.0,
-      'foods': [],
-    };
-    
-    // Update with new weight
-    currentData['weight'] = weight;
-    
-    await provider.updateDailyData(todaysDate, currentData);
-    
-    setState(() async {
-      _weights = await provider.getAllWeights();
-    });
-    if (!mounted) return;
+    final dailyProvider =
+        Provider.of<DailyDataProvider>(context, listen: false);
+    final historyProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Weight saved successfully!")),
-    );
+    final today = DateUtilsExt.today();
+
+    // Load existing day or create new
+    final existing = dailyProvider.getDailyData(today) ?? DailyDataModel();
+    existing.weight = weight;
+
+    // Save to provider/storage
+    await dailyProvider.updateDailyData(today, existing);
+
+    // Reload weight history
+    final newWeights = await historyProvider.getWeightHistory();
+
+    if (!mounted) return;
+    setState(() {
+      _weights = newWeights;
+    });
+
+    _showMessage("Weight saved successfully!");
+  }
+
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -108,15 +111,14 @@ class _WeightPageState extends State<WeightPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final todaysDate = _formatDate(DateTime.now());
-    final todaysWeight = _weights[todaysDate];
+    final today = _formatDate(DateTime.now());
+    final todaysWeight = _weights[today];
 
     return Scaffold(
-      //app bar
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
         centerTitle: true,
+        backgroundColor: Colors.transparent,
         title: Text(
           'Weight',
           style: TextStyle(
@@ -140,13 +142,14 @@ class _WeightPageState extends State<WeightPage> {
           ),
         ),
       ),
+
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // Input Section
+                  // Input Card
                   Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -189,7 +192,7 @@ class _WeightPageState extends State<WeightPage> {
 
                   const SizedBox(height: 20),
 
-                  // Display today's weight
+                  // Today's weight
                   if (todaysWeight != null && todaysWeight != 0.0)
                     Card(
                       elevation: 2,
@@ -223,13 +226,19 @@ class _WeightPageState extends State<WeightPage> {
                     ),
 
                   const SizedBox(height: 20),
-                  SimpleLineChart(data: _weights,),
-                  // Weight history count
+
+                  // Weight chart (already provided)
+                  Expanded(
+                    child: SimpleLineChart(data: _weights),
+                  ),
+
+                  const SizedBox(height: 10),
+
                   Text(
                     "Total entries: ${_weights.length}",
                     style: TextStyle(
                       fontSize: 14,
-                      color: colorScheme.onSurface
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],

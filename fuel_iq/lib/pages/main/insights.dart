@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
-import 'package:fuel_iq/services/utils.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/providers/history_provider.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class Insights extends StatefulWidget {
@@ -57,13 +58,16 @@ class _InsightsState extends State<Insights> {
       isLoading = true;
     });
 
-    final provider = context.read<DailyDataProvider>();
+    final historyProvider = Provider.of<HistoryProvider>(
+                context,
+                listen: false,
+              );
     
     final results = await Future.wait([
-      provider.getAllLoadedCalories(lastDays: daysToShow),
-      provider.getAllLoadedProtein(lastDays: daysToShow),
-      provider.getAllLoadedCarbs(lastDays: daysToShow),
-      provider.getAllLoadedFats(lastDays: daysToShow),
+      historyProvider.getMacroHistory('calories',lastDays: daysToShow),
+      historyProvider.getMacroHistory('protein',lastDays: daysToShow),
+      historyProvider.getMacroHistory('carbs',lastDays: daysToShow),
+      historyProvider.getMacroHistory('fats',lastDays: daysToShow),
     ]);
     
     if (mounted) {

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 //theme
 import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/globals/user_data.dart';
+import 'package:fuel_iq/models/daily_data.dart';
 import 'package:fuel_iq/pages/main/user_profile.dart';
-import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -236,25 +238,28 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
   @override
   void initState() {
     super.initState();
-    // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DailyDataProvider>(context, listen: false)
           .loadDailyData(todaysDate);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
-    var dailyCalorieTarget = (dailyData?['calorieTarget'] ?? 0).toDouble();
-    var dailyProteinTarget = (dailyData?['proteinTarget'] ?? 0).toDouble();
-    var dailyCarbsTarget = (dailyData?['carbsTarget'] ?? 0).toDouble();
-    var dailyFatsTarget = (dailyData?['fatsTarget'] ?? 0).toDouble();
-    var dailyWaterTarget = (dailyData?['waterTarget'] ?? 0).toDouble();
+    final dailyData =
+        context.watch<DailyDataProvider>().getDailyData(todaysDate) ??
+            DailyDataModel();
+
+    double dailyCalorieTarget = dailyData.calorieTarget;
+    double dailyProteinTarget = dailyData.proteinTarget;
+    double dailyCarbsTarget = dailyData.carbsTarget;
+    double dailyFatsTarget = dailyData.fatsTarget;
+    double dailyWaterTarget = dailyData.waterTarget;
+
     return Scaffold(
-      //app bar
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -282,174 +287,126 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
           ),
         ),
       ),
+
       body: ListView(
         children: [
-          // Calorie Target
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Calorie Target',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  dailyCalorieTarget.toString(),
-                  style: TextStyle(
-                    color: colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              showEditTargetDialog(
-                context: context,
-                title: 'Calorie Target',
-                initialValue: dailyCalorieTarget,
-                onSave: (newValue) async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => dailyCalorieTarget = newValue);
-                  await provider.updateSingleTarget(getTodaysDate(), 'calorieTarget', newValue);
-                },
+          _buildTargetTile(
+            context: context,
+            label: "Calorie Target",
+            value: dailyCalorieTarget,
+            onSave: (newValue) async {
+              final provider =
+                  Provider.of<DailyDataProvider>(context, listen: false);
+              await provider.updateSingleTarget(
+                todaysDate,
+                'calorieTarget',
+                newValue,
               );
             },
           ),
 
-          // Protein Target
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Protein Target',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  dailyProteinTarget.toString(),
-                  style: TextStyle(
-                    color: colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              showEditTargetDialog(
-                context: context,
-                title: 'Protein Target',
-                initialValue: dailyProteinTarget,
-                onSave: (newValue) async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => dailyProteinTarget = newValue);
-                  await provider.updateSingleTarget(getTodaysDate(), 'proteinTarget', newValue);
-                },
+          _buildTargetTile(
+            context: context,
+            label: "Protein Target",
+            value: dailyProteinTarget,
+            onSave: (newValue) async {
+              final provider =
+                  Provider.of<DailyDataProvider>(context, listen: false);
+              await provider.updateSingleTarget(
+                todaysDate,
+                'proteinTarget',
+                newValue,
               );
             },
           ),
 
-          // Carbs Target
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Carbs Target',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  dailyCarbsTarget.toString(),
-                  style: TextStyle(
-                    color: colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              showEditTargetDialog(
-                context: context,
-                title: 'Carbs Target',
-                initialValue: dailyCarbsTarget,
-                onSave: (newValue) async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => dailyCarbsTarget = newValue);
-                  await provider.updateSingleTarget(getTodaysDate(), 'carbsTarget', newValue);
-                },
+          _buildTargetTile(
+            context: context,
+            label: "Carbs Target",
+            value: dailyCarbsTarget,
+            onSave: (newValue) async {
+              final provider =
+                  Provider.of<DailyDataProvider>(context, listen: false);
+              await provider.updateSingleTarget(
+                todaysDate,
+                'carbsTarget',
+                newValue,
               );
             },
           ),
 
-          // Fats Target
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Fats Target',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  dailyFatsTarget.toString(),
-                  style: TextStyle(
-                    color: colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              showEditTargetDialog(
-                context: context,
-                title: 'Fats Target',
-                initialValue: dailyFatsTarget,
-                onSave: (newValue) async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => dailyFatsTarget = newValue);
-                  await provider.updateSingleTarget(getTodaysDate(), 'fatsTarget', newValue);
-                },
+          _buildTargetTile(
+            context: context,
+            label: "Fats Target",
+            value: dailyFatsTarget,
+            onSave: (newValue) async {
+              final provider =
+                  Provider.of<DailyDataProvider>(context, listen: false);
+              await provider.updateSingleTarget(
+                todaysDate,
+                'fatsTarget',
+                newValue,
               );
             },
           ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Water Target',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  dailyWaterTarget.toString(),
-                  style: TextStyle(
-                    color: colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              showEditTargetDialog(
-                context: context,
-                title: 'Water Target',
-                initialValue: dailyWaterTarget,
-                onSave: (newValue) async {
-                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
-                  setState(() => dailyWaterTarget = newValue);
-                  await provider.updateSingleTarget(
-                    getTodaysDate(), 
-                    'waterTarget', 
-                    newValue,
-                  );
-                },
+
+          _buildTargetTile(
+            context: context,
+            label: "Water Target",
+            value: dailyWaterTarget,
+            onSave: (newValue) async {
+              final provider =
+                  Provider.of<DailyDataProvider>(context, listen: false);
+              await provider.updateSingleTarget(
+                todaysDate,
+                'waterTarget',
+                newValue,
               );
             },
           ),
         ],
-      )
+      ),
+    );
+  }
+
+  // =============================
+  // REUSABLE TARGET TILE
+  // =============================
+
+  Widget _buildTargetTile({
+    required BuildContext context,
+    required String label,
+    required double value,
+    required Function(double) onSave,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(
+            value.toString(),
+            style: TextStyle(
+              color: colorScheme.secondary,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        showEditTargetDialog(
+          context: context,
+          title: label,
+          initialValue: value,
+          onSave: onSave,
+        );
+      },
     );
   }
 }
+
 
 Future<void> showEditTargetDialog({
   required BuildContext context,
@@ -548,9 +505,6 @@ Future<void> showEraseDataDialog({
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
             child: Text(
               'Cancel',
               style: TextStyle(
@@ -560,34 +514,42 @@ Future<void> showEraseDataDialog({
               ),
             ),
           ),
+
+          // DELETE BUTTON
           ElevatedButton(
             onPressed: () async {
-              final provider = Provider.of<DailyDataProvider>(
+              final dailyProvider = Provider.of<DailyDataProvider>(
                 context,
                 listen: false,
               );
-              await provider.clearAllData();
-              await provider.clearAllFoods();
-              // Initialize provider
-              final dataProvider = DailyDataProvider();
-              
-              await dataProvider.initialize();
+              final savedFoodsProvider = Provider.of<SavedFoodsProvider>(
+                context,
+                listen: false,
+              );
 
-              if (context.mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text('All data cleared successfully'),
-                      ],
-                    ),
-                    behavior: SnackBarBehavior.floating,
+              // Clear ALL user data
+              await dailyProvider.clearAll();
+              await savedFoodsProvider.clearAll();
+
+              // Reinitialize daily data (autofill today)
+              await dailyProvider.initialize();
+
+              if (!context.mounted) return;
+
+              Navigator.pop(context);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('All data cleared successfully'),
+                    ],
                   ),
-                );
-              }
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
