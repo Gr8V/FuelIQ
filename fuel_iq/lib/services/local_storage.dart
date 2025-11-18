@@ -10,6 +10,49 @@ class LocalStorageService {
   // Storage keys
   static const String _dailyDataKey = 'daily_data';
   static const String _themeModeKey = 'theme_data';
+  static const String _savedFoodsKey = 'saved_foods';
+
+  static Future<void> saveFood({
+    required String foodName,
+    required String time,
+    required double quantity,
+    required double calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  }) async   {
+    final prefs = await SharedPreferences.getInstance();
+    final existingFoods = prefs.getString(_savedFoodsKey);
+    Map<String, dynamic> allData =  existingFoods != null ? jsonDecode(existingFoods) : {};
+
+    Map<String, dynamic> foodInfo = {
+      'time':time,
+      'quantity':quantity,
+      'calories':calories,
+      'protein':protein,
+      'carbs':carbs,
+      'fats':fats
+      };
+    allData[foodName] = foodInfo;
+    await prefs.setString(_savedFoodsKey, jsonEncode(allData));
+  }
+  
+  static Future<Map<String, dynamic>> getSavedFoods() async {
+    final prefs = await SharedPreferences.getInstance();
+    final existingFoods = prefs.getString(_savedFoodsKey);
+
+    if (existingFoods == null) {
+      return {};   // return empty map if nothing saved yet
+    }
+
+    return jsonDecode(existingFoods) as Map<String, dynamic>;
+  }
+  static Future<void> saveAllFoods(Map<String, dynamic> foods) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_savedFoodsKey, jsonEncode(foods));
+  }
+
+  
 
   // ============================================================================
   // DAILY DATA OPERATIONS
@@ -67,18 +110,39 @@ class LocalStorageService {
     List foods = dayData["foods"];
 
     // Extract food name (unique identifier)
-    final entryName = foodEntry["foodName"];
+    final entryName = foodEntry["foodName"] ?? foodEntry["name"];
+
+    // Helper to safely convert to double
+    double toDouble(dynamic value) {
+      if (value is num) return value.toDouble();
+      return double.tryParse(value.toString()) ?? 0.0;
+    }
 
     // Try to find existing index
-    final idx = foods.indexWhere((f) => f["foodName"] == entryName);
+    final idx = foods.indexWhere((f) => 
+      (f["foodName"] ?? f["name"]) == entryName
+    );
 
     if (idx != -1) {
+      // Subtract old food's macros before updating
+      final oldFood = foods[idx];
+      dayData['calories'] = (toDouble(dayData['calories']) - toDouble(oldFood['calories']));
+      dayData['protein'] = (toDouble(dayData['protein']) - toDouble(oldFood['protein']));
+      dayData['carbs'] = (toDouble(dayData['carbs']) - toDouble(oldFood['carbs']));
+      dayData['fats'] = (toDouble(dayData['fats']) - toDouble(oldFood['fats']));
+      
       // Update existing entry
       foods[idx] = foodEntry;
     } else {
       // Add new entry
       foods.add(foodEntry);
     }
+
+    // Add new food's macros to daily totals
+    dayData['calories'] = (toDouble(dayData['calories']) + toDouble(foodEntry['calories'])).clamp(0.0, double.infinity);
+    dayData['protein'] = (toDouble(dayData['protein']) + toDouble(foodEntry['protein'])).clamp(0.0, double.infinity);
+    dayData['carbs'] = (toDouble(dayData['carbs']) + toDouble(foodEntry['carbs'])).clamp(0.0, double.infinity);
+    dayData['fats'] = (toDouble(dayData['fats']) + toDouble(foodEntry['fats'])).clamp(0.0, double.infinity);
 
     // Save back to storage
     allData[date] = dayData;
@@ -241,7 +305,7 @@ class LocalStorageService {
   /// Find the index of a food by name (case-insensitive)
   static int _findFoodIndex(List<dynamic> foods, String foodName) {
     return foods.indexWhere((food) {
-      final storedName = (food['name'] ?? food['foodName'] ?? '')
+      final storedName = (food['foodName'] ?? food['foodName'] ?? '')
           .toString()
           .trim()
           .toLowerCase();

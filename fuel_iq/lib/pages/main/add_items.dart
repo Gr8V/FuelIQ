@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/pages/secondary/log_food_page.dart';
+import 'package:fuel_iq/pages/secondary/saved_foods.dart';
 import 'package:fuel_iq/pages/secondary/scan_barcode_page.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
@@ -145,6 +146,43 @@ void showAddFoodDrawer(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    //Saved Foods
+                    Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 3,
+                      color: colorScheme.surface,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            //transition and page builder
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => const SavedFoods(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1.0, 0.0),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                transitionDuration: const Duration(milliseconds: 150),
+                            )
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          child: ListTile(
+                            leading: Icon(Icons.bookmark, color: Colors.redAccent,),
+                            title: const Text('Saved Foods')
+                          )
+                        ),
+                      ),
+                    ),
                     //Water
                     Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

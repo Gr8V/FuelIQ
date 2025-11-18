@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/services/daily_data_provider.dart';
+import 'package:fuel_iq/services/local_storage.dart';
 
 import 'package:fuel_iq/services/utils.dart';
 import 'package:provider/provider.dart';
@@ -228,56 +229,52 @@ class _LogFoodState extends State<LogFood> {
                 onPressed: () async {
                   if (time == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Please select time')),
+                      const SnackBar(content: Text('Please select time')),
                     );
                     return;
                   }
-                  else if (!_formKey.currentState!.validate() || time == null) {
+                  if (!_formKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Please correct the errors')),
+                      const SnackBar(content: Text('Please correct the errors')),
                     );
                     return;
                   }
 
+                  final provider = Provider.of<DailyDataProvider>(context, listen: false);
 
-                  // NOW your inputs are guaranteed valid
-                  final provider =
-                      Provider.of<DailyDataProvider>(context, listen: false);
-
-                  final currentData = provider.getDailyData(todaysDate) ?? {
-                    'calories': 0.0,
-                    'protein': 0.0,
-                    'carbs': 0.0,
-                    'fats': 0.0,
-                    'water': 0.0,
-                    'weight': 0.0,
-                  };
-
+                  String foodName = foodNameController.text.trim();
+                  double quantity = double.parse(quantityController.text);
+                  double calories = double.parse(caloriesController.text);
+                  double protein = double.parse(proteinController.text);
+                  double carbs = double.parse(carbsController.text);
+                  double fats = double.parse(fatsController.text);
+                  
                   final foodEntry = {
-                    'name': foodNameController.text.trim(),
-                    'quantity': double.parse(quantityController.text),
-                    'calories': double.parse(caloriesController.text),
-                    'protein': double.tryParse(proteinController.text) ?? 0,
-                    'carbs': double.tryParse(carbsController.text) ?? 0,
-                    'fats': double.tryParse(fatsController.text) ?? 0,
+                    'foodName': foodName,  // Changed from 'name' to 'foodName' for consistency
+                    'quantity': quantity,
+                    'calories': calories,
+                    'protein': protein,
+                    'carbs': carbs,
+                    'fats': fats,
                     'time': time,
                   };
 
-                  final updatedData = {
-                    'calories':
-                        currentData['calories'] + foodEntry['calories'],
-                    'protein':
-                        currentData['protein'] + foodEntry['protein'],
-                    'carbs': currentData['carbs'] + foodEntry['carbs'],
-                    'fats': currentData['fats'] + foodEntry['fats'],
-                    'water': currentData['water'],
-                    'weight': currentData['weight'],
-                  };
-
+                  // This single call handles everything:
+                  // - Adds the food entry
+                  // - Updates the daily totals
+                  // - Saves to storage
                   await provider.addFood(todaysDate, foodEntry);
-                  await provider.updateDailyData(todaysDate, updatedData);
+                  
+                  // Save to saved foods list
+                  await provider.saveFood(
+                    foodName: foodName,
+                    time: time ?? 'No Time',
+                    quantity: quantity,
+                    calories: calories,
+                    protein: protein,
+                    carbs: carbs,
+                    fats: fats,
+                  );
 
                   foodNameController.clear();
                   quantityController.clear();

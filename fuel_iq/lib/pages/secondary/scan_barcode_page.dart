@@ -445,7 +445,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
                             };
 
                             final foodEntry = {
-                              'name': foodNameController.text.trim(),
+                              'foodName': foodNameController.text.trim(),
                               'quantity': double.parse(quantityController.text),
                               'calories': double.parse(caloriesController.text),
                               'protein': double.tryParse(proteinController.text) ?? 0,

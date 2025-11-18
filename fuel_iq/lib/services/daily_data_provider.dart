@@ -38,6 +38,7 @@ class DailyDataProvider extends ChangeNotifier {
       defaultFatsTarget: defaultFatsTarget,
       defaultWaterTarget: defaultWaterTarget,
     );
+    await loadSavedFoods();
   }
 
   /// Automatically fill missing days between last stored date and today
@@ -619,4 +620,89 @@ Future<Map<String, double>> getAllWeights({int? lastDays}) async {
     _cache[normalizedDate] = data ?? _createEmptyDayData();
     notifyListeners();
   }
+
+  //SAVED FOODS
+  Map<String, dynamic> _savedFoods = {};
+
+  Map<String, dynamic> get savedFoods => _savedFoods;
+
+  // Load from SharedPreferences (call at app start or when screen opens)
+  Future<void> loadSavedFoods() async {
+    _savedFoods = await LocalStorageService.getSavedFoods();
+    notifyListeners();
+  }
+
+  // Add a food and update provider + SharedPreferences
+  Future<void> saveFood({
+    required String foodName,
+    required String time,
+    required double quantity,
+    required double calories,
+    required double protein,
+    required double carbs,
+    required double fats,
+  }) async {
+    await LocalStorageService.saveFood(
+      foodName: foodName,
+      time: time,
+      quantity: quantity,
+      calories: calories,
+      protein: protein,
+      carbs: carbs,
+      fats: fats,
+    );
+
+    // Update local state
+    _savedFoods[foodName] = {
+      'time': time,
+      'quantity': quantity,
+      'calories': calories,
+      'protein': protein,
+      'carbs': carbs,
+      'fats': fats,
+    };
+
+    notifyListeners();
+  }
+
+  // DELETE a saved food
+  Future<void> deleteSavedFood(String foodName) async {
+    _savedFoods.remove(foodName);
+
+    // Save updated data back to SharedPreferences
+    await LocalStorageService.saveAllFoods(_savedFoods);
+
+    notifyListeners();
+  }
+
+  // Clear all foods
+  Future<void> clearAllFoods() async {
+    _savedFoods = {};
+    await LocalStorageService.saveAllFoods({});
+    notifyListeners();
+  }
+
+  List<String> getSavedFoodNames() {
+  return _savedFoods.keys.toList();
+}
+
+Map<String, dynamic>? getSavedFoodDetails(String foodName) {
+  return _savedFoods[foodName];
+}
+
+List<Map<String, dynamic>> getAllSavedFoodsWithDetails() {
+  return _savedFoods.entries.map((entry) {
+    final foodData = Map<String, dynamic>.from(entry.value);
+    foodData['name'] = entry.key; // Add the food name to the data
+    return foodData;
+  }).toList();
+}
+
+bool isFoodSaved(String foodName) {
+  return _savedFoods.containsKey(foodName);
+}
+
+int getSavedFoodsCount() {
+  return _savedFoods.length;
+}
 }

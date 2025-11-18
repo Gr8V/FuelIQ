@@ -592,7 +592,7 @@ class _HomePageState extends State<HomePage> {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'name': food['name'],
+                                    'foodName': food['foodName'],
                                     'quantity': food['quantity'],
                                     'calories': food['calories'],
                                     'protein': food['protein'],
@@ -631,7 +631,7 @@ class _HomePageState extends State<HomePage> {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'name': food['name'],
+                                    'foodName': food['foodName'],
                                     'quantity': food['quantity'],
                                     'calories': food['calories'],
                                     'protein': food['protein'],
@@ -670,7 +670,7 @@ class _HomePageState extends State<HomePage> {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'name': food['name'],
+                                    'foodName': food['foodName'],
                                     'quantity': food['quantity'],
                                     'calories': food['calories'],
                                     'protein': food['protein'],
@@ -709,7 +709,7 @@ class _HomePageState extends State<HomePage> {
                                 final food = foods[index];
                                 return FoodCard(
                                   food: {
-                                    'name': food['name'],
+                                    'foodName': food['foodName'],
                                     'quantity': food['quantity'],
                                     'calories': food['calories'],
                                     'protein': food['protein'],

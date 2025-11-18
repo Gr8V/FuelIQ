@@ -577,7 +577,7 @@ class _DailyDataState extends State<DailyData> {
                           final food = foods[index];
                           return FoodCard(
                             food: {
-                              'name': food['name'],
+                              'foodName': food['foodName'],
                               'quantity': food['quantity'],
                               'calories': food['calories'],
                               'protein': food['protein'],
@@ -616,7 +616,7 @@ class _DailyDataState extends State<DailyData> {
                           final food = foods[index];
                           return FoodCard(
                             food: {
-                              'name': food['name'],
+                              'foodName': food['foodName'],
                               'quantity': food['quantity'],
                               'calories': food['calories'],
                               'protein': food['protein'],
@@ -655,7 +655,7 @@ class _DailyDataState extends State<DailyData> {
                           final food = foods[index];
                           return FoodCard(
                             food: {
-                              'name': food['name'],
+                              'foodName': food['foodName'],
                               'quantity': food['quantity'],
                               'calories': food['calories'],
                               'protein': food['protein'],
@@ -694,7 +694,7 @@ class _DailyDataState extends State<DailyData> {
                           final food = foods[index];
                           return FoodCard(
                             food: {
-                              'name': food['name'],
+                              'foodName': food['foodName'],
                               'quantity': food['quantity'],
                               'calories': food['calories'],
                               'protein': food['protein'],
@@ -1010,7 +1010,7 @@ class FoodCard extends StatelessWidget {
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => FoodView(
-                foodName: food['name'],
+                foodName: food['foodName'],
                 quantity: food['quantity'],
                 calories: food['calories'],
                 protein: food['protein'],
@@ -1045,7 +1045,7 @@ class FoodCard extends StatelessWidget {
                   children: [
                     // Food name (handles long names)
                     Text(
-                      food['name'],
+                      food['foodName'],
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -1434,7 +1434,7 @@ class _EditFoodState extends State<EditFood> {
                             };
 
                             final foodEntry = {
-                              'name': foodNameController.text.trim(),
+                              'foodName': foodNameController.text.trim(),
                               'quantity': double.parse(quantityController.text),
                               'calories': double.parse(caloriesController.text),
                               'protein': double.tryParse(proteinController.text) ?? 0,

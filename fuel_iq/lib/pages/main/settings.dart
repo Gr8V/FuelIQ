@@ -567,6 +567,7 @@ Future<void> showEraseDataDialog({
                 listen: false,
               );
               await provider.clearAllData();
+              await provider.clearAllFoods();
               // Initialize provider
               final dataProvider = DailyDataProvider();
               
