@@ -536,6 +536,7 @@ class _DailyDataState extends State<DailyData> {
 class FoodView extends StatefulWidget {
   
   final String foodName;
+  final String foodId;
   final double quantity;
   final double calories;
   final double protein;
@@ -547,6 +548,7 @@ class FoodView extends StatefulWidget {
 
   const FoodView({super.key,
                   required this.foodName,
+                  required this.foodId,
                   required this.quantity,
                   required this.calories,
                   required this.protein,
@@ -692,6 +694,7 @@ class _FoodViewState extends State<FoodView> {
                           pageBuilder: (context, animation, secondaryAnimation) =>
                               EditFood(
                                 foodName: widget.foodName,
+                                foodId: widget.foodId,
                                 time:  widget.time,
                                 quantity: widget.quantity,
                                 calories: widget.calories,
@@ -768,7 +771,7 @@ class _FoodViewState extends State<FoodView> {
                         final provider =
                             Provider.of<DailyDataProvider>(context, listen: false);
 
-                        await provider.deleteFood(widget.dateOfFood, widget.foodName);
+                        await provider.deleteFood(widget.dateOfFood, widget.foodId);
 
                         if (context.mounted) {
                           Navigator.pop(context);
@@ -822,6 +825,7 @@ class FoodCard extends StatelessWidget {
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => FoodView(
+                foodId: food['id'],
                 foodName: food['foodName'],
                 quantity: food['quantity'],
                 calories: food['calories'],
@@ -977,7 +981,8 @@ class FoodCard extends StatelessWidget {
 
 
 class EditFood extends StatefulWidget {
-    final String foodName;
+  final String foodName;
+  final String foodId;
   final double quantity;
   final double calories;
   final double protein;
@@ -987,6 +992,7 @@ class EditFood extends StatefulWidget {
   final String dateOfFood;
 
   const EditFood({super.key,
+                  required this.foodId,
                   required this.foodName,
                   required this.quantity,
                   required this.calories,
@@ -1249,6 +1255,7 @@ class _EditFoodState extends State<EditFood> {
 
                             // Create typed model entry
                             final entry = FoodEntry(
+                              id: widget.foodId,
                               name: foodName,
                               quantity: quantity,
                               calories: calories,
@@ -1264,6 +1271,7 @@ class _EditFoodState extends State<EditFood> {
                             // Save to saved foods library
                             await savedFoodsProvider.saveFood({
                               'name': foodName,
+                              'id': widget.foodId,
                               'quantity': quantity,
                               'calories': calories,
                               'protein': protein,

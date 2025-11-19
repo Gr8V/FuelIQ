@@ -6,6 +6,7 @@ import 'package:fuel_iq/providers/saved_foods_provider.dart';
 
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 class LogFood extends StatefulWidget {
   const LogFood({super.key});
 
@@ -245,6 +246,7 @@ class _LogFoodState extends State<LogFood> {
 
                   // Read input
                   String foodName = foodNameController.text.trim();
+                  String foodId = const Uuid().v4();
                   double quantity = double.parse(quantityController.text);
                   double calories = double.parse(caloriesController.text);
                   double protein = double.parse(proteinController.text);
@@ -253,6 +255,7 @@ class _LogFoodState extends State<LogFood> {
 
                   // Create typed model entry
                   final entry = FoodEntry(
+                    id: foodId,
                     name: foodName,
                     quantity: quantity,
                     calories: calories,
@@ -268,6 +271,7 @@ class _LogFoodState extends State<LogFood> {
                   // Save to saved foods library
                   await savedFoodsProvider.saveFood({
                     'name': foodName,
+                    'id': foodId,
                     'quantity': quantity,
                     'calories': calories,
                     'protein': protein,

@@ -12,18 +12,21 @@ class SavedFoodsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // SAVE or update a food
+  // SAVE or update a food (using id as key)
   Future<void> saveFood(Map<String, dynamic> data) async {
-    final name = data['name'];
-    _savedFoods[name] = data;
+    final id = data['id'];
+    if (id == null) {
+      throw Exception('Food must have an id');
+    }
+    _savedFoods[id] = data;
 
     await LocalStorageService.saveAllFoods(_savedFoods);
     notifyListeners();
   }
 
-  // DELETE a food by name
-  Future<void> deleteFood(String name) async {
-    _savedFoods.remove(name);
+  // DELETE a food by id
+  Future<void> deleteFood(String id) async {
+    _savedFoods.remove(id);
     await LocalStorageService.saveAllFoods(_savedFoods);
     notifyListeners();
   }
@@ -35,24 +38,45 @@ class SavedFoodsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ======== EXTRA METHODS (your UI depends on these) ========= //
+  // ======== EXTRA METHODS (updated to use id) ========= //
 
-  // Return only names of saved foods
-  List<String> getSavedFoodNames() {
+  // Return list of saved food ids
+  List<String> getSavedFoodIds() {
     return _savedFoods.keys.toList();
   }
 
-  // Get details for *one* saved food
-  Map<String, dynamic>? getSavedFoodDetails(String name) {
-    return _savedFoods[name];
+  // Get details for *one* saved food by id
+  Map<String, dynamic>? getSavedFoodDetails(String id) {
+    return _savedFoods[id];
   }
 
-  // Get full list of saved foods with "name" added inside the map
+  // Get full list of saved foods with details
   List<Map<String, dynamic>> getAllSavedFoodsWithDetails() {
-    return _savedFoods.entries.map((entry) {
-      final data = Map<String, dynamic>.from(entry.value);
-      data['name'] = entry.key; // Add name to details
-      return data;
+    return _savedFoods.values.map((data) {
+      return Map<String, dynamic>.from(data);
     }).toList();
+  }
+
+  // HELPER: Check if a food exists by id
+  bool foodExists(String id) {
+    return _savedFoods.containsKey(id);
+  }
+
+  // HELPER: Get a saved food by name (if you need to search)
+  Map<String, dynamic>? getSavedFoodByName(String name) {
+    for (var food in _savedFoods.values) {
+      if (food['name'] == name) {
+        return Map<String, dynamic>.from(food);
+      }
+    }
+    return null;
+  }
+
+  // HELPER: Get all foods with a specific name
+  List<Map<String, dynamic>> getAllFoodsWithName(String name) {
+    return _savedFoods.values
+        .where((food) => food['name'] == name)
+        .map((food) => Map<String, dynamic>.from(food))
+        .toList();
   }
 }

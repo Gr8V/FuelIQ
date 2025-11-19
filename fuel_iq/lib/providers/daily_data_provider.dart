@@ -81,34 +81,35 @@ class DailyDataProvider extends ChangeNotifier {
     await updateDailyData(normalized, data);
   }
 
-  Future<void> deleteFood(String date, String foodName) async {
+  Future<void> deleteFood(String date, String foodId) async {
     final normalized = DateUtilsExt.normalize(date);
 
     final day = await LocalStorageService.loadDailyData(normalized);
     final data = day ?? DailyDataModel();
 
-    final entry = data.foods.firstWhere(
-      (f) => f.name == foodName,
-      orElse: () => FoodEntry(
-        name: "",
-        calories: 0,
-        protein: 0,
-        carbs: 0,
-        fats: 0,
-        quantity: 0,
-        time: "No Time"
-      ),
-    );
+    // Find the entry
+    final entryIndex = data.foods.indexWhere((f) => f.id == foodId);
 
-    data.foods.removeWhere((f) => f.name == foodName);
+    if (entryIndex == -1) {
+      // Food not found — early return
+      return;
+    }
 
+    final entry = data.foods[entryIndex];
+
+    // Remove the entry
+    data.foods.removeAt(entryIndex);
+
+    // Subtract its macros
     data.calories -= entry.calories;
     data.protein -= entry.protein;
     data.carbs -= entry.carbs;
     data.fats -= entry.fats;
 
+    // Save back
     await updateDailyData(normalized, data);
   }
+
 
   Future<void> clearAll() async {
     await LocalStorageService.clearAllData();

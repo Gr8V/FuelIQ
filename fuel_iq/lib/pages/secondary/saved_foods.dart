@@ -4,6 +4,7 @@ import 'package:fuel_iq/models/food_entry.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class SavedFoods extends StatelessWidget {
   const SavedFoods({super.key});
@@ -68,6 +69,7 @@ class SavedFoods extends StatelessWidget {
             itemBuilder: (context, index) {
               final food = savedFoods[index];
               final foodName = food['name'];
+              final foodId = food['id'];
               final calories = food['calories'] ?? 0.0;
               final protein = food['protein'] ?? 0.0;
               final carbs = food['carbs'] ?? 0.0;
@@ -117,6 +119,7 @@ class SavedFoods extends StatelessWidget {
                         onPressed: () async {
                           
                           final entry = FoodEntry(
+                            id: foodId,
                             name: foodName,
                             calories: calories,
                             protein: protein,
@@ -162,7 +165,7 @@ class SavedFoods extends StatelessWidget {
                           
                           if (confirm == true && context.mounted) {
                             final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
-                            await savedFoodsProvider.deleteFood(foodName);
+                            await savedFoodsProvider.deleteFood(foodId);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('$foodName deleted')),

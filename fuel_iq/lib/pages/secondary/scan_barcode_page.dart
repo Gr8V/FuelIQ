@@ -9,6 +9,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fuel_iq/services/api_services.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
+
+import 'package:uuid/uuid.dart';
 class ScanBarcode extends StatefulWidget {
   const ScanBarcode({super.key});
 
@@ -438,6 +440,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
 
                             // Read input
                             String foodName = foodNameController.text.trim();
+                            String foodId = const Uuid().v4();
                             double quantity = double.parse(quantityController.text);
                             double calories = double.parse(caloriesController.text);
                             double protein = double.parse(proteinController.text);
@@ -446,6 +449,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
 
                             // Create typed model entry
                             final entry = FoodEntry(
+                              id: foodId,
                               name: foodName,
                               quantity: quantity,
                               calories: calories,
@@ -461,6 +465,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
                             // Save to saved foods library
                             await savedFoodsProvider.saveFood({
                               'name': foodName,
+                              'id': foodId,
                               'quantity': quantity,
                               'calories': calories,
                               'protein': protein,
