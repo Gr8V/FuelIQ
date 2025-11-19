@@ -183,11 +183,30 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
   ProductInfo? _productInfo;
   bool _isloading = true;
   String? _error;
+  late String foodName = _productInfo!.productName;
+  final String quantity = "100";
+  late double? calories = _productInfo!.energyKcal;
+  late double? protein = _productInfo!.proteins;
+  late double? carbs = _productInfo!.carbohydrates;
+  late double? fats = _productInfo!.fat;
+  late TextEditingController foodNameController;
+  late TextEditingController quantityController;
+  late TextEditingController caloriesController;
+  late TextEditingController proteinController;
+  late TextEditingController carbsController;
+  late TextEditingController fatsController;
+  String? time;
 
   @override
   void initState() {
     super.initState();
     _loadProduct();
+    foodNameController = TextEditingController(text: foodName);
+    quantityController = TextEditingController(text: quantity);
+    caloriesController = TextEditingController(text: calories.toString());
+    proteinController = TextEditingController(text: protein.toString());
+    carbsController = TextEditingController(text: carbs.toString());
+    fatsController = TextEditingController(text: fats.toString());
   }
 
   Future<void> _loadProduct() async {
@@ -234,21 +253,6 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
               padding: const EdgeInsets.all(16),
               child: Builder(
                 builder: (context) {
-                  // ✅ Safe to access here
-                  final String foodName = _productInfo!.productName;
-                  final String quantity = "100";
-                  final double? calories = _productInfo!.energyKcal;
-                  final double? protein = _productInfo!.proteins;
-                  final double? carbs = _productInfo!.carbohydrates;
-                  final double? fats = _productInfo!.fat;
-
-                  final foodNameController = TextEditingController(text: foodName);
-                  final quantityController = TextEditingController(text: quantity);
-                  final caloriesController = TextEditingController(text: calories.toString());
-                  final proteinController = TextEditingController(text: protein.toString());
-                  final carbsController = TextEditingController(text: carbs.toString());
-                  final fatsController = TextEditingController(text: fats.toString());
-                  String? time;
 
                   return Form(
                     key: _formKey,
