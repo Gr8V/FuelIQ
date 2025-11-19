@@ -4,7 +4,6 @@ import 'package:fuel_iq/models/food_entry.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class SavedFoods extends StatelessWidget {
   const SavedFoods({super.key});

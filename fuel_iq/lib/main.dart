@@ -22,6 +22,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //load theme
   await loadSavedTheme();
+  //saved foods loading
+  final savedFoodsProvider = SavedFoodsProvider();
+  await savedFoodsProvider.loadSavedFoods();
   // Initialize provider
   final dataProvider = DailyDataProvider();
   await dataProvider.initialize();
@@ -33,7 +36,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: dataProvider),
-        ChangeNotifierProvider(create: (_) => SavedFoodsProvider()),
+        ChangeNotifierProvider.value(value: savedFoodsProvider),
       ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: const FuelIQApp(),
