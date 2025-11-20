@@ -3,7 +3,7 @@ import 'package:fuel_iq/pages/main/add_items.dart';
 import 'package:fuel_iq/pages/main/insights.dart';
 import 'package:fuel_iq/providers/history_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
-import 'package:fuel_iq/services/notification_service.dart';
+import 'package:fuel_iq/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //pages
@@ -20,24 +20,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //load theme
-  await loadSavedTheme();
-  //saved foods loading
-  final savedFoodsProvider = SavedFoodsProvider();
-  await savedFoodsProvider.loadSavedFoods();
-  // Initialize provider
-  final dataProvider = DailyDataProvider();
-  await dataProvider.initialize();
-  //notifications initialization
-  await NotificationService.init();
-  await NotificationService.requestPermission();
-
+  
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: dataProvider),
-        ChangeNotifierProvider.value(value: savedFoodsProvider),
-      ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => SavedFoodsProvider()),
+        ChangeNotifierProvider(create: (_) => DailyDataProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: const FuelIQApp(),
     ),
@@ -46,6 +35,7 @@ void main() async {
 
 class FuelIQApp extends StatefulWidget {
   const FuelIQApp({super.key});
+  
   @override
   State<FuelIQApp> createState() => _FuelIQAppState();
 }
@@ -60,15 +50,14 @@ class _FuelIQAppState extends State<FuelIQApp> {
           title: 'FuelIQ',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: currentMode, // ✅ reacts to changes
-          home: const HomeScreen(),
+          themeMode: currentMode,
+          home: const SplashScreen(), // Start with loading screen
           debugShowCheckedModeBanner: false,
         );
       },
     );
   }
 }
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -86,15 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _selectedBottomNavBarIndex,
         children: const [
-          // 0 - Home
           HomePage(),
-          // 1 - Scan
           DetailsPage(),
-          // 2 - Add Food
           SizedBox.shrink(),
-          // 3 - Insights
           Insights(),
-          // 4 - Settings
           SettingsPage(),
         ],
       ),
@@ -115,26 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: '',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart_rounded), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
         ],
       ),
     );
