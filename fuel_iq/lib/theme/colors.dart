@@ -1,31 +1,46 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Light theme
-  static const lightScaffold = Color(0xFFF5F6FA);   // soft neutral white
-  static const lightCard = Color(0xFFFFFFFF);       // true white card
-  static const lightPrimary = Color(0xFF4A6CF7);    // modern blue accent
-  static const lightSecondary = Color(0xFF6C63FF);  // subtle purple accent
-  static const lightTertiary = Color(0xFFA78BFA); // soft lavender accent
-  static const lightTextPrimary = Color(0xFF1E1E1E);
-  static const lightTextSecondary = Color(0xFF707070);
-  static const lightError = Color(0xFFE74C3C);      // modern soft red
+  // =========================
+  // Light Theme
+  // =========================
 
-  // Dark theme
-  static const darkScaffold = Color(0xFF0E0E11);    // dark neutral background
-  static const darkCard = Color(0xFF1A1B1E);        // lifted surface
-  static const darkPrimary = Color(0xFF6C8CFF);     // bright blue accent
-  static const darkSecondary = Color(0xFF9B8CFF);   // bluish-lavender for highlights
-  static const darkTertiary = Color.fromARGB(255, 43, 169, 201); // muted purple tone for contrast
+  static const lightScaffold = Color(0xFFF7F6F3); // warm off-white (chalk wall)
+  static const lightCard = Color(0xFFFFFFFF); // clean raised card
+
+  static const lightPrimary = Color(0xFF2E2E2E); // charcoal (strength, neutral)
+  static const lightSecondary = Color(0xFF6B5E54); // warm stone brown
+  static const lightTertiary = Color(0xFFB08A5A); // muted bronze / copper
+
+  static const lightTextPrimary = Color(0xFF1C1C1C);
+  static const lightTextSecondary = Color(0xFF6E6E6E);
+
+  static const lightError = Color(0xFFD64545); // deep gym-red (plates)
+
+
+  // =========================
+  // Dark Theme
+  // =========================
+
+  static const darkScaffold = Color(0xFF0F1012); // rubber mat black
+  static const darkCard = Color(0xFF1A1C1F); // lifted steel surface
+
+  static const darkPrimary = Color(0xFFE6E6E6); // chalk white (text & icons)
+  static const darkSecondary = Color(0xFF9C8F7A); // warm concrete
+  static const darkTertiary = Color(0xFFC7A36A); // brushed brass accent
+
   static const darkTextPrimary = Color(0xFFEDEDED);
-  static const darkTextSecondary = Color(0xFF9E9E9E);
-  static const darkError = Color(0xFFFF6B6B);
+  static const darkTextSecondary = Color(0xFF9A9A9A);
+
+  static const darkError = Color(0xFFFF6A6A);
 
 
-  // Macronutrients
-  static const proteinColor = Color(0xFFFF5252); // Vibrant red = strength, muscle
-  static const carbsColor = Color(0xFFFFCA28);   // Warm yellow = quick energy
-  static const fatColor = Color(0xFF42A5F5);     // Cool blue = dense, essential fats
-  static const waterColor = Color(0xFF4FC3F7);   // Clean sky blue = hydration
+  // =========================
+  // Macronutrients (Muted & Premium)
+  // =========================
 
+  static const proteinColor = Color(0xFFC0392B); // deep iron red
+  static const carbsColor = Color(0xFFD4A017);   // grain gold
+  static const fatColor = Color(0xFF7E8C8D);     // steel grey
+  static const waterColor = Color(0xFF5DADE2);   // subtle hydration (only blue allowed)
 }

@@ -53,46 +53,206 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       //body
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('User Profile'),
-              subtitle: const Text('User data, Sync'),
-              onTap: () {
-                pushWithSlideFade(context, UserProfile());
-              },
+            SettingsSection(
+              title: 'General',
+              children: [
+                SettingsCardTile(
+                  icon: Icons.notifications,
+                  title: 'Notifications',
+                  onTap: () {
+                    
+                  },
+                ),
+                SettingsCardTile(
+                  icon: Icons.color_lens,
+                  title: 'Theme',
+                  onTap: () {
+                    pushWithSlideFade(context, ThemeSelectionPage());
+                  },
+                ),
+                SettingsCardTile(
+                  icon: Icons.language,
+                  title: 'Language',
+                  onTap: () {
+                    
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.color_lens),
-              title: const Text('Theme'),
-              subtitle: const Text('Light, Dark, System'),
-              onTap: () {
-                pushWithSlideFade(context, ThemeSelectionPage());
-              },
+            SettingsSection(
+              title: 'Training & Nutrition',
+              children: [
+                SettingsCardTile(
+                  icon: Icons.flag,
+                  title: 'Macro Targets',
+                  onTap: () {
+                    pushWithSlideFade(context, ThemeSelectionPage());
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.flag),
-              title: const Text('Targets'),
-              subtitle: const Text('Set Targets (Calories, Macros, Water)'),
-              onTap: () {
-                pushWithSlideFade(context, TargetSelectionPage());
-              },
+            SettingsSection(
+              title: 'Account',
+              children: [
+                SettingsCardTile(
+                  icon: Icons.person,
+                  title: 'User Profile',
+                  onTap: () {
+                    pushWithSlideFade(context, UserProfile());
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.flag),
-              
-              title: const Text('Erase All Data'),
-              subtitle: const Text(''),
-              onTap: () {
-                showEraseDataDialog(context: context);
-              },
-              
-            )
+            SettingsSection(
+              title: 'Danger Zone',
+              children: [
+                SettingsCardTile(
+                  icon: Icons.delete_forever,
+                  bgColor: Colors.red,
+                  title: 'Erase All Data',
+                  onTap: () {
+                    showEraseDataDialog(context: context);
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: 'Log Out',
+              children: [
+                SettingsCardTile(
+                  icon: Icons.logout,
+                  title: 'Sign Out',
+                  onTap: () {
+                    
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class SettingsCardTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+
+  final VoidCallback onTap;
+  final Color? bgColor;
+
+  const SettingsCardTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.bgColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: bgColor ?? colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+            child: Row(
+              children: [
+                // Icon container
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colorScheme.secondary.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: colorScheme.primary,
+                  ),
+                ),
+
+                const SizedBox(width: 16),
+
+                // Title + subtitle
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Icon(Icons.chevron_right),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsSection extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const SettingsSection({
+    super.key,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            title.toUpperCase(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            ),
+          ),
+        ),
+        Column(children: children),
+      ],
     );
   }
 }
