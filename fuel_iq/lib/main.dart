@@ -71,6 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //theme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       body: IndexedStack(
         index: _selectedBottomNavBarIndex,
@@ -82,29 +85,55 @@ class _HomeScreenState extends State<HomeScreen> {
           SettingsPage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        elevation: 0,
-        currentIndex: _selectedBottomNavBarIndex,
-        onTap: (index) {
-          if (index == 2) {
-            showAddFoodDrawer(context);
-          }
-          else {
-            setState(() {
-              _selectedBottomNavBarIndex = index;
-            });
-          }
+      bottomNavigationBar: _buildBottomNavigationBar(colorScheme),
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        onPressed: () => showAddFoodDrawer(context),
+        elevation: 2,
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  Widget _buildBottomNavigationBar(ColorScheme colorscheme) {
+    return BottomAppBar(
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8.0,
+      elevation: 8,
+      child: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(colorscheme, Icons.home, 0),
+            _buildNavItem(colorscheme, Icons.calendar_month, 1),
+            const SizedBox(width: 40), // Space for FAB
+            _buildNavItem(colorscheme, Icons.bar_chart_rounded, 3),
+            _buildNavItem(colorscheme, Icons.settings, 4),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(ColorScheme colorscheme,IconData icon, int index) {
+    final isSelected = _selectedBottomNavBarIndex == index;
+    return Expanded(
+      child: IconButton(
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        icon: Icon(
+          icon,
+          color: isSelected 
+              ? colorscheme.secondary
+              : colorscheme.primary,
+        ),
+        onPressed: () {
+          setState(() {
+            _selectedBottomNavBarIndex = index;
+          });
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart_rounded), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
-        ],
       ),
     );
   }
