@@ -6,6 +6,7 @@ import 'package:fuel_iq/models/daily_data.dart';
 import 'package:fuel_iq/pages/main/user_profile.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -60,26 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: const Text('User Profile'),
               subtitle: const Text('User data, Sync'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  //transition and page builder
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => const UserProfile(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(1.0, 0.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                      transitionDuration: const Duration(milliseconds: 150),
-                  )
-                );
+                pushWithSlideFade(context, UserProfile());
               },
             ),
             ListTile(
@@ -87,26 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: const Text('Theme'),
               subtitle: const Text('Light, Dark, System'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  //transition and page builder
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => const ThemeSelectionPage(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(1.0, 0.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                      transitionDuration: const Duration(milliseconds: 150),
-                  )
-                );
+                pushWithSlideFade(context, ThemeSelectionPage());
               },
             ),
             ListTile(
@@ -114,26 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: const Text('Targets'),
               subtitle: const Text('Set Targets (Calories, Macros, Water)'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  //transition and page builder
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => const TargetSelectionPage(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(1.0, 0.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                      transitionDuration: const Duration(milliseconds: 150),
-                  )
-                );
+                pushWithSlideFade(context, TargetSelectionPage());
               },
             ),
             ListTile(

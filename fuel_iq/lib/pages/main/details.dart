@@ -688,36 +688,19 @@ class _FoodViewState extends State<FoodView> {
                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      pushWithSlideFade(
                         context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              EditFood(
-                                foodName: widget.foodName,
-                                foodId: widget.foodId,
-                                time:  widget.time,
-                                quantity: widget.quantity,
-                                calories: widget.calories,
-                                protein: widget.protein,
-                                carbs: widget.carbs,
-                                fats: widget.fats,
-                                dateOfFood: widget.dateOfFood,
-                              ),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1.0, 0.0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 150),
-                        ),
+                        EditFood(
+                          foodName: widget.foodName,
+                          foodId: widget.foodId,
+                          time:  widget.time,
+                          quantity: widget.quantity,
+                          calories: widget.calories,
+                          protein: widget.protein,
+                          carbs: widget.carbs,
+                          fats: widget.fats,
+                          dateOfFood: widget.dateOfFood,
+                        )
                       );
                     },
                   ),
@@ -821,32 +804,19 @@ class FoodCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          Navigator.push(
+          pushWithSlideFade(
             context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => FoodView(
-                foodId: food['id'],
-                foodName: food['foodName'],
-                quantity: food['quantity'],
-                calories: food['calories'],
-                protein: food['protein'],
-                carbs: food['carbs'],
-                fats: food['fats'],
-                time: food['time'],
-                dateOfFood: todaysDate,
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: FadeTransition(opacity: animation, child: child),
-                );
-              },
-              transitionDuration: const Duration(milliseconds: 180),
-            ),
+            FoodView(
+              foodId: food['id'],
+              foodName: food['foodName'],
+              quantity: food['quantity'],
+              calories: food['calories'],
+              protein: food['protein'],
+              carbs: food['carbs'],
+              fats: food['fats'],
+              time: food['time'],
+              dateOfFood: todaysDate,
+            )
           );
         },
         child: Padding(

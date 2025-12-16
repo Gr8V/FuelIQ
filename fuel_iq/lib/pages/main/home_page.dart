@@ -151,26 +151,10 @@ class _HomePageState extends State<HomePage> {
                       focusColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            //transition and page builder
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => DailyData(dateSelected: todaysDate, showAppBar: true,),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    child: FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                transitionDuration: const Duration(milliseconds: 150),
-                            )
-                          );
+                        pushWithSlideFade(
+                          context,
+                          DailyData(dateSelected: todaysDate, showAppBar: true)
+                        );
                       },
                       child: Column(
                         children: [
@@ -392,25 +376,7 @@ class _HomePageState extends State<HomePage> {
                             focusColor: Colors.transparent,
                             borderRadius: BorderRadius.circular(16),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(1.0, 0.0),
-                                        end: Offset.zero,
-                                      ).animate(animation),
-                                      child: FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      ),
-                                    );
-                                  },
-                                  transitionDuration: const Duration(milliseconds: 150),
-                                ),
-                              );
+                              pushWithSlideFade(context, WaterPage());
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -471,25 +437,7 @@ class _HomePageState extends State<HomePage> {
                             focusColor: Colors.transparent,
                             borderRadius: BorderRadius.circular(16),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(1.0, 0.0),
-                                        end: Offset.zero,
-                                      ).animate(animation),
-                                      child: FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      ),
-                                    );
-                                  },
-                                  transitionDuration: const Duration(milliseconds: 150),
-                                ),
-                              );
+                              pushWithSlideFade(context, WeightPage());
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

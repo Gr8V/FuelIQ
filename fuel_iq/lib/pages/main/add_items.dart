@@ -5,6 +5,7 @@ import 'package:fuel_iq/pages/secondary/saved_foods.dart';
 import 'package:fuel_iq/pages/secondary/scan_barcode_page.dart';
 import 'package:fuel_iq/pages/secondary/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/utils/utils.dart';
 
 void showAddFoodDrawer(BuildContext context) {
   final theme = Theme.of(context);
@@ -41,26 +42,7 @@ void showAddFoodDrawer(BuildContext context) {
                   color: colorScheme.surface,
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        //transition and page builder
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => const LogFood(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).animate(animation),
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              );
-                            },
-                            transitionDuration: const Duration(milliseconds: 150),
-                        )
-                      );
+                      pushWithSlideFade(context, LogFood());
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: SizedBox(
@@ -153,26 +135,7 @@ void showAddFoodDrawer(BuildContext context) {
                       color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            //transition and page builder
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const SavedFoods(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    child: FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                transitionDuration: const Duration(milliseconds: 150),
-                            )
-                          );
+                          pushWithSlideFade(context, SavedFoods());
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: SizedBox(
@@ -190,26 +153,7 @@ void showAddFoodDrawer(BuildContext context) {
                       color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            //transition and page builder
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const WaterPage(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    child: FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                transitionDuration: const Duration(milliseconds: 150),
-                            )
-                          );
+                          pushWithSlideFade(context, WaterPage());
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: SizedBox(
@@ -227,26 +171,7 @@ void showAddFoodDrawer(BuildContext context) {
                       color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            //transition and page builder
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const WeightPage(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    child: FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                transitionDuration: const Duration(milliseconds: 150),
-                            )
-                          );
+                          pushWithSlideFade(context, WeightPage());
                         },
                         borderRadius: BorderRadius.circular(12),
                         child:  SizedBox(
