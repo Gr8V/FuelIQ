@@ -85,7 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
           SettingsPage(),
         ],
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(colorScheme),
+      bottomNavigationBar: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.09, // ~9% of screen
+        child: _buildBottomNavigationBar(colorScheme),
+      ),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () => showAddFoodDrawer(context),
@@ -102,13 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
       notchMargin: 8.0,
       elevation: 8,
       child: SizedBox(
-        height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavItem(colorscheme, Icons.home, 0),
             _buildNavItem(colorscheme, Icons.calendar_month, 1),
-            const SizedBox(width: 40), // Space for FAB
+            const SizedBox(width: 20), // Space for FAB
             _buildNavItem(colorscheme, Icons.bar_chart_rounded, 3),
             _buildNavItem(colorscheme, Icons.settings, 4),
           ],

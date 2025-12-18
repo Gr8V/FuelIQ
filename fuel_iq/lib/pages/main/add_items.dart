@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fuel_iq/pages/secondary/log_food_page.dart';
-import 'package:fuel_iq/pages/secondary/saved_foods.dart';
-import 'package:fuel_iq/pages/secondary/scan_barcode_page.dart';
-import 'package:fuel_iq/pages/secondary/water.dart';
+import 'package:fuel_iq/pages/nutrition/log_food_page.dart';
+import 'package:fuel_iq/pages/nutrition/saved_foods.dart';
+import 'package:fuel_iq/pages/nutrition/scan_barcode_page.dart';
+import 'package:fuel_iq/pages/nutrition/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'package:fuel_iq/utils/utils.dart';
 
