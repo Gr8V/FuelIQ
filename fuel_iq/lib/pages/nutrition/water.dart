@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/models/daily_data.dart';
 import 'package:fuel_iq/utils/utils.dart';
-import 'package:fuel_iq/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 class WaterPage extends StatefulWidget {
@@ -89,7 +88,7 @@ class _WaterPageState extends State<WaterPage> {
                       size: 140,
                       bgColor:
                           theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                      fgColor: AppColors.waterColor,
+                      fgColor: Colors.blue,
                       icon: FontAwesomeIcons.glassWater,
                       strokeWidth: 7,
                       label: 'Water',

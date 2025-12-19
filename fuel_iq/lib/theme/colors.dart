@@ -39,8 +39,8 @@ class AppColors {
   // Macronutrients (Muted & Premium)
   // =========================
 
-  static const proteinColor = Color(0xFFC0392B); // deep iron red
-  static const carbsColor = Color(0xFFD4A017);   // grain gold
-  static const fatColor = Color(0xFF7E8C8D);     // steel grey
-  static const waterColor = Color(0xFF5DADE2);   // subtle hydration (only blue allowed)
+  static const calorieColor = Color(0xFFFF5252);
+  static const proteinColor = Color(0xFFFFAB40); // deep iron red
+  static const carbsColor = Color(0xFF448AFF);   // grain gold
+  static const fatColor = Color(0xFF69F0AE);     // steel grey   // subtle hydration (only blue allowed)
 }

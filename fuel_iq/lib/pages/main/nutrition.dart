@@ -387,7 +387,7 @@ class _NutritionState extends State<Nutrition> {
                                     goal: dailyWaterTarget,
                                     size: 48,
                                     bgColor: colorScheme.onSurface.withValues(alpha: 0.1),
-                                    fgColor: AppColors.waterColor,
+                                    fgColor: Colors.blue,
                                     strokeWidth: 3,
                                     icon: FontAwesomeIcons.glassWater,
                                     label: 'Water',

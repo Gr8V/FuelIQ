@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/services/notification_service.dart';
+import 'package:fuel_iq/theme/colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -64,34 +65,59 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    width: 260,
-                    height: 260,
-                    child: CustomPaint(
-                      painter: MacroRingPainter(
-                        macros: const [
-                          MacroRing(0.85, Colors.redAccent),   // Calories
-                          MacroRing(0.65, Colors.orangeAccent),// Protein
-                          MacroRing(0.45, Colors.blueAccent),  // Carbs
-                          MacroRing(0.30, Colors.greenAccent), // Fats
-                        ],
+                    height: 200,
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
                           children: [
-                            Text(
-                              'Daily Macros',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                            // 🔹 LEFT: Text / Legend
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text(
+                                      'Daily Macros',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    SizedBox(height: 12),
+                                
+                                    _LegendRow('Calories', Colors.redAccent, '85%'),
+                                    _LegendRow('Protein', Colors.orangeAccent, '65%'),
+                                    _LegendRow('Carbs', Colors.blueAccent, '45%'),
+                                    _LegendRow('Fats', Colors.greenAccent, '30%'),
+                                  ],
+                                ),
                               ),
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              '72%',
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
+
+                            // 🔹 RIGHT: Circular Chart
+                            SizedBox(
+                              width: 140,
+                              height: 140,
+                              child: CustomPaint(
+                                painter: MacroRingPainter(
+                                  macros: [
+                                    //Calories Ring
+                                    MacroRing(0.85, AppColors.calorieColor),
+                                    //Protein Ring
+                                    MacroRing(0.65, AppColors.proteinColor),
+                                    //Carbs Ring
+                                    MacroRing(0.45, AppColors.carbsColor),
+                                    //Fats Ring
+                                    MacroRing(0.30, AppColors.fatColor),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -99,42 +125,8 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  _legendDot('Calories', Colors.redAccent),
-                  _legendDot('Protein', Colors.orangeAccent),
-                  _legendDot('Carbs', Colors.blueAccent),
-                  _legendDot('Fats', Colors.greenAccent),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _legendDot(String label, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -152,7 +144,7 @@ class MacroRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final startAngle = -pi / 2;
-    const thickness = 14.0;
+    const thickness = 7.0;
     const gap = 10.0;
 
     double radius = size.width / 2 - thickness;
@@ -201,4 +193,48 @@ class MacroRing {
   final Color color;
 
   const MacroRing(this.value, this.color);
+}
+
+class _LegendRow extends StatelessWidget {
+  final String label;
+  final Color color;
+  final String value;
+
+  const _LegendRow(this.label, this.color, this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

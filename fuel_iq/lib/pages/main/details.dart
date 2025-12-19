@@ -373,7 +373,7 @@ class _DailyDataState extends State<DailyData> {
                         eaten: waterDrunk,
                         goal: dailyWaterTarget,
                         icon: FontAwesomeIcons.glassWater,
-                        colorFill: AppColors.waterColor,
+                        colorFill: Colors.blue,
                       ),
                     ),
 
