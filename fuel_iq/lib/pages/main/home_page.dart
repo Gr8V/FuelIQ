@@ -124,217 +124,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   //Today's Workout
-                  SizedBox(
-                    width: double.infinity,
-                    child: Card(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
-                        onTap: () {
-                          //Push to workout Page
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "TODAY'S WORKOUT",
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  wordSpacing: 1.3,
-                                  color: colorScheme.onInverseSurface
-                                ),
-                              ),
-                              Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Back and Biceps",
-                                      style: GoogleFonts.inter(
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.w800,
-                                        wordSpacing: 1.3
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    IntrinsicHeight(
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        children: [
-                                          //Top Set
-                                          Expanded(
-                                            child: SizedBox(
-                                              child: Card(
-                                                color: colorScheme.primary.withValues(alpha: 0.12),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: [
-                                                      Text(
-                                                        "Top Set",
-                                                        style: GoogleFonts.inter(
-                                                          fontSize: 15,
-                                                          fontWeight: FontWeight.w600,
-                                                          wordSpacing: 1.3,
-                                                          color: colorScheme.onInverseSurface
-                                                        ),
-                                                      ),
-                                                      Column(
-                                                        children: [
-                                                          Text(
-                                                            "Deadlift",
-                                                            style: GoogleFonts.inter(
-                                                              fontSize: 15,
-                                                              fontWeight: FontWeight.w500,
-                                                              wordSpacing: 1.3
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              Flexible(
-                                                                child: FittedBox(
-                                                                  fit: BoxFit.scaleDown,
-                                                                  child: Row(
-                                                                    mainAxisSize: MainAxisSize.min,
-                                                                    children: [
-                                                                      Text(
-                                                                        "210",
-                                                                        style: GoogleFonts.inter(
-                                                                          fontSize: 12,
-                                                                          fontWeight: FontWeight.w600,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        "kg",
-                                                                        style: GoogleFonts.inter(
-                                                                          fontSize: 12,
-                                                                          fontWeight: FontWeight.w400,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        " x3 • RPE 7",
-                                                                        style: GoogleFonts.inter(
-                                                                          fontSize: 12,
-                                                                          fontWeight: FontWeight.w600,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 16),
-                                          //Status
-                                          Expanded(
-                                            child: SizedBox(
-                                              child: Card(
-                                                color: Color(0xFF4CAF50).withValues(alpha: 0.3),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                    children: [
-                                                      Text(
-                                                        "Status",
-                                                        style: GoogleFonts.inter(
-                                                          fontSize: 15,
-                                                          fontWeight: FontWeight.w600,
-                                                          wordSpacing: 1.3,
-                                                          color: colorScheme.onInverseSurface
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "Completed",
-                                                        style: GoogleFonts.inter(
-                                                          fontSize: 15,
-                                                          fontWeight: FontWeight.w600,
-                                                          wordSpacing: 1.3,
-                                                          color: Color(0xFF4CAF50).withValues(alpha: 0.8)
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    SizedBox(
-                                      height: 34,
-                                      width: double.infinity,
-                                      child: Card(
-                                        color: colorScheme.primary.withValues(alpha: 0.12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                                          child: Center(
-                                            child: AutoSizeText.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: "Next Workout • ",
-                                                    style: GoogleFonts.inter(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: colorScheme.onInverseSurface,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: "Chest & Shoulders",
-                                                    style: GoogleFonts.inter(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.w500,
-                                                      color: colorScheme.primary,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              maxLines: 1,
-                                              minFontSize: 11,
-                                              stepGranularity: 1,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                        
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  TodaysWorkoutCard(),
                   const SizedBox(height: 30),
                   //Supplements and Weight
                   Row(
@@ -830,6 +620,228 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class TodaysWorkoutCard extends StatelessWidget {
+  const TodaysWorkoutCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
+          onTap: () {
+            //Push to workout Page
+          },
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "TODAY'S WORKOUT",
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    wordSpacing: 1.3,
+                    color: colorScheme.onInverseSurface
+                  ),
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Back and Biceps",
+                        style: GoogleFonts.inter(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          wordSpacing: 1.3
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            //Top Set
+                            Expanded(
+                              child: SizedBox(
+                                child: Card(
+                                  color: colorScheme.primary.withValues(alpha: 0.12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "Top Set",
+                                          style: GoogleFonts.inter(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            wordSpacing: 1.3,
+                                            color: colorScheme.onInverseSurface
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "Deadlift",
+                                              style: GoogleFonts.inter(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                wordSpacing: 1.3
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          "210",
+                                                          style: GoogleFonts.inter(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "kg",
+                                                          style: GoogleFonts.inter(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          " x3 • RPE 7",
+                                                          style: GoogleFonts.inter(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            //Status
+                            Expanded(
+                              child: SizedBox(
+                                child: Card(
+                                  color: Color(0xFF4CAF50).withValues(alpha: 0.3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "Status",
+                                          style: GoogleFonts.inter(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            wordSpacing: 1.3,
+                                            color: colorScheme.onInverseSurface
+                                          ),
+                                        ),
+                                        Text(
+                                          "Completed",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.inter(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            wordSpacing: 1.3,
+                                            color: Color(0xFF4CAF50).withValues(alpha: 0.8)
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 34,
+                        width: double.infinity,
+                        child: Card(
+                          color: colorScheme.primary.withValues(alpha: 0.12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Center(
+                              child: AutoSizeText.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Next Workout • ",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onInverseSurface,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "Chest & Shoulders",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 1,
+                                minFontSize: 11,
+                                stepGranularity: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+          
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
