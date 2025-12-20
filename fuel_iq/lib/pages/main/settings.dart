@@ -89,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   icon: Icons.flag,
                   title: 'Macro Targets',
                   onTap: () {
-                    pushWithSlideFade(context, ThemeSelectionPage());
+                    pushWithSlideFade(context, TargetSelectionPage());
                   },
                 ),
               ],
