@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
           SliverAppBar(
             floating: true,
             elevation: 0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.amber,
             centerTitle: true,
             title: Column(
               mainAxisSize: MainAxisSize.min,
@@ -64,6 +64,22 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 30,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Tue, 19 Dec",
+                          style: TextStyle(
+                            wordSpacing: 1.3,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                            fontFamily: "roboto"
+                          ),
+                          )
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 200,
                     child: Card(
