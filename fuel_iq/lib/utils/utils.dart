@@ -781,3 +781,72 @@ void pushWithSlideFade(BuildContext context, Widget page) {
     ),
   );
 }
+
+class DateSelectorRow extends StatefulWidget {
+  final Function(int)? onDateSelected;
+
+  const DateSelectorRow({super.key, this.onDateSelected});
+
+  @override
+  State<DateSelectorRow> createState() => _DateSelectorRowState();
+}
+
+class _DateSelectorRowState extends State<DateSelectorRow> {
+  int selectedIndex = 1;
+
+  final List<String> days = ["S", "M", "T", "W", "T", "F", "S"];
+  final List<String> dates = ["11", "12", "13", "14", "15", "16", "17"];
+
+  @override
+  Widget build(BuildContext context) {
+    //theme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: List.generate(days.length, (index) {
+        final bool isSelected = index == selectedIndex;
+
+        return Expanded(
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () {
+              setState(() => selectedIndex = index);
+              widget.onDateSelected?.call(index);
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                color: isSelected ? colorScheme.secondary : Colors.transparent,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    days[index],
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? colorScheme.onSecondary : colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    dates[index],
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected ? colorScheme.onSecondary.withValues(alpha: 0.6) : colorScheme.primary.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}

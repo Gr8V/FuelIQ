@@ -5,7 +5,7 @@ import 'package:fuel_iq/pages/main/details.dart';
 import 'package:fuel_iq/pages/nutrition/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
-import 'package:fuel_iq/services/notification_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/utils/utils.dart';
@@ -74,7 +74,6 @@ class _NutritionState extends State<Nutrition> {
       //body
       body: CustomScrollView(
         slivers: [
-           // 🔹 Scrollable AppBar
           SliverAppBar(
             elevation: 0,
             pinned: false,
@@ -91,23 +90,13 @@ class _NutritionState extends State<Nutrition> {
                     end: Alignment.bottomRight,
                   ).createShader(bounds),
                   child: Text(
-                    'Fuel IQ',
-                    style: TextStyle(
+                    'NUTRITION',
+                    style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 26,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.3,
-                      fontFamily: 'Poppins',
                     ),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Performance Meets Precision',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 12,
-                    letterSpacing: 0.8,
                   ),
                 ),
               ],
@@ -123,19 +112,9 @@ class _NutritionState extends State<Nutrition> {
                   end: Alignment.bottomCenter,
                 ),
               ),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.notifications, color: colorScheme.primary),
-                onPressed: () {
-                  NotificationService.showNotification(
-                    title: 'TEST NOTIFICATION',
-                    body: 'This is a test notification.',
-                    );
-                },
-              ),
-            ],
+            )
           ),
+          
           SliverToBoxAdapter(
             child: SingleChildScrollView(
               child: Padding(
@@ -143,6 +122,12 @@ class _NutritionState extends State<Nutrition> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    DateSelectorRow(
+                      onDateSelected: (index) {
+                        // handle date change
+                      },
+                    ),
+
                     const SizedBox(height: 20),
                     //Calories & Macros Section
                     InkWell(
