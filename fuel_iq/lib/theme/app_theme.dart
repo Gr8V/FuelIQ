@@ -59,7 +59,7 @@ class AppTheme {
       shadow: Colors.black,
       surfaceTint: Colors.transparent,
       inverseSurface: AppColors.darkCard,
-      onInverseSurface: AppColors.darkTextPrimary,
+      onInverseSurface: AppColors.darkTextSecondary,
       inversePrimary: AppColors.darkPrimary,
     ),
     appBarTheme: const AppBarTheme(

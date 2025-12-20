@@ -504,6 +504,7 @@ class HomePage extends StatelessWidget {
                                           fontSize: 24,
                                           wordSpacing: 1.3,
                                           fontWeight: FontWeight.w800,
+                                          color: Colors.black
                                         ),
                                       ),
                                       const SizedBox(height: 2),

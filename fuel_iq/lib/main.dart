@@ -123,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isSelected = _selectedBottomNavBarIndex == index;
     return Expanded(
       child: IconButton(
+        iconSize: 32,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         icon: Icon(
