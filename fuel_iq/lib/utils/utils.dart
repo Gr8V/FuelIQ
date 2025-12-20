@@ -850,3 +850,239 @@ class _DateSelectorRowState extends State<DateSelectorRow> {
     );
   }
 }
+
+
+//Charts
+
+class WeeklyBarChart extends StatelessWidget {
+  final Map<String, Map<String, int>> weeklyData;
+  final double height;
+
+  const WeeklyBarChart({
+    super.key,
+    required this.weeklyData,
+    this.height = 200,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final days = weeklyData.keys.toList();
+
+    // Find max target to scale chart nicely
+    final maxTarget = weeklyData.values
+        .map((e) => e['target'] ?? 0)
+        .reduce((a, b) => a > b ? a : b)
+        .toDouble();
+
+    return SizedBox(
+      height: height,
+      child: BarChart(
+        BarChartData(
+          maxY: maxTarget,
+          gridData: FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  if (value.toInt() >= days.length) return const SizedBox();
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      days[value.toInt()].substring(0, 1), // M T W...
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          barGroups: List.generate(days.length, (i) {
+            final dayData = weeklyData[days[i]]!;
+            final value = (dayData['value'] ?? 0).toDouble();
+            final target = (dayData['target'] ?? 1).toDouble();
+
+            return BarChartGroupData(
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  toY: value.clamp(0, target),
+                  width: 16,
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: value >= target
+                        ? [
+                            const Color(0xFF81C784), // green success
+                            const Color(0xFF388E3C),
+                          ]
+                        : [
+                            const Color(0xFFB3E5FC),
+                            const Color(0xFF0288D1),
+                          ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+class MonthlyBarChart extends StatelessWidget {
+  final Map<int, Map<String, int>> monthlyData;
+  final double height;
+
+  const MonthlyBarChart({
+    super.key,
+    required this.monthlyData,
+    this.height = 220,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final days = monthlyData.keys.toList()..sort();
+
+    final maxTarget = monthlyData.values
+        .map((e) => e['target'] ?? 0)
+        .reduce((a, b) => a > b ? a : b)
+        .toDouble();
+
+    return SizedBox(
+      height: height,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: SizedBox(
+          width: days.length * 32, // spacing per bar
+          child: BarChart(
+            BarChartData(
+              maxY: maxTarget,
+              gridData: FlGridData(show: false),
+              borderData: FlBorderData(show: false),
+              barTouchData: BarTouchData(
+                enabled: true,
+                handleBuiltInTouches: true,
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBorderRadius: BorderRadius.all(Radius.circular(12)),
+                  tooltipPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final day = group.x;
+                    final dayData = monthlyData[day]!;
+
+                    final value = dayData['value'] ?? 0;
+                    final target = dayData['target'] ?? 0;
+
+                    return BarTooltipItem(
+                      'Day $day\n',
+                      const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Value: $value\n',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Target: $target',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: value >= target
+                                ? Colors.greenAccent
+                                : Colors.orangeAccent,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 22,
+                    getTitlesWidget: (value, meta) {
+                      final day = value.toInt();
+                      if (!days.contains(day)) return const SizedBox();
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          '$day',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              barGroups: days.map((day) {
+                final dayData = monthlyData[day]!;
+                final value = (dayData['value'] ?? 0).toDouble();
+                final target = (dayData['target'] ?? 1).toDouble();
+
+                return BarChartGroupData(
+                  x: day,
+                  barRods: [
+                    BarChartRodData(
+                      toY: value.clamp(0, target),
+                      width: 14,
+                      borderRadius: BorderRadius.circular(8),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: value >= target
+                            ? [
+                                const Color(0xFF81C784),
+                                const Color(0xFF388E3C),
+                              ]
+                            : [
+                                const Color(0xFFB3E5FC),
+                                const Color(0xFF0288D1),
+                              ],
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

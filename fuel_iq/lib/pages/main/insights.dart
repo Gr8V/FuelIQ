@@ -146,6 +146,56 @@ class _InsightsState extends State<Insights> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              WeeklyBarChart(
+                weeklyData: {
+                  "Mon": {"value": 101, "target": 100},
+                  "Tue": {"value": 40, "target": 100},
+                  "Wed": {"value": 23, "target": 100},
+                  "Thu": {"value": 65, "target": 100},
+                  "Fri": {"value": 46, "target": 100},
+                  "Sat": {"value": 67, "target": 100},
+                  "Sun": {"value": 12, "target": 100},
+                }
+              ),
+              MonthlyBarChart(
+                monthlyData: {
+                  1:  {"value": 80,  "target": 100},
+                  2:  {"value": 95,  "target": 100},
+                  3:  {"value": 100, "target": 100},
+                  4:  {"value": 60,  "target": 100},
+                  5:  {"value": 0,   "target": 100},  // missed day
+                  6:  {"value": 40,  "target": 100},
+                  7:  {"value": 110, "target": 100},  // over target
+
+                  8:  {"value": 70,  "target": 100},
+                  9:  {"value": 85,  "target": 100},
+                  10: {"value": 90,  "target": 100},
+                  11: {"value": 100, "target": 100},
+                  12: {"value": 50,  "target": 100},
+                  13: {"value": 30,  "target": 100},
+                  14: {"value": 0,   "target": 100},
+
+                  15: {"value": 60,  "target": 100},
+                  16: {"value": 75,  "target": 100},
+                  17: {"value": 95,  "target": 100},
+                  18: {"value": 100, "target": 100},
+                  19: {"value": 105, "target": 100},
+                  20: {"value": 0,   "target": 100},
+
+                  21: {"value": 65,  "target": 100},
+                  22: {"value": 80,  "target": 100},
+                  23: {"value": 90,  "target": 100},
+                  24: {"value": 100, "target": 100},
+                  25: {"value": 100, "target": 100},
+                  26: {"value": 45,  "target": 100},
+
+                  27: {"value": 70,  "target": 100},
+                  28: {"value": 85,  "target": 100},
+                  29: {"value": 95,  "target": 100},
+                  30: {"value": 110, "target": 100},
+                  31: {"value": 60,  "target": 100},
+                }
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
