@@ -23,7 +23,7 @@ class AppTheme {
       shadow: Color(0x1A000000),
       surfaceTint: Colors.transparent,
       inverseSurface: AppColors.lightCard,
-      onInverseSurface: AppColors.lightTextPrimary,
+      onInverseSurface: AppColors.lightTextSecondary,
       inversePrimary: AppColors.lightPrimary,
     ),
     appBarTheme: const AppBarTheme(
