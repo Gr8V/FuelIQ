@@ -21,31 +21,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            floating: true,
-            toolbarHeight: 74,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            centerTitle: true,
-            title: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [colorScheme.primary, colorScheme.secondary],
-                  ).createShader(bounds),
-                  child: Text(
-                    'HOME',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.3,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          CustomSliverAppBar(
+            title: "home",
+            showBack: false,
             actions: [
               IconButton(
                 icon: Icon(Icons.notifications, color: colorScheme.primary),

@@ -115,33 +115,7 @@ class _WeightPageState extends State<WeightPage> {
     final todaysWeight = _weights[today];
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'Weight',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "weight"),
 
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

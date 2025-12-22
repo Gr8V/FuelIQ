@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/utils/utils.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -14,32 +15,8 @@ class _UserProfileState extends State<UserProfile> {
     final colorScheme = theme.colorScheme;
     return Scaffold(
       //app bar
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: "profile",
         actions: [
           IconButton(
             icon: Icon(Icons.edit),

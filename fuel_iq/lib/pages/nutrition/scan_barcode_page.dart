@@ -77,54 +77,30 @@ class _ScanBarcodeState extends State<ScanBarcode> {
     );
 
     return Scaffold(
-    appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Scan',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
+    appBar: CustomAppBar(
+      title: "scan",
+      actions: [
+        // Toggle flashlight
+        if (supportsCamera) 
+        ...[
+          IconButton(
+            icon: Icon(
+              isTorchOn ? Icons.flash_on : Icons.flash_off,
+              color: colorScheme.onPrimary,
+            ),
+            onPressed: () {
+              setState(() => isTorchOn = !isTorchOn);
+              cameraController.toggleTorch();
+            },
           ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+          // Switch camera
+          IconButton(
+            icon: Icon(Icons.cameraswitch, color: colorScheme.onPrimary),
+            onPressed: () => cameraController.switchCamera(),
           ),
-        ),
-        actions: [
-          // Toggle flashlight
-          if (supportsCamera) 
-          ...[
-            IconButton(
-              icon: Icon(
-                isTorchOn ? Icons.flash_on : Icons.flash_off,
-                color: colorScheme.onPrimary,
-              ),
-              onPressed: () {
-                setState(() => isTorchOn = !isTorchOn);
-                cameraController.toggleTorch();
-              },
-            ),
-            // Switch camera
-            IconButton(
-              icon: Icon(Icons.cameraswitch, color: colorScheme.onPrimary),
-              onPressed: () => cameraController.switchCamera(),
-            ),
-          ]
-        ],
-      ),
+        ]
+      ],
+    ),
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -185,12 +161,12 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
   ProductInfo? _productInfo;
   bool _isloading = true;
   String? _error;
-  late String foodName = _productInfo!.productName;
+  late String? foodName = _productInfo?.productName;
   final String quantity = "100";
-  late double? calories = _productInfo!.energyKcal;
-  late double? protein = _productInfo!.proteins;
-  late double? carbs = _productInfo!.carbohydrates;
-  late double? fats = _productInfo!.fat;
+  late double? calories = _productInfo?.energyKcal;
+  late double? protein = _productInfo?.proteins;
+  late double? carbs = _productInfo?.carbohydrates;
+  late double? fats = _productInfo?.fat;
   late TextEditingController foodNameController;
   late TextEditingController quantityController;
   late TextEditingController caloriesController;
@@ -244,7 +220,7 @@ class _BarcodeResultPageState extends State<BarcodeResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Scanned Result")),
+      appBar: CustomAppBar(title: "Result"),
       body: _isloading
         ? const Center(child: CircularProgressIndicator())
         : _error != null

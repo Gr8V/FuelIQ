@@ -25,33 +25,7 @@ class _WaterPageState extends State<WaterPage> {
     final double dailyWaterTarget = dailyData.waterTarget;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Water',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "water"),
 
       body: Padding(
         padding: const EdgeInsets.all(16.0),

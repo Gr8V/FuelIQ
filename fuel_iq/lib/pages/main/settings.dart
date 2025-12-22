@@ -21,37 +21,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    //final theme = Theme.of(context);
+    //final colorScheme = theme.colorScheme;
     return Scaffold(
       //app bar
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Settings',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "settings", showBack: false,),
       //body
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -263,41 +237,15 @@ class ThemeSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    //final theme = Theme.of(context);
+    //final colorScheme = theme.colorScheme;
     
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: themeNotifier,
       builder: (context, currentTheme, child) {
         return Scaffold(
           //app bar
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            centerTitle: true,
-            title: Text(
-              'Theme',
-              style: TextStyle(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w700,
-                fontSize: 22,
-                letterSpacing: 1.1,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.onSurface.withValues(alpha: 0.1),
-                    colorScheme.surface.withValues(alpha: 0.1),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+          appBar: CustomAppBar(title: "theme"),
           body: Column(
             children: [
               RadioGroup<ThemeMode>(
@@ -351,8 +299,8 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    //final theme = Theme.of(context);
+    //final colorScheme = theme.colorScheme;
 
     final dailyData =
         context.watch<DailyDataProvider>().getDailyData(todaysDate) ??
@@ -365,33 +313,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
     double dailyWaterTarget = dailyData.waterTarget;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Targets',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "Targets"),
 
       body: ListView(
         children: [

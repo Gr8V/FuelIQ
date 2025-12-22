@@ -82,8 +82,8 @@ class _InsightsState extends State<Insights> {
   }
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    //final theme = Theme.of(context);
+    //final colorScheme = theme.colorScheme;
 
     double avgCalories = 0;
 
@@ -113,33 +113,7 @@ class _InsightsState extends State<Insights> {
 
     return Scaffold(
       //app bar
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Insights',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "insights", showBack: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

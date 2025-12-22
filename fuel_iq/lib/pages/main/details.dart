@@ -48,33 +48,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Details',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "details", showBack: false,),
 
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -212,33 +186,7 @@ class _DailyDataState extends State<DailyData> {
 
     return Scaffold(
       appBar: widget.showAppBar
-          ? AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              title: Text(
-                "Today's Data",
-                style: TextStyle(
-                  color: colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 22,
-                  letterSpacing: 1.1,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      colorScheme.onSurface.withValues(alpha: 0.1),
-                      colorScheme.surface.withValues(alpha: 0.1),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-            )
+          ? CustomAppBar(title: "details")
           : null,
 
       body: Padding(

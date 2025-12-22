@@ -2,6 +2,132 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+
+class CustomAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+
+  final String title;
+  final bool showBack;
+  final List<Widget>? actions;
+
+  const CustomAppBar({
+    super.key,
+    required this.title,
+    this.showBack = true,
+    this.actions,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final canPop = Navigator.of(context).canPop();
+    final shouldShowBack = showBack && canPop;
+
+    return AppBar(
+      automaticallyImplyLeading: shouldShowBack,
+      leading: shouldShowBack
+          ? IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            )
+          : null,
+
+      actions: actions,
+
+      toolbarHeight: 74,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+
+      title: ShaderMask(
+        shaderCallback: (bounds) => LinearGradient(
+          colors: [colorScheme.primary, colorScheme.secondary],
+        ).createShader(bounds),
+        child: Text(
+          title.toUpperCase(),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 26,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.3,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(74);
+}
+class CustomSliverAppBar extends StatelessWidget {
+  final String title;
+  final bool showBack;
+  final List<Widget>? actions;
+
+
+  const CustomSliverAppBar({
+    super.key,
+    required this.title,
+    this.showBack = true,
+    this.actions,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final canPop = Navigator.of(context).canPop();
+    final shouldShowBack = showBack && canPop;
+
+    return SliverAppBar(
+      automaticallyImplyLeading: shouldShowBack,
+      leading: shouldShowBack
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () => Navigator.pop(context),
+            )
+          : null,
+
+      actions: actions,
+      pinned: false,
+      floating: false,
+      snap: false,
+      expandedHeight: 74,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      title: _GradientTitle(title),
+    );
+  }
+}
+class _GradientTitle extends StatelessWidget {
+  final String title;
+
+  const _GradientTitle(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        colors: [colorScheme.primary, colorScheme.secondary],
+      ).createShader(bounds),
+      child: Text(
+        title.toUpperCase(),
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.3,
+        ),
+      ),
+    );
+  }
+}
+
 
 
 class SimpleLineChart extends StatelessWidget {

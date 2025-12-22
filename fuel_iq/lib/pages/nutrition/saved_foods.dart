@@ -3,6 +3,7 @@ import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/models/food_entry.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
+import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class SavedFoods extends StatelessWidget {
@@ -11,37 +12,11 @@ class SavedFoods extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //theme
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    //final theme = Theme.of(context);
+    //final colorScheme = theme.colorScheme;
     return Scaffold(
       //app bar
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Saved Foods',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 1.1,
-            fontFamily: 'Poppins',
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.onSurface.withValues(alpha: 0.1),
-                colorScheme.surface.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "saved food"),
       body: Consumer<SavedFoodsProvider>(
         builder: (context, savedFoodsProvider, child) {
           final savedFoods = savedFoodsProvider.getAllSavedFoodsWithDetails();
