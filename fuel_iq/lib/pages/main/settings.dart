@@ -7,6 +7,7 @@ import 'package:fuel_iq/pages/main/user_profile.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/utils/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -524,19 +525,45 @@ Future<void> showEditTargetDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('Set New $title'),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            labelText: title,
-            border: const OutlineInputBorder(),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        title: Text(
+          'Set New $title',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w600
+          ),
+        ),
+
+        content: SizedBox(
+          width: 320,
+          height: 60,
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: title,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -546,7 +573,13 @@ Future<void> showEditTargetDialog({
                 Navigator.pop(context);
               }
             },
-            child: const Text('Save'),
+            child: Text(
+              'Save',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600
+              ),
+            ),
           ),
         ],
       );

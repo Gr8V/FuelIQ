@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/nutrition.dart';
 import 'package:fuel_iq/pages/nutrition/water.dart';
