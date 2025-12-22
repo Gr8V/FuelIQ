@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/add_items.dart';
-import 'package:fuel_iq/pages/main/insights.dart';
 import 'package:fuel_iq/providers/history_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/splash_screen.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //pages
 import 'pages/main/home_page.dart';
 import 'pages/main/details.dart';
+import 'package:fuel_iq/pages/main/insights.dart';
 import 'pages/main/settings.dart'; 
 import 'providers/daily_data_provider.dart';
 //theme

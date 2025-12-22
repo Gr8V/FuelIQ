@@ -3,8 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/pages/nutrition/log_food_page.dart';
 import 'package:fuel_iq/pages/nutrition/saved_foods.dart';
 import 'package:fuel_iq/pages/nutrition/scan_barcode_page.dart';
+import 'package:fuel_iq/pages/nutrition/supplements.dart';
 import 'package:fuel_iq/pages/nutrition/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/pages/training/log_cardio.dart';
+import 'package:fuel_iq/pages/training/log_workout.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -52,7 +55,9 @@ void showAddFoodDrawer(BuildContext context) {
                             icon: FontAwesomeIcons.dumbbell,
                             label: 'Log Workout',
                             color: colorScheme.primary,
-                            onTap: () {},
+                            onTap: () {
+                              pushWithSlideFade(context, LogWorkout());
+                            },
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -62,7 +67,9 @@ void showAddFoodDrawer(BuildContext context) {
                             icon: FontAwesomeIcons.personRunning,
                             label: 'Log Cardio',
                             color: colorScheme.primary,
-                            onTap: () {},
+                            onTap: () {
+                              pushWithSlideFade(context, LogCardio());
+                            },
                           ),
                         ),
                       ],
@@ -139,7 +146,7 @@ void showAddFoodDrawer(BuildContext context) {
                       color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
-                          
+                          pushWithSlideFade(context, Supplements());
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: SizedBox(
