@@ -1,8 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/nutrition.dart';
+import 'package:fuel_iq/pages/nutrition/supplements.dart';
 import 'package:fuel_iq/pages/nutrition/water.dart';
 import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/pages/training/cardio_page.dart';
+import 'package:fuel_iq/pages/training/personal_records_page.dart';
+import 'package:fuel_iq/pages/training/workout_page.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:fuel_iq/utils/utils.dart';
@@ -120,7 +124,7 @@ class HomePage extends StatelessWidget {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
                               onTap: () {
-                                //push to supplements page
+                                pushWithSlideFade(context, Supplements());
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -443,7 +447,7 @@ class HomePage extends StatelessWidget {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
                               onTap: () {
-                                //Push to personal records page
+                                pushWithSlideFade(context, PersonalRecordsPage());
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -558,7 +562,7 @@ class HomePage extends StatelessWidget {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
                               onTap: () {
-                                //Push to cardio page
+                                pushWithSlideFade(context, CardioPage());
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -621,7 +625,7 @@ class TodaysWorkoutCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
           onTap: () {
-            //Push to workout Page
+            pushWithSlideFade(context, WorkoutPage());
           },
           child: Padding(
             padding: EdgeInsets.all(16.0),
