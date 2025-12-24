@@ -181,11 +181,19 @@ Future<void> showEditTargetDialog({
       TextEditingController(text: initialValue.toStringAsFixed(0));
 
   await showDialog(
+    
     context: context,
     builder: (context) {
       return AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         title: Text(
-          "Set $title",
+          "Set $title Target",
           style: GoogleFonts.inter(
             fontSize: 20,
             fontWeight: FontWeight.w600,
