@@ -8,6 +8,8 @@ class ThemeSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: themeNotifier,
       builder: (context, currentTheme, _) {
@@ -17,15 +19,17 @@ class ThemeSelectionPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               Text(
-                "Appearance",
-                style: GoogleFonts.inter(
-                  fontSize: 14,
+                "appearance".toUpperCase(),
+                style: TextStyle(
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
+                  color: colorScheme.secondary,
                 ),
               ),
               const SizedBox(height: 8),
               Card(
-                elevation: 0,
+                margin: EdgeInsets.zero,
+                elevation: 3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -96,6 +100,8 @@ class _ThemeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return RadioListTile<ThemeMode>(
       value: value,
       title: Text(
@@ -108,8 +114,10 @@ class _ThemeTile extends StatelessWidget {
         subtitle,
         style: GoogleFonts.inter(),
       ),
-      secondary: Icon(icon),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      secondary: CircleAvatar(
+          backgroundColor: colorScheme.secondary.withValues(alpha: 0.5),
+          child: Icon(icon, color: colorScheme.primary),
+        ),
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );

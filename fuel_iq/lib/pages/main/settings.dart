@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/settings/language.dart';
-import 'package:fuel_iq/pages/main/settings/macro_targets.dart';
+import 'package:fuel_iq/pages/main/settings/targets.dart';
 import 'package:fuel_iq/pages/main/settings/notifications.dart';
 import 'package:fuel_iq/pages/main/settings/sign_out.dart';
 import 'package:fuel_iq/pages/main/settings/theme.dart';
@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 SettingsCardTile(
                   icon: Icons.flag,
-                  title: 'Macro Targets',
+                  title: 'Targets',
                   onTap: () {
                     pushWithSlideFade(context, TargetSelectionPage());
                   },
@@ -116,7 +116,6 @@ class _SettingsPageState extends State<SettingsPage> {
 class SettingsCardTile extends StatelessWidget {
   final IconData icon;
   final String title;
-
   final VoidCallback onTap;
   final Color? bgColor;
 
@@ -132,72 +131,58 @@ class SettingsCardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: bgColor ?? colorScheme.surface,
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8,),
+      elevation: 3,
+      color: bgColor ?? colorScheme.surface,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
-      child: Material(
-        color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            child: Row(
-              children: [
-                // Icon container
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: colorScheme.secondary.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: colorScheme.primary,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: colorScheme.primary,
+                ),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Title
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
 
-                const SizedBox(width: 16),
-
-                // Title + subtitle
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Icon(Icons.chevron_right),
-              ],
-            ),
+              const Icon(Icons.chevron_right),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
 class SettingsSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -216,12 +201,13 @@ class SettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 6),
           child: Text(
             title.toUpperCase(),
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.primary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.secondary,
             ),
           ),
         ),
