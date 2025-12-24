@@ -29,6 +29,7 @@ void showAddFoodDrawer(BuildContext context) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              //custom drag handle
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Container(
@@ -40,6 +41,7 @@ void showAddFoodDrawer(BuildContext context) {
                   ),
                 ),
               ),
+              //content
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 child: Column(
@@ -47,7 +49,7 @@ void showAddFoodDrawer(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space evenly between cards
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         //Log Workout
                         Expanded(
@@ -75,7 +77,7 @@ void showAddFoodDrawer(BuildContext context) {
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space evenly between cards
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         //Log Food
                         Expanded(
