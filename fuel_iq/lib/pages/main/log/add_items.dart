@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fuel_iq/pages/nutrition/log_food_page.dart';
+import 'package:fuel_iq/pages/main/log/log_food_page.dart';
 import 'package:fuel_iq/pages/nutrition/saved_foods.dart';
 import 'package:fuel_iq/pages/nutrition/scan_barcode_page.dart';
-import 'package:fuel_iq/pages/nutrition/supplements.dart';
-import 'package:fuel_iq/pages/nutrition/water.dart';
-import 'package:fuel_iq/pages/secondary/weight.dart';
-import 'package:fuel_iq/pages/training/log_cardio.dart';
-import 'package:fuel_iq/pages/training/log_workout.dart';
+import 'package:fuel_iq/pages/main/log/log_supplements.dart';
+import 'package:fuel_iq/pages/main/log/log_water.dart';
+import 'package:fuel_iq/pages/main/log/log_weight.dart';
+import 'package:fuel_iq/pages/main/log/log_cardio.dart';
+import 'package:fuel_iq/pages/main/log/log_workout.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -223,7 +223,7 @@ void showAddFoodDrawer(BuildContext context) {
                       color: colorScheme.surface,
                       child: InkWell(
                         onTap: () {
-                          pushWithSlideFade(context, WeightPage());
+                          pushWithSlideFade(context, WeightPickerPage());
                         },
                         borderRadius: BorderRadius.circular(12),
                         child:  SizedBox(

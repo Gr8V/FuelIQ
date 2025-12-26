@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
 import 'package:fuel_iq/models/food_entry.dart';
 import 'package:fuel_iq/pages/main/details.dart';
-import 'package:fuel_iq/pages/nutrition/water.dart';
-import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/pages/main/log/log_water.dart';
+import 'package:fuel_iq/pages/main/log/log_weight.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -422,7 +422,7 @@ class _NutritionState extends State<Nutrition> {
                             focusColor: Colors.transparent,
                             borderRadius: BorderRadius.circular(16),
                             onTap: () {
-                              pushWithSlideFade(context, WeightPage());
+                              pushWithSlideFade(context, WeightPickerPage());
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

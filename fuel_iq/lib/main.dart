@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/pages/main/add_items.dart';
+import 'package:fuel_iq/pages/main/log/add_items.dart';
 import 'package:fuel_iq/providers/history_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/splash_screen.dart';

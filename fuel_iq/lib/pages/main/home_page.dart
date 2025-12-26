@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/pages/main/nutrition.dart';
-import 'package:fuel_iq/pages/nutrition/supplements.dart';
-import 'package:fuel_iq/pages/nutrition/water.dart';
-import 'package:fuel_iq/pages/secondary/weight.dart';
+import 'package:fuel_iq/pages/main/log/log_supplements.dart';
+import 'package:fuel_iq/pages/main/log/log_water.dart';
 import 'package:fuel_iq/pages/training/cardio_page.dart';
 import 'package:fuel_iq/pages/training/personal_records_page.dart';
 import 'package:fuel_iq/pages/training/workout_page.dart';
@@ -122,7 +121,7 @@ class HomePage extends StatelessWidget {
                             ),
                             clipBehavior: Clip.antiAlias,
                             child: InkWell(
-                              borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
+                              borderRadius: BorderRadius.circular(20),
                               onTap: () {
                                 pushWithSlideFade(context, Supplements());
                               },
@@ -163,53 +162,46 @@ class HomePage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            clipBehavior: Clip.antiAlias,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(20), // 🔑 Match card radius
-                              onTap: () {
-                                pushWithSlideFade(context, WeightPage());
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "95.6",
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 20,
-                                              wordSpacing: 1.3
-                                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "95.6",
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 20,
+                                            wordSpacing: 1.3
                                           ),
-                                          Text(
-                                            "kg",
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20,
-                                              wordSpacing: 1.3
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Icon(Icons.north, color: Colors.green)
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    "Weight",
-                                    style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      wordSpacing: 1.3
+                                        ),
+                                        Text(
+                                          "kg",
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 20,
+                                            wordSpacing: 1.3
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
+                                    Icon(Icons.north, color: Colors.green)
+                                  ],
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "Weight",
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    wordSpacing: 1.3
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
