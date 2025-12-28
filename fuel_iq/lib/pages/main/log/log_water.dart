@@ -14,20 +14,16 @@ class WaterPage extends StatefulWidget {
 }
 
 class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMixin {
-  AnimationController? _animationController;
+
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
+
   }
 
   @override
   void dispose() {
-    _animationController?.dispose();
     super.dispose();
   }
 
@@ -38,7 +34,7 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
     day.water += amount;
     await provider.updateDailyData(todaysDate, day);
     
-    _animationController?.forward(from: 0);
+
   }
 
   @override
@@ -72,80 +68,72 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
                 child: Column(
                   children: [
                     // Large Circular Progress Indicator
-                    ScaleTransition(
-                      scale: Tween<double>(begin: 1.0, end: 1.05).animate(
-                        CurvedAnimation(
-                          parent: _animationController ?? AnimationController(vsync: this, duration: Duration.zero),
-                          curve: Curves.easeOut,
-                        ),
-                      ),
-                      child: SizedBox(
-                        height: 220,
-                        width: 220,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Background Circle
-                            SizedBox(
-                              height: 220,
-                              width: 220,
-                              child: CircularProgressIndicator(
-                                value: 1.0,
-                                strokeWidth: 14,
-                                color: Colors.blue.shade100,
-                                strokeCap: StrokeCap.round,
-                              ),
+                    SizedBox(
+                      height: 220,
+                      width: 220,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Background Circle
+                          SizedBox(
+                            height: 220,
+                            width: 220,
+                            child: CircularProgressIndicator(
+                              value: 1.0,
+                              strokeWidth: 14,
+                              color: Colors.blue.shade100,
+                              strokeCap: StrokeCap.round,
                             ),
-                            // Progress Circle
-                            SizedBox(
-                              height: 220,
-                              width: 220,
-                              child: CircularProgressIndicator(
-                                value: (waterDrunk / dailyWaterTarget).clamp(0.0, 1.0),
-                                strokeWidth: 14,
-                                backgroundColor: Colors.transparent,
+                          ),
+                          // Progress Circle
+                          SizedBox(
+                            height: 220,
+                            width: 220,
+                            child: CircularProgressIndicator(
+                              value: (waterDrunk / dailyWaterTarget).clamp(0.0, 1.0),
+                              strokeWidth: 14,
+                              backgroundColor: Colors.transparent,
+                              color: Colors.blue,
+                              strokeCap: StrokeCap.round,
+                            ),
+                          ),
+                          // Center Content
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.glassWater,
+                                size: 48,
                                 color: Colors.blue,
-                                strokeCap: StrokeCap.round,
                               ),
-                            ),
-                            // Center Content
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.glassWater,
-                                  size: 48,
-                                  color: Colors.blue,
+                              const SizedBox(height: 16),
+                              Text(
+                                '${(waterDrunk * 1000).toInt()}',
+                                style: TextStyle(
+                                  fontSize: 42,
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onSurface,
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  '${(waterDrunk * 1000).toInt()}',
-                                  style: TextStyle(
-                                    fontSize: 42,
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.onSurface,
-                                  ),
+                              ),
+                              Text(
+                                'ml',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Text(
-                                  'ml',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'of ${(dailyWaterTarget * 1000).toInt()}ml',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: colorScheme.onSurface.withValues(alpha: 0.5),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'of ${(dailyWaterTarget * 1000).toInt()}ml',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     
