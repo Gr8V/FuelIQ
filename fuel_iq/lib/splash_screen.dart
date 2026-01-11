@@ -3,7 +3,6 @@ import 'package:fuel_iq/pages/secondary/onboarding_page.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
-import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/main.dart';
 import 'package:provider/provider.dart';
 
@@ -43,11 +42,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   Future<void> _initializeApp() async {
     try {
-      // 1. Load theme
-      _updateStatus('Loading theme...', 0.2);
-      await loadSavedTheme();
-      await Future.delayed(const Duration(milliseconds: 300));
-
       if (!mounted) return;
 
       // 2. Load saved foods

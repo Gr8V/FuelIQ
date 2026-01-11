@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/globals/theme_controller.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:fuel_iq/providers/theme_provider.dart';
 
 class ThemeSelectionPage extends StatelessWidget {
   const ThemeSelectionPage({super.key});
@@ -10,38 +11,36 @@ class ThemeSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
-      builder: (context, currentTheme, _) {
-        return Scaffold(
-          appBar: CustomAppBar(title: "Theme"),
-          body: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              Text(
-                "appearance".toUpperCase(),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.secondary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Card(
-                margin: EdgeInsets.zero,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: _ThemeRadios(currentTheme),
-                ),
-              ),
-            ],
+
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return Scaffold(
+      appBar: CustomAppBar(title: "Theme"),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text(
+            "appearance".toUpperCase(),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.secondary,
+            ),
           ),
-        );
-      },
+          const SizedBox(height: 8),
+          Card(
+            margin: EdgeInsets.zero,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: _ThemeRadios(themeProvider.themeMode),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -56,7 +55,7 @@ class _ThemeRadios extends StatelessWidget {
       groupValue: currentTheme,
       onChanged: (value) {
         if (value != null) {
-          setTheme(value);
+          context.read<ThemeProvider>().setTheme(value);
         }
       },
       child: Column(

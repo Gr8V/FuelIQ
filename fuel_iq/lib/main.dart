@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/data/local/settings_storage.dart';
 import 'package:fuel_iq/pages/main/log/add_items.dart';
 import 'package:fuel_iq/providers/history_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
+import 'package:fuel_iq/providers/theme_provider.dart';
 import 'package:fuel_iq/splash_screen.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //pages
@@ -13,7 +15,6 @@ import 'package:fuel_iq/pages/main/insights.dart';
 import 'pages/main/settings.dart'; 
 import 'providers/daily_data_provider.dart';
 //theme
-import 'globals/theme_controller.dart';
 import 'theme/app_theme.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -22,12 +23,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  
+
   await Hive.openBox('settingsBox');
   
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider(SettingsStorage())),
         ChangeNotifierProvider(create: (_) => SavedFoodsProvider()),
         ChangeNotifierProvider(create: (_) => DailyDataProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
@@ -37,28 +39,20 @@ void main() async {
   );
 }
 
-class FuelIQApp extends StatefulWidget {
+class FuelIQApp extends StatelessWidget {
   const FuelIQApp({super.key});
-  
-  @override
-  State<FuelIQApp> createState() => _FuelIQAppState();
-}
 
-class _FuelIQAppState extends State<FuelIQApp> {
   @override
+
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
-      builder: (context, currentMode, child) {
-        return MaterialApp(
-          title: 'FuelIQ',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: currentMode,
-          home: const SplashScreen(), // Start with loading screen
-          debugShowCheckedModeBanner: false,
-        );
-      },
+    final themeProvider = context.watch<ThemeProvider>();
+    return MaterialApp(
+      title: 'FuelIQ',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeProvider.themeMode,
+      home: const SplashScreen(), // Start with loading screen
+      debugShowCheckedModeBanner: false,
     );
   }
 }
