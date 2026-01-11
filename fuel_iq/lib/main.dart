@@ -3,6 +3,7 @@ import 'package:fuel_iq/pages/main/log/add_items.dart';
 import 'package:fuel_iq/providers/history_provider.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/splash_screen.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //pages
@@ -20,6 +21,9 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  
+  await Hive.openBox('settingsBox');
   
   runApp(
     MultiProvider(

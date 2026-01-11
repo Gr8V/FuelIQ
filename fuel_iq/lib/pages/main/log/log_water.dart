@@ -22,11 +22,6 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
 
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void _addWater(double amount) async {
     final provider = Provider.of<DailyDataProvider>(context, listen: false);
     DailyDataModel day = provider.getDailyData(todaysDate) ?? DailyDataModel();
