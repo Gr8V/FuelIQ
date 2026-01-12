@@ -1,28 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/data/local/settings_storage.dart';
 import 'package:fuel_iq/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingService {
-  static const String _onboardingKey = 'has_completed_onboarding';
-
-  // Check if user has completed onboarding
-  static Future<bool> hasCompletedOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_onboardingKey) ?? false;
-  }
-
-  // Mark onboarding as completed
-  static Future<void> completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_onboardingKey, true);
-  }
-
-  // Reset onboarding (useful for testing)
-  static Future<void> resetOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_onboardingKey);
-  }
-}
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -43,7 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _completeOnboarding() async {
-    await OnboardingService.completeOnboarding();
+    await SettingsStorage().completeOnboarding();
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const HomeScreen()),

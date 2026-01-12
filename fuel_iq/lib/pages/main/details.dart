@@ -462,6 +462,7 @@ class _DailyDataState extends State<DailyData> {
                     return FoodCard(
                       todaysDate: todaysDate,
                       food: {
+                        'id': food.id,
                         'foodName': food.name,
                         'quantity': food.quantity,
                         'calories': food.calories,

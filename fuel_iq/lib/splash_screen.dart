@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/data/local/settings_storage.dart';
 import 'package:fuel_iq/pages/secondary/onboarding_page.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
@@ -70,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
       // 5. Check onboarding status
       _updateStatus('Almost ready...', 0.9);
-      final hasCompletedOnboarding = await OnboardingService.hasCompletedOnboarding();
+      final hasCompletedOnboarding = SettingsStorage().hasCompletedOnboarding();
       await Future.delayed(const Duration(milliseconds: 300));
 
       if (!mounted) return;
