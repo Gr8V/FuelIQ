@@ -5,23 +5,6 @@ import '../models/daily_data.dart';
 
 class LocalStorageService {
   static const String _dailyDataKey = 'daily_data';
-  static const String _savedFoodsKey = 'saved_foods';
-
-  // ================================================================
-  // FOOD LIBRARY (Saved Foods)
-  // ================================================================
-
-  static Future<Map<String, dynamic>> getSavedFoods() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonStr = prefs.getString(_savedFoodsKey);
-    if (jsonStr == null) return {};
-    return jsonDecode(jsonStr);
-  }
-
-  static Future<void> saveAllFoods(Map<String, dynamic> foods) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_savedFoodsKey, jsonEncode(foods));
-  }
 
   // ================================================================
   // DAILY DATA

@@ -25,6 +25,7 @@ void main() async {
   await Hive.initFlutter();
 
   await Hive.openBox('settingsBox');
+  await Hive.openBox('quickAccessBox');
   
   runApp(
     MultiProvider(

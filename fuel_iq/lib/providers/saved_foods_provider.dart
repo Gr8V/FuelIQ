@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import '../services/local_storage.dart';
+import 'package:fuel_iq/data/local/quick_access_data_storage.dart';
 
 class SavedFoodsProvider extends ChangeNotifier {
   Map<String, dynamic> _savedFoods = {};
 
   Map<String, dynamic> get savedFoods => _savedFoods;
 
+  SavedFoodsProvider() {
+    _loadSavedFoods();
+  }
+
   // LOAD all saved foods from local storage
-  Future<void> loadSavedFoods() async {
-    _savedFoods = await LocalStorageService.getSavedFoods();
+  Future<void> _loadSavedFoods() async {
+    _savedFoods = QuickAccessStorage().getSavedFoods();
     notifyListeners();
   }
 
@@ -20,46 +24,32 @@ class SavedFoodsProvider extends ChangeNotifier {
     }
     _savedFoods[id] = data;
 
-    await LocalStorageService.saveAllFoods(_savedFoods);
+    await QuickAccessStorage().saveAllFoods(_savedFoods);
     notifyListeners();
   }
 
   // DELETE a food by id
   Future<void> deleteFood(String id) async {
     _savedFoods.remove(id);
-    await LocalStorageService.saveAllFoods(_savedFoods);
+    await QuickAccessStorage().saveAllFoods(_savedFoods);
     notifyListeners();
   }
 
   // CLEAR all saved foods
   Future<void> clearAll() async {
     _savedFoods.clear();
-    await LocalStorageService.saveAllFoods({});
+    await QuickAccessStorage().saveAllFoods({});
     notifyListeners();
   }
 
   // ======== EXTRA METHODS (updated to use id) ========= //
 
-  // Return list of saved food ids
-  List<String> getSavedFoodIds() {
-    return _savedFoods.keys.toList();
-  }
-
-  // Get details for *one* saved food by id
-  Map<String, dynamic>? getSavedFoodDetails(String id) {
-    return _savedFoods[id];
-  }
 
   // Get full list of saved foods with details
   List<Map<String, dynamic>> getAllSavedFoodsWithDetails() {
     return _savedFoods.values.map((data) {
       return Map<String, dynamic>.from(data);
     }).toList();
-  }
-
-  // HELPER: Check if a food exists by id
-  bool foodExists(String id) {
-    return _savedFoods.containsKey(id);
   }
 
   // HELPER: Get a saved food by name (if you need to search)
