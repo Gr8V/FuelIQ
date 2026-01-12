@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/local_storage.dart';
+import 'package:fuel_iq/data/local/daily_data_storage.dart';
 import '../utils/date_utils.dart';
 
 class HistoryProvider extends ChangeNotifier {
@@ -7,7 +7,7 @@ class HistoryProvider extends ChangeNotifier {
     String key, {
     int? lastDays,
   }) async {
-    final all = await LocalStorageService.getAllData();
+    final all = DailyDataStorage().getAllData();
     final List<Map<String, dynamic>> results = [];
 
     DateTime? cutoffDate;
@@ -48,7 +48,7 @@ class HistoryProvider extends ChangeNotifier {
 
 
   Future<Map<String, double>> getWeightHistory() async {
-    final all = await LocalStorageService.getAllData();
+    final all = DailyDataStorage().getAllData();
     final map = <String, double>{};
 
     all.forEach((date, json) {

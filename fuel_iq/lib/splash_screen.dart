@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuel_iq/data/local/settings_storage.dart';
 import 'package:fuel_iq/pages/secondary/onboarding_page.dart';
 import 'package:fuel_iq/services/notification_service.dart';
-import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/main.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -52,8 +50,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
       // 3. Initialize daily data
       _updateStatus('Loading your data...', 0.6);
-      final dataProvider = context.read<DailyDataProvider>();
-      await dataProvider.initialize();
       await Future.delayed(const Duration(milliseconds: 300));
 
       if (!mounted) return;

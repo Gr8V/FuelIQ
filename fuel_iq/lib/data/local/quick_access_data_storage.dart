@@ -1,7 +1,7 @@
 import 'package:hive_ce/hive.dart';
 
 class QuickAccessStorage {
-  final Box _box = Hive.box('quickAccessBox');
+  static Box get _box => Hive.box('quickAccessBox');
 
   // Read
   Map<String, dynamic> getSavedFoods() {

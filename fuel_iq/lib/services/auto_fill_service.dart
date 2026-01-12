@@ -1,4 +1,4 @@
-import '../services/local_storage.dart';
+import 'package:fuel_iq/data/local/daily_data_storage.dart';
 import '../models/daily_data.dart';
 import '../utils/date_utils.dart';
 
@@ -6,13 +6,13 @@ class AutoFillService {
   /// Automatically fills missing days between the last stored date and today.
   /// Ensures continuous daily data history.
   static Future<void> autoFillMissingDays() async {
-    final all = await LocalStorageService.getAllData();
+    final all = DailyDataStorage().getAllData();
     final today = DateUtilsExt.todayDate();
 
     // If empty, create today's entry with default targets
     if (all.isEmpty) {
       final newDay = DailyDataModel();
-      await LocalStorageService.saveDailyData(
+      await DailyDataStorage().saveDailyData(
         date: DateUtilsExt.format(today),
         data: newDay.toJson(),
       );
@@ -44,7 +44,7 @@ class AutoFillService {
         waterTarget: lastDay.waterTarget,
       );
 
-      await LocalStorageService.saveDailyData(
+      await DailyDataStorage().saveDailyData(
         date: DateUtilsExt.format(cursor),
         data: newDay.toJson(),
       );

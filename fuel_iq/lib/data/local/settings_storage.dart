@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 
 class SettingsStorage {
-  final Box _box = Hive.box('settingsBox');
+  static Box get _box => Hive.box('settingsBox');
 
   //ONBOARDING SECTION
   bool hasCompletedOnboarding() {

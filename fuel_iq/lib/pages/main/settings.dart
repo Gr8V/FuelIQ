@@ -300,7 +300,7 @@ Future<void> showEraseDataDialog({
               await savedFoodsProvider.clearAll();
 
               // Reinitialize daily data (autofill today)
-              await dailyProvider.initialize();
+              await dailyProvider.reinitialize();
 
               if (!context.mounted) return;
 

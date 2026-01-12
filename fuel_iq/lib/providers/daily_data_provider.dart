@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/data/local/daily_data_storage.dart';
 import '../models/daily_data.dart';
 import '../models/food_entry.dart';
-import '../services/local_storage.dart';
 import '../utils/date_utils.dart';
 import '../services/auto_fill_service.dart';
 
 class DailyDataProvider extends ChangeNotifier {
   final Map<String, DailyDataModel> _cache = {};
+  bool _initialized = false;
+
+  DailyDataProvider() {
+    initialize();
+  }
 
   Future<void> initialize() async {
+    if (_initialized) return;
+
+    await _doInitialize();
+    _initialized = true;
+  }
+
+  Future<void> reinitialize() async {
+    _cache.clear();
+    _initialized = false;
+
+    await _doInitialize();
+    _initialized = true;
+
+    notifyListeners();
+  }
+
+  Future<void> _doInitialize() async {
     await AutoFillService.autoFillMissingDays();
     await loadDailyData(DateUtilsExt.today());
   }
@@ -20,7 +42,7 @@ class DailyDataProvider extends ChangeNotifier {
 
   Future<void> loadDailyData(String date) async {
     final normalized = DateUtilsExt.normalize(date);
-    final json = await LocalStorageService.loadDailyData(normalized);
+    final json = DailyDataStorage().loadDailyData(normalized);
 
     _cache[normalized] = json ?? DailyDataModel();
 
@@ -30,7 +52,7 @@ class DailyDataProvider extends ChangeNotifier {
 
   Future<void> updateDailyData(String date, DailyDataModel data) async {
     final normalized = DateUtilsExt.normalize(date);
-    await LocalStorageService.saveDailyData(
+    await DailyDataStorage().saveDailyData(
       date: normalized,
       data: data.toJson(),
     );
@@ -41,7 +63,7 @@ class DailyDataProvider extends ChangeNotifier {
       String date, String targetName, double value) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = await LocalStorageService.loadDailyData(normalized);
+    final day = DailyDataStorage().loadDailyData(normalized);
     final data = day ?? DailyDataModel();
 
     switch (targetName) {
@@ -68,7 +90,7 @@ class DailyDataProvider extends ChangeNotifier {
   Future<void> addFood(String date, FoodEntry entry) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = await LocalStorageService.loadDailyData(normalized);
+    final day = DailyDataStorage().loadDailyData(normalized);
     final data = day ?? DailyDataModel();
 
     data.foods.add(entry);
@@ -84,7 +106,7 @@ class DailyDataProvider extends ChangeNotifier {
   Future<void> deleteFood(String date, String foodId) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = await LocalStorageService.loadDailyData(normalized);
+    final day = DailyDataStorage().loadDailyData(normalized);
     final data = day ?? DailyDataModel();
 
     // Find the entry
@@ -112,7 +134,7 @@ class DailyDataProvider extends ChangeNotifier {
 
 
   Future<void> clearAll() async {
-    await LocalStorageService.clearAllData();
+    await DailyDataStorage().clearAllData();
     _cache.clear();
     notifyListeners();
   }
