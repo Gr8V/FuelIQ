@@ -59,7 +59,9 @@ class DailyDataModel {
         fatsTarget: (json['fatsTarget'] ?? 70).toDouble(),
         waterTarget: (json['waterTarget'] ?? 3).toDouble(),
         foods: (json['foods'] as List? ?? [])
-            .map((f) => FoodEntry.fromJson(f))
+            .map((f) => FoodEntry.fromJson(
+              Map<String, dynamic>.from(f)
+              ))
             .toList(),
       );
 }

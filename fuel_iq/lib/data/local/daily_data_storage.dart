@@ -14,12 +14,13 @@ class DailyDataStorage {
 
   /// Load data for ONE date
   DailyDataModel? loadDailyData(String date) {
-    final json = _box.get(date);
-    if (json == null) return null;
+    final raw = _box.get(date);
+    if (raw == null) return null;
 
-    return DailyDataModel.fromJson(
-      Map<String, dynamic>.from(json),
-    );
+    final Map<String, dynamic> json =
+      Map<String, dynamic>.from(raw);
+
+    return DailyDataModel.fromJson(json);
   }
 
   // Read ALL days Data

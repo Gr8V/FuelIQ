@@ -26,6 +26,7 @@ void main() async {
 
   await Hive.openBox('settingsBox');
   await Hive.openBox('quickAccessBox');
+  await Hive.openBox('dailyDataBox');
   
   runApp(
     MultiProvider(
