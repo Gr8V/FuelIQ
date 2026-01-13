@@ -1,16 +1,20 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:fuel_iq/globals/user_data.dart';
+import 'package:fuel_iq/pages/main/log/log_weight.dart';
 import 'package:fuel_iq/pages/main/nutrition.dart';
 import 'package:fuel_iq/pages/main/log/log_supplements.dart';
 import 'package:fuel_iq/pages/main/log/log_water.dart';
 import 'package:fuel_iq/pages/training/cardio_page.dart';
 import 'package:fuel_iq/pages/training/personal_records_page.dart';
 import 'package:fuel_iq/pages/training/workout_page.dart';
+import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/services/notification_service.dart';
 import 'package:fuel_iq/theme/colors.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -20,6 +24,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    //data
+    final dailyData = context.watch<DailyDataProvider>().getDailyData(todaysDate);
+
+    final weightToday = dailyData?.weight ?? 0.0;
 
     return Scaffold(
       body: CustomScrollView(
@@ -162,46 +171,52 @@ class HomePage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "95.6",
-                                          style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 20,
-                                            wordSpacing: 1.3
+                            clipBehavior: Clip.antiAlias,
+                            child: InkWell(
+                              onTap: () {
+                                pushWithSlideFade(context, WeightPickerPage());
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            weightToday.toStringAsFixed(1),
+                                            style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 20,
+                                              wordSpacing: 1.3
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "kg",
-                                          style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 20,
-                                            wordSpacing: 1.3
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Icon(Icons.north, color: Colors.green)
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  "Weight",
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    wordSpacing: 1.3
+                                          Text(
+                                            "kg",
+                                            style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 20,
+                                              wordSpacing: 1.3
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Icon(Icons.north, color: Colors.green)
+                                    ],
                                   ),
-                                )
-                              ],
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "Weight",
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      wordSpacing: 1.3
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

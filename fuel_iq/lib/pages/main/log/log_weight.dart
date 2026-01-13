@@ -124,6 +124,8 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       appBar: CustomAppBar(title: "weight"),
       body: SafeArea(
@@ -179,6 +181,7 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
                                     style: GoogleFonts.inter(
                                       fontSize: 26,
                                       fontWeight: FontWeight.w600,
+                                      color: colorScheme.primary
                                     ),
                                   ),
                                 );
@@ -194,6 +197,7 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
                             style: GoogleFonts.inter(
                               fontSize: 34,
                               fontWeight: FontWeight.bold,
+                              color: colorScheme.primary
                             ),
                           ),
                         ),
@@ -219,6 +223,7 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
                                     style: GoogleFonts.inter(
                                       fontSize: 26,
                                       fontWeight: FontWeight.w600,
+                                      color: colorScheme.primary
                                     ),
                                   ),
                                 );
@@ -232,6 +237,7 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
                           style: GoogleFonts.inter(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
+                            color: colorScheme.primary
                           ),
                         ),
                       ],
@@ -242,9 +248,10 @@ class _WeightPickerPageState extends State<WeightPickerPage> {
               const SizedBox(height: 50),
               Text(
                 "$weightInt.$weightDecimal kg",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 34,
                   fontWeight: FontWeight.bold,
+                  color: colorScheme.primary
                 ),
               ),
               const SizedBox(height: 24),
