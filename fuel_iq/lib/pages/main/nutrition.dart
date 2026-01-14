@@ -43,30 +43,30 @@ class _NutritionState extends State<Nutrition> {
         context.watch<DailyDataProvider>().getDailyData(todaysDate);
 
     // ====== FIXED: Model-safe lookups ======
-    final caloriesEaten = dailyData?.calories ?? 0.0;
-    final proteinEaten = dailyData?.protein ?? 0.0;
-    final carbsEaten = dailyData?.carbs ?? 0.0;
-    final fatsEaten = dailyData?.fats ?? 0.0;
-    final waterDrunk = dailyData?.water ?? 0.0;
+    final caloriesEaten = dailyData?.nutrition.calories ?? 0.0;
+    final proteinEaten = dailyData?.nutrition.protein ?? 0.0;
+    final carbsEaten = dailyData?.nutrition.carbs ?? 0.0;
+    final fatsEaten = dailyData?.nutrition.fats ?? 0.0;
+    final waterDrunk = dailyData?.nutrition.water ?? 0.0;
     final weightToday = dailyData?.weight ?? 0.0;
 
     final dailyCalorieTarget =
-        (dailyData?.calorieTarget ?? 0) != 0 ? dailyData!.calorieTarget : defaultCaloriesTarget.toDouble();
+        (dailyData?.nutrition.targets.calories ?? 0) != 0 ? dailyData!.nutrition.targets.calories : defaultCaloriesTarget.toDouble();
 
     final dailyProteinTarget =
-        (dailyData?.proteinTarget ?? 0) != 0 ? dailyData!.proteinTarget : defaultProteinTarget.toDouble();
+        (dailyData?.nutrition.targets.protein ?? 0) != 0 ? dailyData!.nutrition.targets.protein : defaultProteinTarget.toDouble();
 
     final dailyCarbsTarget =
-        (dailyData?.carbsTarget ?? 0) != 0 ? dailyData!.carbsTarget : defaultCarbsTarget.toDouble();
+        (dailyData?.nutrition.targets.carbs ?? 0) != 0 ? dailyData!.nutrition.targets.carbs : defaultCarbsTarget.toDouble();
 
     final dailyFatsTarget =
-        (dailyData?.fatsTarget ?? 0) != 0 ? dailyData!.fatsTarget : defaultFatsTarget.toDouble();
+        (dailyData?.nutrition.targets.fats ?? 0) != 0 ? dailyData!.nutrition.targets.fats : defaultFatsTarget.toDouble();
 
     final dailyWaterTarget =
-        (dailyData?.waterTarget ?? 0) != 0 ? dailyData!.waterTarget : defaultWaterTarget.toDouble();
+        (dailyData?.nutrition.targets.water ?? 0) != 0 ? dailyData!.nutrition.targets.water : defaultWaterTarget.toDouble();
 
     // ====== FIXED: foods is now List<FoodEntry> ======
-    final List<FoodEntry> foods = dailyData?.foods ?? [];
+    final List<FoodEntry> foods = dailyData?.nutrition.foods ?? [];
 
 
     return Scaffold(

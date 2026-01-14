@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/models/daily_data_model.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/utils/date_utils.dart';
 import 'package:fuel_iq/utils/utils.dart';

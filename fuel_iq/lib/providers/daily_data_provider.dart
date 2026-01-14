@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/data/local/daily_data_storage.dart';
-import '../models/daily_data.dart';
+import '../models/daily_data_model.dart';
 import '../models/food_entry.dart';
 import '../utils/date_utils.dart';
 import '../services/auto_fill_service.dart';
@@ -42,11 +42,8 @@ class DailyDataProvider extends ChangeNotifier {
 
   Future<void> loadDailyData(String date) async {
     final normalized = DateUtilsExt.normalize(date);
-    final json = DailyDataStorage().loadDailyData(normalized);
-
-    _cache[normalized] = json ?? DailyDataModel();
-
-
+    final json = DailyDataStorage.getOrCreateDay(normalized);
+    _cache[normalized] = json;
     notifyListeners();
   }
 
@@ -63,24 +60,24 @@ class DailyDataProvider extends ChangeNotifier {
       String date, String targetName, double value) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = DailyDataStorage().loadDailyData(normalized);
-    final data = day ?? DailyDataModel();
+    final day = DailyDataStorage.getOrCreateDay(normalized);
+    final data = day;
 
     switch (targetName) {
       case 'calorieTarget':
-        data.calorieTarget = value;
+        data.nutrition.targets.calories = value;
         break;
       case 'proteinTarget':
-        data.proteinTarget = value;
+        data.nutrition.targets.protein = value;
         break;
       case 'carbsTarget':
-        data.carbsTarget = value;
+        data.nutrition.targets.calories = value;
         break;
       case 'fatsTarget':
-        data.fatsTarget = value;
+        data.nutrition.targets.fats = value;
         break;
       case 'waterTarget':
-        data.waterTarget = value;
+        data.nutrition.targets.water = value;
         break;
     }
 
@@ -90,15 +87,15 @@ class DailyDataProvider extends ChangeNotifier {
   Future<void> addFood(String date, FoodEntry entry) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = DailyDataStorage().loadDailyData(normalized);
-    final data = day ?? DailyDataModel();
+    final day = DailyDataStorage.getOrCreateDay(normalized);
+    final data = day;
 
-    data.foods.add(entry);
+    data.nutrition.foods.add(entry);
 
-    data.calories += entry.calories;
-    data.protein += entry.protein;
-    data.carbs += entry.carbs;
-    data.fats += entry.fats;
+    data.nutrition.calories += entry.calories;
+    data.nutrition.protein += entry.protein;
+    data.nutrition.carbs += entry.carbs;
+    data.nutrition.fats += entry.fats;
 
     await updateDailyData(normalized, data);
   }
@@ -106,27 +103,27 @@ class DailyDataProvider extends ChangeNotifier {
   Future<void> deleteFood(String date, String foodId) async {
     final normalized = DateUtilsExt.normalize(date);
 
-    final day = DailyDataStorage().loadDailyData(normalized);
-    final data = day ?? DailyDataModel();
+    final day = DailyDataStorage.getOrCreateDay(normalized);
+    final data = day;
 
     // Find the entry
-    final entryIndex = data.foods.indexWhere((f) => f.id == foodId);
+    final entryIndex = data.nutrition.foods.indexWhere((f) => f.id == foodId);
 
     if (entryIndex == -1) {
       // Food not found — early return
       return;
     }
 
-    final entry = data.foods[entryIndex];
+    final entry = data.nutrition.foods[entryIndex];
 
     // Remove the entry
-    data.foods.removeAt(entryIndex);
+    data.nutrition.foods.removeAt(entryIndex);
 
     // Subtract its macros
-    data.calories -= entry.calories;
-    data.protein -= entry.protein;
-    data.carbs -= entry.carbs;
-    data.fats -= entry.fats;
+    data.nutrition.calories -= entry.calories;
+    data.nutrition.protein -= entry.protein;
+    data.nutrition.carbs -= entry.carbs;
+    data.nutrition.fats -= entry.fats;
 
     // Save back
     await updateDailyData(normalized, data);

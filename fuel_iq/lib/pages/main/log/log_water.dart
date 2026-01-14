@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/models/daily_data_model.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
@@ -26,7 +26,7 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
     final provider = Provider.of<DailyDataProvider>(context, listen: false);
     DailyDataModel day = provider.getDailyData(todaysDate) ?? DailyDataModel();
     
-    day.water += amount;
+    day.nutrition.water += amount;
     await provider.updateDailyData(todaysDate, day);
     
 
@@ -40,8 +40,8 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
     final provider = context.watch<DailyDataProvider>();
     final dailyData = provider.getDailyData(todaysDate) ?? DailyDataModel();
 
-    final double waterDrunk = dailyData.water;
-    final double dailyWaterTarget = dailyData.waterTarget;
+    final double waterDrunk = dailyData.nutrition.water;
+    final double dailyWaterTarget = dailyData.nutrition.targets.water;
     final double percentage = (waterDrunk / dailyWaterTarget * 100).clamp(0, 100);
 
     return Scaffold(
@@ -194,7 +194,7 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
                           provider.getDailyData(todaysDate) ??
                               DailyDataModel();
 
-                      if (day.water <= 0) {
+                      if (day.nutrition.water <= 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("You have not drank water today."),
@@ -203,7 +203,7 @@ class _WaterPageState extends State<WaterPage> with SingleTickerProviderStateMix
                         return;
                       }
 
-                      day.water = (day.water - 0.25).clamp(0.0, 99.0);
+                      day.nutrition.water = (day.nutrition.water - 0.25).clamp(0.0, 99.0);
 
                       await provider.updateDailyData(todaysDate, day);
                     },

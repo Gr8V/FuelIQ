@@ -1,5 +1,6 @@
 import 'package:fuel_iq/data/local/daily_data_storage.dart';
-import '../models/daily_data.dart';
+import 'package:fuel_iq/models/nutrition_data_model.dart';
+import '../models/daily_data_model.dart';
 import '../utils/date_utils.dart';
 
 class AutoFillService {
@@ -37,11 +38,9 @@ class AutoFillService {
 
     while (!DateUtilsExt.isAfter(cursor, today)) {
       final newDay = DailyDataModel(
-        calorieTarget: lastDay.calorieTarget,
-        proteinTarget: lastDay.proteinTarget,
-        carbsTarget: lastDay.carbsTarget,
-        fatsTarget: lastDay.fatsTarget,
-        waterTarget: lastDay.waterTarget,
+        nutrition: NutritionData(
+          targets: lastDay.nutrition.targets,
+        )
       );
 
       await DailyDataStorage().saveDailyData(

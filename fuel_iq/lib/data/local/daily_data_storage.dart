@@ -1,4 +1,4 @@
-import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/models/daily_data_model.dart';
 import 'package:hive_ce/hive.dart';
 
 class DailyDataStorage {
@@ -13,15 +13,18 @@ class DailyDataStorage {
   }
 
   /// Load data for ONE date
-  DailyDataModel? loadDailyData(String date) {
-    final raw = _box.get(date);
-    if (raw == null) return null;
-
-    final Map<String, dynamic> json =
-      Map<String, dynamic>.from(raw);
-
-    return DailyDataModel.fromJson(json);
+  static DailyDataModel getOrCreateDay(String date) {
+  final raw = _box.get(date);
+  if (raw == null) {
+    final empty = DailyDataModel();
+    _box.put(date, empty.toJson());
+    return empty;
   }
+
+  return DailyDataModel.fromJson(
+    Map<String, dynamic>.from(raw),
+  );
+}
 
   // Read ALL days Data
   Map<String, dynamic> getAllData() {

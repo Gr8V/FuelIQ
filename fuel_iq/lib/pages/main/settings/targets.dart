@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/models/daily_data.dart';
+import 'package:fuel_iq/models/daily_data_model.dart';
 import 'package:fuel_iq/providers/daily_data_provider.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,28 +40,28 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
             icon: Icons.local_fire_department_rounded,
             label: "Calories",
             unit: "kcal",
-            value: dailyData.calorieTarget,
+            value: dailyData.nutrition.targets.calories,
             onSave: (v) => _update(context, 'calorieTarget', v),
           ),
           _TargetCard(
             icon: Icons.fitness_center_rounded,
             label: "Protein",
             unit: "g",
-            value: dailyData.proteinTarget,
+            value: dailyData.nutrition.targets.protein,
             onSave: (v) => _update(context, 'proteinTarget', v),
           ),
           _TargetCard(
             icon: Icons.bakery_dining_rounded,
             label: "Carbs",
             unit: "g",
-            value: dailyData.carbsTarget,
+            value: dailyData.nutrition.targets.carbs,
             onSave: (v) => _update(context, 'carbsTarget', v),
           ),
           _TargetCard(
             icon: Icons.opacity_rounded,
             label: "Fats",
             unit: "g",
-            value: dailyData.fatsTarget,
+            value: dailyData.nutrition.targets.fats,
             onSave: (v) => _update(context, 'fatsTarget', v),
           ),
 
@@ -73,7 +73,7 @@ class _TargetSelectionPageState extends State<TargetSelectionPage> {
             icon: Icons.water_drop_rounded,
             label: "Water",
             unit: "ml",
-            value: dailyData.waterTarget,
+            value: dailyData.nutrition.targets.water,
             onSave: (v) => _update(context, 'waterTarget', v),
           ),
         ],
