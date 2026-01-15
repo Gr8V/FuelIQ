@@ -8,7 +8,22 @@ import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 class LogFood extends StatefulWidget {
-  const LogFood({super.key});
+  final String? defaultFoodName;
+  final String? defaultQuantity;
+  final String? defaultCalories;
+  final String? defaultProtein;
+  final String? defaultCarbs;
+  final String? defaultFats;
+
+  const LogFood({
+    super.key,
+    this.defaultFoodName,
+    this.defaultQuantity,
+    this.defaultCalories,
+    this.defaultProtein,
+    this.defaultCarbs,
+    this.defaultFats,
+  });
 
   @override
   State<LogFood> createState() => _LogFoodState();
@@ -17,12 +32,41 @@ class LogFood extends StatefulWidget {
 class _LogFoodState extends State<LogFood> {
   final _formKey = GlobalKey<FormState>();
 
-  final foodNameController = TextEditingController();
-  final quantityController = TextEditingController();
-  final caloriesController = TextEditingController();
-  final proteinController = TextEditingController();
-  final carbsController = TextEditingController();
-  final fatsController = TextEditingController();
+  late final TextEditingController foodNameController;
+  late final TextEditingController quantityController;
+  late final TextEditingController caloriesController;
+  late final TextEditingController proteinController;
+  late final TextEditingController carbsController;
+  late final TextEditingController fatsController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    foodNameController =
+        TextEditingController(text: widget.defaultFoodName ?? '');
+    quantityController =
+        TextEditingController(text: widget.defaultQuantity ?? '');
+    caloriesController =
+        TextEditingController(text: widget.defaultCalories ?? '');
+    proteinController =
+        TextEditingController(text: widget.defaultProtein ?? '');
+    carbsController =
+        TextEditingController(text: widget.defaultCarbs ?? '');
+    fatsController =
+        TextEditingController(text: widget.defaultFats ?? '');
+  }
+
+  @override
+  void dispose() {
+    foodNameController.dispose();
+    quantityController.dispose();
+    caloriesController.dispose();
+    proteinController.dispose();
+    carbsController.dispose();
+    fatsController.dispose();
+    super.dispose();
+  }
 
   String? time;
 

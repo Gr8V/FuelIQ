@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_iq/globals/user_data.dart';
-import 'package:fuel_iq/models/food_entry.dart';
-import 'package:fuel_iq/providers/daily_data_provider.dart';
+import 'package:fuel_iq/pages/main/log/log_food_page.dart';
 import 'package:fuel_iq/providers/saved_foods_provider.dart';
 import 'package:fuel_iq/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class SavedFoods extends StatelessWidget {
   const SavedFoods({super.key});
@@ -120,7 +117,7 @@ class SavedFoodWidget extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          
+          _navigateToLogFood(context);
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -288,7 +285,7 @@ class SavedFoodWidget extends StatelessWidget {
     }
     
     if (direction == DismissDirection.startToEnd) {
-      await _addFoodToToday(context);
+      _navigateToLogFood(context);
       return false;
     }
     
@@ -323,38 +320,18 @@ class SavedFoodWidget extends StatelessWidget {
     );
   }
 
-  Future<void> _addFoodToToday(BuildContext context) async {
-    final entry = FoodEntry(
-      id: const Uuid().v4(),
-      name: foodName,
-      calories: calories,
-      protein: protein,
-      carbs: carbs,
-      fats: fats,
-      quantity: quantity,
-      time: time,
+  void _navigateToLogFood(BuildContext context) {
+    pushWithSlideFade(
+      context,
+      LogFood(
+        defaultFoodName: foodName,
+        defaultCalories: calories.toStringAsFixed(1),
+        defaultProtein: protein.toStringAsFixed(1),
+        defaultCarbs: carbs.toStringAsFixed(1),
+        defaultFats: fats.toStringAsFixed(1),
+        defaultQuantity: quantity.toStringAsFixed(1),
+      ),
     );
-
-    final dailyDataProvider = Provider.of<DailyDataProvider>(context, listen: false);
-    await dailyDataProvider.addFood(todaysDate, entry);
-    
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 12),
-              Expanded(child: Text('$foodName added to today')),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
   }
 
   Future<void> _onDismissed(BuildContext context, DismissDirection direction) async {
