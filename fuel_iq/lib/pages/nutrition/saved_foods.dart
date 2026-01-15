@@ -62,7 +62,6 @@ class SavedFoods extends StatelessWidget {
 }
 
 class SavedFoodWidget extends StatelessWidget {
-
   final String foodName;
   final String foodId;
   final double calories;
@@ -86,140 +85,307 @@ class SavedFoodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Dismissible(
+        key: ValueKey(foodId),
+        direction: DismissDirection.horizontal,
+        confirmDismiss: (direction) => _handleDismiss(context, direction),
+        onDismissed: (direction) => _onDismissed(context, direction),
+        background: _buildSwipeBackground(
+          alignment: Alignment.centerLeft,
+          color: Colors.green,
+          icon: Icons.add_circle_outline,
+          label: 'Add',
+        ),
+        secondaryBackground: _buildSwipeBackground(
+          alignment: Alignment.centerRight,
+          color: Colors.red,
+          icon: Icons.delete_outline,
+          label: 'Delete',
+        ),
+        child: _buildCard(context),
+      ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 2,
+      shadowColor: Colors.black26,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 12),
+              _buildNutritionInfo(),
+              const SizedBox(height: 8),
+              _buildMetadata(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Dismissible(
-            key: ValueKey(foodId),
-            direction: DismissDirection.horizontal,
-            confirmDismiss: (direction) async {
-              if (direction == DismissDirection.endToStart) {
-                // Show confirmation dialog
-                return await showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Delete Food'),
-                      content: Text('Remove "$foodName" from Saved Foods?'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.red,
-                          ),
-                          child: const Text('Delete'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-              if (direction == DismissDirection.startToEnd) {
-                // ADD FOOD
-                final entry = FoodEntry(
-                  id: const Uuid().v4(),
-                  name: foodName,
-                  calories: calories,
-                  protein: protein,
-                  carbs: carbs,
-                  fats: fats,
-                  quantity: quantity,
-                  time: time
-                );
-        
-                final dailyDataProvider = Provider.of<DailyDataProvider>(context, listen: false);
-                await dailyDataProvider.addFood(todaysDate, entry);
-                
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$foodName added to today')),
-                  );
-                }
-                return false;
-              }
-              return false;
-            },
-            onDismissed: (direction) async {
-              if (direction == DismissDirection.endToStart) {
-                final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
-                await savedFoodsProvider.deleteFood(foodId);
-                
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('$foodName deleted'),
-                      duration: const Duration(milliseconds: 1500),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
-              }
-            },
-            background: Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 20),
-              child: const Icon(Icons.add, color: Colors.white, size: 28),
+        Expanded(
+          child: Text(
+            foodName,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.1,
             ),
-        
-            secondaryBackground: Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 20),
-              child: const Icon(Icons.delete, color: Colors.white, size: 28),
-            ),
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                leading: CircleAvatar(
-                  child: Text(
-                    foodName.substring(0, 1).toUpperCase(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                title: Text(
-                  foodName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 4),
-                    Text('Quantity: ${quantity.toStringAsFixed(0)}g'),
-                    Text('Time: $time'),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Cal: ${calories.toStringAsFixed(0)} | '
-                      'P: ${protein.toStringAsFixed(1)}g | '
-                      'C: ${carbs.toStringAsFixed(1)}g | '
-                      'F: ${fats.toStringAsFixed(1)}g',
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                isThreeLine: true,
-              ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.orange.shade200, width: 1),
+          ),
+          child: Text(
+            '${calories.toStringAsFixed(0)} cal',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.orange.shade900,
             ),
           ),
-                  ),
+        ),
       ],
     );
+  }
+
+  Widget _buildNutritionInfo() {
+    return Wrap(
+      spacing: 2,
+      runSpacing: 4,
+      children: [
+        _buildNutrientChip('P', protein),
+        const SizedBox(width: 8),
+        _buildNutrientChip('C', carbs),
+        const SizedBox(width: 8),
+        _buildNutrientChip('F', fats),
+      ],
+    );
+  }
+
+  Widget _buildNutrientChip(String label, double value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade700,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade500, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade200,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${value.toStringAsFixed(1)}g',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade100,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetadata() {
+    return Wrap(
+      spacing: 2,
+      runSpacing: 4,
+      children: [
+        Icon(Icons.scale_outlined, size: 14, color: Colors.grey.shade600),
+        const SizedBox(width: 4),
+        Text(
+          '${quantity.toStringAsFixed(0)}g',
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Icon(Icons.access_time, size: 14, color: Colors.grey.shade600),
+        const SizedBox(width: 4),
+        Text(
+          time,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSwipeBackground({
+    required Alignment alignment,
+    required Color color,
+    required IconData icon,
+    required String label,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      alignment: alignment,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 28),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool?> _handleDismiss(BuildContext context, DismissDirection direction) async {
+    if (direction == DismissDirection.endToStart) {
+      return await _showDeleteDialog(context);
+    }
+    
+    if (direction == DismissDirection.startToEnd) {
+      await _addFoodToToday(context);
+      return false;
+    }
+    
+    return false;
+  }
+
+  Future<bool?> _showDeleteDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Food'),
+          content: Text('Remove "$foodName" from Saved Foods?'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _addFoodToToday(BuildContext context) async {
+    final entry = FoodEntry(
+      id: const Uuid().v4(),
+      name: foodName,
+      calories: calories,
+      protein: protein,
+      carbs: carbs,
+      fats: fats,
+      quantity: quantity,
+      time: time,
+    );
+
+    final dailyDataProvider = Provider.of<DailyDataProvider>(context, listen: false);
+    await dailyDataProvider.addFood(todaysDate, entry);
+    
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(child: Text('$foodName added to today')),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onDismissed(BuildContext context, DismissDirection direction) async {
+    if (direction == DismissDirection.endToStart) {
+      final savedFoodsProvider = Provider.of<SavedFoodsProvider>(context, listen: false);
+      await savedFoodsProvider.deleteFood(foodId);
+      
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.delete, color: Colors.white),
+                const SizedBox(width: 12),
+                Expanded(child: Text('$foodName deleted')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            duration: const Duration(seconds: 2),
+            action: SnackBarAction(
+              label: 'UNDO',
+              textColor: Colors.white,
+              onPressed: () {
+                // Implement undo functionality if needed
+              },
+            ),
+          ),
+        );
+      }
+    }
   }
 }
