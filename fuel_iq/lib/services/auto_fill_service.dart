@@ -34,7 +34,10 @@ class AutoFillService {
     DateTime cursor = lastStored.add(const Duration(days: 1));
 
     // Get last day's targets to reuse
-    final lastDay = DailyDataModel.fromJson(all[dates.last]);
+    final lastDay = DailyDataModel.fromJson(
+      Map<String, dynamic>.from(all[dates.last]),
+    );
+
 
     while (!DateUtilsExt.isAfter(cursor, today)) {
       final newDay = DailyDataModel(

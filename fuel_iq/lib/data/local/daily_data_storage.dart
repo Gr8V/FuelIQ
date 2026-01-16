@@ -14,17 +14,17 @@ class DailyDataStorage {
 
   /// Load data for ONE date
   static DailyDataModel getOrCreateDay(String date) {
-  final raw = _box.get(date);
-  if (raw == null) {
-    final empty = DailyDataModel();
-    _box.put(date, empty.toJson());
-    return empty;
-  }
+    final raw = _box.get(date);
+    if (raw == null) {
+      final empty = DailyDataModel();
+      _box.put(date, empty.toJson());
+      return empty;
+    }
 
-  return DailyDataModel.fromJson(
-    Map<String, dynamic>.from(raw),
-  );
-}
+    return DailyDataModel.fromJson(
+      Map<String, dynamic>.from(raw),
+    );
+  }
 
   // Read ALL days Data
   Map<String, dynamic> getAllData() {

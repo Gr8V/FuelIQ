@@ -180,32 +180,40 @@ class HomePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            weightToday.toStringAsFixed(1),
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 20,
-                                              wordSpacing: 1.3
+                                  weightToday != 0
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              weightToday.toStringAsFixed(1),
+                                              style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 20,
+                                                wordSpacing: 1.3
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            "kg",
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20,
-                                              wordSpacing: 1.3
-                                            ),
-                                          )
-                                        ],
+                                            Text(
+                                              "kg",
+                                              style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 20,
+                                                wordSpacing: 1.3
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Icon(Icons.north, color: Colors.green)
+                                      ],
+                                    )
+                                  : Text(
+                                      "Add weight",
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
                                       ),
-                                      Icon(Icons.north, color: Colors.green)
-                                    ],
-                                  ),
+                                    ),
                                   const SizedBox(height: 5),
                                   Text(
                                     "Weight",
